@@ -1,0 +1,22 @@
+<Solution>
+    <Folder Name="/src/">
+        <Project Path="src/Wallee.Mall.Domain/Wallee.Mall.Domain.csproj" />
+        <Project Path="src/Wallee.Mall.Application/Wallee.Mall.Application.csproj" />
+        <Project Path="src/Wallee.Mall.EntityFrameworkCore/Wallee.Mall.EntityFrameworkCore.csproj" />
+        <Project Path="src/Wallee.Mall.Domain.Shared/Wallee.Mall.Domain.Shared.csproj" />
+        <Project Path="src/Wallee.Mall.Application.Contracts/Wallee.Mall.Application.Contracts.csproj" />
+        <Project Path="src/Wallee.Mall.HttpApi/Wallee.Mall.HttpApi.csproj" />
+        <Project Path="src/Wallee.Mall.HttpApi.Client/Wallee.Mall.HttpApi.Client.csproj" />
+        <Project Path="src/Wallee.Mall.DbMigrator/Wallee.Mall.DbMigrator.csproj" />
+        <Project Path="src/Wallee.Mall.HttpApi.Host/Wallee.Mall.HttpApi.Host.csproj" />
+    </Folder>
+    <Folder Name="/test/">
+        <Project Path="test/Wallee.Mall.Application.Tests/Wallee.Mall.Application.Tests.csproj" />
+        <Project Path="test/Wallee.Mall.EntityFrameworkCore.Tests/Wallee.Mall.EntityFrameworkCore.Tests.csproj" />
+        <Project Path="test/Wallee.Mall.TestBase/Wallee.Mall.TestBase.csproj" />
+        <Project Path="test/Wallee.Mall.Domain.Tests/Wallee.Mall.Domain.Tests.csproj" />
+        <Project Path="test/Wallee.Mall.HttpApi.Client.ConsoleTestApp/Wallee.Mall.HttpApi.Client.ConsoleTestApp.csproj" />
+    </Folder>
+    <Project Path="app-host/Wallee.Mall.AppHost/Wallee.Mall.AppHost.csproj" Id="b375c3e0-1c10-4297-9ed1-2cb0fbb82412" />
+    <Project Path="app-host/Wallee.Mall.ServiceDefaults/Wallee.Mall.ServiceDefaults.csproj" />
+</Solution>
