@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Volo.Abp.Domain.Entities.Auditing;
 
 namespace Wallee.Mall.Tags
@@ -12,9 +12,8 @@ namespace Wallee.Mall.Tags
         {
         }
 
-        public Tag(Guid id, string name)
+        public Tag(Guid id, string name) : base(id)
         {
-            Id = id;
             SetName(name);
         }
 

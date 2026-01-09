@@ -1,9 +1,12 @@
 {
   "Culture": "en",
   "Texts": {
-    "AppName": "Mall",
-    "Menu:Home": "Home",
-    "LongWelcomeMessage": "Welcome to the application. This is a startup project based on the ABP framework. For more information visit",
-    "Welcome": "Welcome"
+    "Permission:Create": "创建",
+    "Permission:Update": "更新",
+    "Permission:Delete": "删除",
+    "Permission:Product": "商品管理",
+    "Permission:Tag": "标签管理",
+    "Permission:BackgroundJob": "后台任务",
+    "Permission:AuditLog": "审计日志"
   }
 }

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
 using Volo.Abp.BlobStoring.Database.EntityFrameworkCore;
@@ -14,6 +15,8 @@ using Volo.Abp.PermissionManagement.EntityFrameworkCore;
 using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.TenantManagement;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
+using Wallee.Mall.Carousels;
+using Wallee.Mall.Medias;
 using Wallee.Mall.Products;
 using Wallee.Mall.Tags;
 
@@ -22,8 +25,8 @@ namespace Wallee.Mall.EntityFrameworkCore;
 [ReplaceDbContext(typeof(IIdentityDbContext))]
 [ReplaceDbContext(typeof(ITenantManagementDbContext))]
 [ConnectionStringName("Default")]
-public class MallDbContext :
-    AbpDbContext<MallDbContext>,
+public class MallDbContext(DbContextOptions<MallDbContext> options) :
+    AbpDbContext<MallDbContext>(options),
     ITenantManagementDbContext,
     IIdentityDbContext
 {
@@ -58,12 +61,12 @@ public class MallDbContext :
     public DbSet<TenantConnectionString> TenantConnectionStrings { get; set; }
 
     #endregion
-
-    public MallDbContext(DbContextOptions<MallDbContext> options)
-        : base(options)
-    {
-
-    }
+    public DbSet<Product> Products { get; set; }
+    public DbSet<Tag> Tags { get; set; }
+    public DbSet<ProductTag> ProductTags { get; set; }
+    public DbSet<ProductSku> ProductSkus { get; set; }
+    public DbSet<Carousel> Carousels { get; set; }
+    public DbSet<MallMedia> MallMedias { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -91,22 +94,27 @@ public class MallDbContext :
             b.Property(p => p.Brand).HasMaxLength(128);
             b.Property(p => p.ShortDescription).HasMaxLength(1024);
             b.Property(p => p.OriginalPrice).HasColumnType("decimal(18,2)");
-            b.Property(p => p.DiscountPrice).HasColumnType("decimal(18,2)");
+            b.Property(p => p.DiscountRate).HasColumnType("decimal(18,4)").HasDefaultValue(1m);
             b.Property(p => p.JdPrice).HasColumnType("decimal(18,2)");
             b.Property(p => p.Currency).IsRequired().HasMaxLength(8);
+            b.Property(p => p.IsActive).HasDefaultValue(true);
+            b.Property(p => p.SortOrder).HasDefaultValue(0);
+            b.Property(p => p.SalesCount).HasDefaultValue(0);
 
-            b.HasMany(p => p.Skus)
-                .WithOne(s => s.Product)
-                .HasForeignKey(s => s.ProductId)
-                .IsRequired();
+            b.HasMany(p => p.Skus).WithOne().HasForeignKey(s => s.ProductId);
 
-            b.HasMany(p => p.ProductTags)
-                .WithOne(pt => pt.Product)
-                .HasForeignKey(pt => pt.ProductId)
-                .IsRequired();
+            b.HasMany(p => p.ProductTags).WithOne().HasForeignKey(pt => pt.ProductId);
+
+            b.OwnsMany(p => p.ProductCovers, pc =>
+            {
+                pc.ToJson();
+            });
 
             b.HasIndex(p => p.Name);
             b.HasIndex(p => p.Brand);
+            b.HasIndex(p => p.IsActive);
+            b.HasIndex(p => new { p.IsActive, p.SortOrder, p.SalesCount });
+            b.HasIndex(p => p.CreationTime);
         });
 
         builder.Entity<ProductSku>(b =>
@@ -115,13 +123,12 @@ public class MallDbContext :
             b.ConfigureByConvention();
             b.Property(s => s.SkuCode).IsRequired().HasMaxLength(64);
             b.Property(s => s.OriginalPrice).HasColumnType("decimal(18,2)");
-            b.Property(s => s.DiscountPrice).HasColumnType("decimal(18,2)");
+            b.Property(s => s.DiscountRate).HasColumnType("decimal(18,4)").HasDefaultValue(1m);
             b.Property(s => s.JdPrice).HasColumnType("decimal(18,2)");
             b.Property(s => s.Currency).IsRequired().HasMaxLength(8);
             b.Property(s => s.Attributes).HasColumnType("jsonb");
 
             b.HasIndex(s => new { s.ProductId, s.SkuCode }).IsUnique();
-            // 为属性查询（颜色/尺码等）建立 GIN 索引，配合 jsonb 查询
             b.HasIndex(s => s.Attributes).HasMethod("gin");
         });
 
@@ -139,17 +146,31 @@ public class MallDbContext :
             b.ToTable(MallConsts.DbTablePrefix + "ProductTags", MallConsts.DbSchema);
             b.ConfigureByConvention();
             b.HasKey(pt => new { pt.ProductId, pt.TagId });
-            b.HasOne(pt => pt.Product)
-                .WithMany(p => p.ProductTags)
-                .HasForeignKey(pt => pt.ProductId)
-                .IsRequired();
-            b.HasOne(pt => pt.Tag)
-                .WithMany()
-                .HasForeignKey(pt => pt.TagId)
-                .IsRequired();
+
+            b.Property(pt => pt.NormalizedTagName).IsRequired().HasMaxLength(128);
 
             b.HasIndex(pt => pt.TagId);
             b.HasIndex(pt => pt.ProductId);
+            b.HasIndex(pt => pt.NormalizedTagName);
+        });
+
+        builder.Entity<MallMedia>(b =>
+        {
+            b.ToTable(MallConsts.DbTablePrefix + "MallMedias", MallConsts.DbSchema);
+            b.ConfigureByConvention();
+
+            b.Property(it => it.Name).IsRequired().HasMaxLength(1024).HasComment("媒体文件名称");
+            b.Property(it => it.MimeType).IsRequired().HasMaxLength(512).HasComment("媒体文件类型");
+        });
+
+        builder.Entity<Carousel>(b =>
+        {
+            b.ToTable(MallConsts.DbTablePrefix + "Carousels", MallConsts.DbSchema);
+            b.ConfigureByConvention();
+
+            b.Property(it => it.Title).IsRequired().HasMaxLength(256);
+            b.Property(it => it.Description).IsRequired(false).HasMaxLength(2048);
+            b.Property(it => it.Link).IsRequired().HasMaxLength(1024);
         });
     }
 }

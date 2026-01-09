@@ -1,6 +1,5 @@
 ﻿using System;
 using Volo.Abp.Domain.Entities;
-using Wallee.Mall.Tags;
 
 namespace Wallee.Mall.Products
 {
@@ -8,23 +7,32 @@ namespace Wallee.Mall.Products
     {
         public Guid ProductId { get; private set; }
         public Guid TagId { get; private set; }
-
-        public Product Product { get; private set; } = default!;
-        public Tag Tag { get; private set; } = default!;
+        public string NormalizedTagName { get; private set; } = default!;
 
         private ProductTag()
         {
         }
 
-        public ProductTag(Guid productId, Guid tagId)
+        public ProductTag(Guid productId, Guid tagId, string normalizedTagName)
         {
             ProductId = productId;
             TagId = tagId;
+            SetNormalizedTagName(normalizedTagName);
+        }
+
+        public void SetNormalizedTagName(string normalizedTagName)
+        {
+            if (string.IsNullOrWhiteSpace(normalizedTagName))
+            {
+                throw new ArgumentException("Normalized tag name cannot be empty", nameof(normalizedTagName));
+            }
+
+            NormalizedTagName = normalizedTagName.Trim().ToLowerInvariant();
         }
 
         public override object[] GetKeys()
         {
-            return new object[] { ProductId, TagId };
+            return [ProductId, TagId];
         }
     }
 }

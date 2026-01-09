@@ -11,5 +11,6 @@ namespace Wallee.Mall.Medias
 		Task<MallMediaDto> CreateAsync(CreateMallMediaDto input);
 		Task DeleteAsync(Guid id);
 		Task<RemoteStreamContent> DownloadAsync(Guid id);
-	}
+        Task<RemoteStreamContent> PreviewAsync(Guid id);
+    }
 }

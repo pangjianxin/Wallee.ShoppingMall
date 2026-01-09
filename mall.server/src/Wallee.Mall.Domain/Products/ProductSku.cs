@@ -9,13 +9,19 @@ namespace Wallee.Mall.Products
         public Guid ProductId { get; private set; }
         public string SkuCode { get; private set; } = default!;
         public decimal OriginalPrice { get; private set; }
-        public decimal? DiscountPrice { get; private set; }
+        /// <summary>
+        /// SKU 折扣率：1 = 不打折，0.7 = 7 折。
+        /// </summary>
+        public decimal DiscountRate { get; private set; } = 1m;
+
+        /// <summary>
+        /// 京东参考价（仅用于展示/比价，不参与系统销售价计算）。
+        /// </summary>
         public decimal? JdPrice { get; private set; }
+
         public string Currency { get; private set; } = "CNY";
         public int StockQuantity { get; private set; }
-        public Dictionary<string, string> Attributes { get; private set; } = new(StringComparer.OrdinalIgnoreCase);
-
-        public Product Product { get; private set; } = default!;
+        public Dictionary<string, string>? Attributes { get; private set; }
 
         private ProductSku()
         {
@@ -27,6 +33,7 @@ namespace Wallee.Mall.Products
             ProductId = productId;
             SetSkuCode(skuCode);
             SetOriginalPrice(originalPrice);
+            SetDiscountRate(1m);
         }
 
         public void SetSkuCode(string skuCode)
@@ -41,17 +48,32 @@ namespace Wallee.Mall.Products
 
         public void SetOriginalPrice(decimal price)
         {
-            OriginalPrice = ValidatePrice(price);
+            OriginalPrice = RoundMoney(ValidatePrice(price));
         }
 
-        public void SetDiscountPrice(decimal? price)
+        public void SetDiscountRate(decimal discountRate)
         {
-            DiscountPrice = price.HasValue ? ValidatePrice(price.Value) : null;
+            if (discountRate <= 0)
+            {
+                throw new ArgumentException("Discount rate must be greater than 0", nameof(discountRate));
+            }
+
+            if (discountRate > 1)
+            {
+                throw new ArgumentException("Discount rate cannot be greater than 1", nameof(discountRate));
+            }
+
+            DiscountRate = discountRate;
+        }
+
+        public void ResetDiscount()
+        {
+            DiscountRate = 1m;
         }
 
         public void SetJdPrice(decimal? price)
         {
-            JdPrice = price.HasValue ? ValidatePrice(price.Value) : null;
+            JdPrice = price.HasValue ? RoundMoney(ValidatePrice(price.Value)) : null;
         }
 
         public void SetCurrency(string currency)
@@ -80,18 +102,19 @@ namespace Wallee.Mall.Products
             StockQuantity = newValue;
         }
 
-        public void SetAttributes(Dictionary<string, string> attributes)
+        public void SetAttributes(Dictionary<string, string>? attributes)
         {
             Attributes = attributes == null
                 ? new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
                 : new Dictionary<string, string>(attributes, StringComparer.OrdinalIgnoreCase);
         }
 
-        public decimal GetEffectivePrice()
+        public decimal GetSellingPrice()
         {
-            // 优先 SKU 价，再回落商品价
-            return DiscountPrice ?? OriginalPrice;
+            return RoundMoney(OriginalPrice * DiscountRate);
         }
+
+        private static decimal RoundMoney(decimal value) => Math.Round(value, 2, MidpointRounding.AwayFromZero);
 
         private static decimal ValidatePrice(decimal price)
         {

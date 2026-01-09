@@ -4,7 +4,7 @@ using Volo.Abp.Data;
 
 namespace Wallee.Mall.AuditLogs.Dtos
 {
-    public class AuditLogActionDto : EntityDto<Guid>, IHasExtraProperties
+    public class AuditLogActionDto : EntityDto<Guid>
     {
         public Guid? TenantId { get; set; }
 
@@ -20,6 +20,6 @@ namespace Wallee.Mall.AuditLogs.Dtos
 
         public int ExecutionDuration { get; set; }
 
-        public ExtraPropertyDictionary ExtraProperties { get; set; } = default!;
+        public ExtraPropertyDictionary? ExtraProperties { get; set; }
     }
 }

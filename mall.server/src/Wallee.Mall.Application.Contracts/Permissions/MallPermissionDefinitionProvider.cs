@@ -14,8 +14,18 @@ public class MallPermissionDefinitionProvider : PermissionDefinitionProvider
         backgroundJobPermission.AddChild(MallPermissions.BackgroundJob.Update, L("Permission:Update"));
         backgroundJobPermission.AddChild(MallPermissions.BackgroundJob.Delete, L("Permission:Delete"));
 
-        var auditLogPermissions = myGroup.AddPermission(MallPermissions.AuditLogs.Default, L("Permission:AuditLog"));
-        auditLogPermissions.AddChild(MallPermissions.AuditLogs.Delete, L("Permission:Delete"));
+        var auditLogPermissions = myGroup.AddPermission(MallPermissions.AuditLog.Default, L("Permission:AuditLog"));
+        auditLogPermissions.AddChild(MallPermissions.AuditLog.Delete, L("Permission:Delete"));
+
+        var tagPermission = myGroup.AddPermission(MallPermissions.Tag.Default, L("Permission:Tag"));
+        tagPermission.AddChild(MallPermissions.Tag.Create, L("Permission:Create"));
+        tagPermission.AddChild(MallPermissions.Tag.Update, L("Permission:Update"));
+        tagPermission.AddChild(MallPermissions.Tag.Delete, L("Permission:Delete"));
+
+        var productPermission = myGroup.AddPermission(MallPermissions.Product.Default, L("Permission:Product"));
+        productPermission.AddChild(MallPermissions.Product.Create, L("Permission:Create"));
+        productPermission.AddChild(MallPermissions.Product.Update, L("Permission:Update"));
+        productPermission.AddChild(MallPermissions.Product.Delete, L("Permission:Delete"));
     }
 
     private static LocalizableString L(string name)

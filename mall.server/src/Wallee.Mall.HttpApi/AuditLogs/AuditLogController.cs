@@ -7,16 +7,11 @@ using Wallee.Mall.AuditLogs.Dtos;
 
 namespace Wallee.Mall.AuditLogs
 {
-    [Route("api/admin/audit-log")]
+    [Route("api/mall/audit-logs")]
     [Authorize]
-    public class AuditLogController : MallController, IAuditLogAppService
+    public class AuditLogController(IAuditLogAppService service) : MallController, IAuditLogAppService
     {
-        private readonly IAuditLogAppService _service;
-
-        public AuditLogController(IAuditLogAppService service)
-        {
-            _service = service;
-        }
+        private readonly IAuditLogAppService _service = service;
 
         [HttpGet]
         [Route("{id}")]

@@ -10,15 +10,15 @@ namespace Wallee.Mall.BackgroundJobs.Dtos
 		/// <summary>
 		/// Application name that scheduled this job.
 		/// </summary>
-		public string ApplicationName { get; set; } = default!;
+		public string? ApplicationName { get; set; } = default!;
 		//
 		// 摘要:
 		//     Name of the job.
-		public string JobName { get; set; } = default!;
+		public string? JobName { get; set; } = default!;
 		//
 		// 摘要:
 		//     Job arguments as serialized to string.
-		public string JobArgs { get; set; } = default!;
+		public string? JobArgs { get; set; } = default!;
 		//
 		// 摘要:
 		//     Try count of this job. A job is re-tried if it fails.

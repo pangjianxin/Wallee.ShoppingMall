@@ -44,8 +44,8 @@ namespace Wallee.Mall.AuditLogs.Dtos
 
         public int? HttpStatusCode { get; set; }
 
-        public ICollection<EntityChangeDto>? EntityChanges { get; set; }
+        public ICollection<EntityChangeDto?>? EntityChanges { get; set; }
 
-        public ICollection<AuditLogActionDto>? Actions { get; set; }
+        public ICollection<AuditLogActionDto?>? Actions { get; set; }
     }
 }

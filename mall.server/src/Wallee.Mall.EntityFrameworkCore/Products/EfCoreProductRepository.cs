@@ -1,22 +1,18 @@
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
-using Wallee.Mall.Products;
+using Wallee.Mall.EntityFrameworkCore;
 
-namespace Wallee.Mall.EntityFrameworkCore.Products;
+namespace Wallee.Mall.Products;
 
-public class EfCoreProductRepository : EfCoreRepository<MallDbContext, Product, Guid>, IProductRepository
+public class EfCoreProductRepository(IDbContextProvider<MallDbContext> dbContextProvider)
+    : EfCoreRepository<MallDbContext, Product, Guid>(dbContextProvider), IProductRepository
 {
-    public EfCoreProductRepository(IDbContextProvider<MallDbContext> dbContextProvider)
-        : base(dbContextProvider)
-    {
-    }
-
     public async Task<List<Product>> SearchAsync(
         string? keyword,
         string? normalizedTag,
@@ -24,33 +20,25 @@ public class EfCoreProductRepository : EfCoreRepository<MallDbContext, Product, 
         string? attributeValue,
         CancellationToken cancellationToken = default)
     {
-        var dbSet = await GetDbSetAsync();
-
-        var query = dbSet
-            .Include(p => p.Skus)
-            .Include(p => p.ProductTags)!.ThenInclude(pt => pt.Tag)
-            .AsQueryable();
+        var predicate = PredicateBuilder.New<Product>(it => it.IsActive == true);
 
         if (!string.IsNullOrWhiteSpace(keyword))
         {
-            var like = $"%{keyword.Trim()}%";
-            query = query.Where(p => EF.Functions.ILike(p.Name, like) || (p.Brand != null && EF.Functions.ILike(p.Brand, like)));
+            var trimmed = keyword.Trim();
+            predicate = predicate?.And(p => p.Name.Contains(trimmed) || (p.Brand != null && p.Brand.Contains(trimmed)));
         }
 
         if (!string.IsNullOrWhiteSpace(normalizedTag))
         {
             var tag = normalizedTag.Trim().ToLowerInvariant();
-            query = query.Where(p => p.ProductTags.Any(pt => pt.Tag.NormalizedName == tag));
+            predicate = predicate?.And(p => p.ProductTags.Any(pt => pt.NormalizedTagName == tag));
         }
 
-        if (!string.IsNullOrWhiteSpace(attributeKey) && !string.IsNullOrWhiteSpace(attributeValue))
-        {
-            // ÓÃ jsonb contains ¹ýÂË SKU ÊôÐÔ
-            query = query.Where(p => p.Skus.Any(sku => EF.Functions.JsonContains(
-                sku.Attributes,
-                new Dictionary<string, string> { { attributeKey.Trim(), attributeValue.Trim() } })));
-        }
+        return await GetListAsync(predicate!, includeDetails: true, cancellationToken: cancellationToken);
+    }
 
-        return await query.ToListAsync(cancellationToken);
+    public override async Task<IQueryable<Product>> WithDetailsAsync()
+    {
+        return (await GetQueryableAsync()).IncludeDetails();
     }
 }

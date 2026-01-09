@@ -7,15 +7,11 @@ using Wallee.Mall.Medias.Dtos;
 
 namespace Wallee.Mall.Medias
 {
-    [Route("api/hr-tools/media")]
-    public class MallMediaController : MallController, IMallMediaAppService
+    [Route("api/mall/medias")]
+    public class MallMediaController(IMallMediaAppService service) : MallController, IMallMediaAppService
     {
-        private readonly IMallMediaAppService _service;
+        private readonly IMallMediaAppService _service = service;
 
-        public MallMediaController(IMallMediaAppService service)
-        {
-            _service = service;
-        }
         [HttpPost]
         [Route("")]
         public async Task<MallMediaDto> CreateAsync(CreateMallMediaDto input)
@@ -50,6 +46,13 @@ namespace Wallee.Mall.Medias
         {
             return await _service.GetListAsync(input);
 
+        }
+
+        [HttpGet]
+        [Route("preview/{id}")]
+        public async Task<RemoteStreamContent> PreviewAsync(Guid id)
+        {
+            return await _service.PreviewAsync(id);
         }
     }
 }

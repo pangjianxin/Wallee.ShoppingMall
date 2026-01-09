@@ -1,0 +1,77 @@
+"use client";
+import { signOut, useSession } from "next-auth/react";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
+import { ChevronDown } from "lucide-react";
+import { FC } from "react";
+import { cn } from "@/lib/utils";
+
+type Props = {
+  className?: string;
+  size: "sm" | "lg" | "icon" | "icon-sm" | "icon-lg";
+};
+const UserMenu: FC<Props> = ({ className, size = "sm" }) => {
+  const session = useSession();
+  const router = useRouter();
+  const handleSignin = () => {
+    router.push(`/account/login`);
+  };
+  //redirectTo: "/"
+  const handleSignOut = async () => {
+    await signOut({ redirect: false });
+  };
+
+  if (session.status === "authenticated") {
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size={size} className={cn(className)}>
+            <span className="inline">
+              {session.data?.user?.name?.substring(0, 10)}
+            </span>
+            <ChevronDown className="ml-1 h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-[150px]">
+          <DropdownMenuLabel> {session.data?.user?.email}</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuGroup>
+            <DropdownMenuItem
+              onClick={() => {
+                router.push(`/identity/profile`);
+              }}
+            >
+              账户设置
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={handleSignOut}>
+              退出登录
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+  }
+
+  return (
+    <Button
+      onClick={handleSignin}
+      variant={"default"}
+      className={cn("", className)}
+      size={size}
+    >
+      <span className="hidden sm:inline">账户登录</span>
+      <span className="sm:hidden">登录</span>
+    </Button>
+  );
+};
+
+export default UserMenu;

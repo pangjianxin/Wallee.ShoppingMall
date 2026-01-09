@@ -9,44 +9,52 @@ using Wallee.Mall.Medias.Dtos;
 
 namespace Wallee.Mall.Medias
 {
-	public class MallMediaAppService(
-		IMallMediaRepository repository,
-		IBlobContainer<MediaContainer> mediaContainer,
-		IMallMediaRepository mediaRepository)
-		: ReadOnlyAppService<MallMedia, MallMediaDto, Guid, MallMediaGetListInput>(repository), IMallMediaAppService
-	{
+    public class MallMediaAppService(
+        IMallMediaRepository repository,
+        IBlobContainer<MediaContainer> mediaContainer,
+        IBlobContainer<MediaThumbnailContainer> mediaThumbnailContainer,
+        IMallMediaRepository mediaRepository)
+        : ReadOnlyAppService<MallMedia, MallMediaDto, Guid, MallMediaGetListInput>(repository), IMallMediaAppService
+    {
 
-		protected IBlobContainer<MediaContainer> MediaContainer { get; } = mediaContainer;
+        public virtual async Task<MallMediaDto> CreateAsync(CreateMallMediaDto input)
+        {
+            var entity = new MallMedia(GuidGenerator.Create(), input.FileName, input.File.ContentType, input.File.ContentLength ?? 0);
 
-		public virtual async Task<MallMediaDto> CreateAsync(CreateMallMediaDto input)
-		{
-			var entity = new MallMedia(GuidGenerator.Create(), input.FileName, input.File.ContentType, input.File.ContentLength ?? 0);
+            await mediaContainer.SaveAsync(entity.Id.ToString(), input.File.GetStream());
+            await repository.InsertAsync(entity);
 
-			await MediaContainer.SaveAsync(entity.Id.ToString(), input.File.GetStream());
-			await repository.InsertAsync(entity);
+            return ObjectMapper.Map<MallMedia, MallMediaDto>(entity);
+        }
 
-			return ObjectMapper.Map<MallMedia, MallMediaDto>(entity);
-		}
+        public virtual async Task<RemoteStreamContent> DownloadAsync(Guid id)
+        {
+            var entity = await mediaRepository.GetAsync(id);
+            var stream = await mediaContainer.GetAsync(id.ToString());
 
-		public virtual async Task<RemoteStreamContent> DownloadAsync(Guid id)
-		{
-			var entity = await mediaRepository.GetAsync(id);
-			var stream = await MediaContainer.GetAsync(id.ToString());
+            return new RemoteStreamContent(stream, entity.Name, entity.MimeType);
+        }
 
-			return new RemoteStreamContent(stream, entity.Name, entity.MimeType);
-		}
+        public virtual async Task<RemoteStreamContent> PreviewAsync(Guid id)
+        {
+            var entity = await mediaRepository.GetAsync(id);
+            var stream = await mediaThumbnailContainer.GetAsync(id.ToString());
 
-		public virtual async Task DeleteAsync(Guid id)
-		{
-			var mediaDescriptor = await repository.GetAsync(id);
+            return new RemoteStreamContent(stream, entity.Name, entity.MimeType);
+        }
 
-			await MediaContainer.DeleteAsync(id.ToString());
-			await repository.DeleteAsync(id);
-		}
+        public virtual async Task DeleteAsync(Guid id)
+        {
+            var mediaDescriptor = await repository.GetAsync(id);
 
-		protected override async Task<IQueryable<MallMedia>> CreateFilteredQueryAsync(MallMediaGetListInput input)
-		{
-			return (await base.CreateFilteredQueryAsync(input)).ApplyFilter(input);
-		}
-	}
+            await mediaContainer.DeleteAsync(id.ToString());
+            await mediaThumbnailContainer.DeleteAsync(id.ToString());
+            await repository.DeleteAsync(id);
+        }
+
+        protected override async Task<IQueryable<MallMedia>> CreateFilteredQueryAsync(MallMediaGetListInput input)
+        {
+            return (await base.CreateFilteredQueryAsync(input)).ApplyFilter(input);
+        }
+    }
 }

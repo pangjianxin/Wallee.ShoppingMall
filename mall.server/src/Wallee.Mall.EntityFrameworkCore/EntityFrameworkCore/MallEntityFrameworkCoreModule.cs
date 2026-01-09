@@ -1,6 +1,6 @@
+using Wallee.Mall.Tags;
 using System;
 using Microsoft.Extensions.DependencyInjection;
-using Volo.Abp.Uow;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
@@ -15,6 +15,8 @@ using Volo.Abp.BlobStoring.Database.EntityFrameworkCore;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
 using Volo.Abp.Studio;
 using Wallee.Mall.Medias;
+using Wallee.Mall.Products;
+using Wallee.Mall.Carousels;
 
 namespace Wallee.Mall.EntityFrameworkCore;
 
@@ -49,6 +51,9 @@ public class MallEntityFrameworkCoreModule : AbpModule
              * default repositories only for aggregate roots */
             options.AddDefaultRepositories(includeAllEntities: true);
             options.AddRepository<MallMedia, MallMediaRepository>();
+            options.AddRepository<Tag, TagRepository>();
+            options.AddRepository<Product, EfCoreProductRepository>();
+            options.AddRepository<Carousel, EfCoreCarouselRepository>();
         });
 
         if (AbpStudioAnalyzeHelper.IsInAnalyzeMode)

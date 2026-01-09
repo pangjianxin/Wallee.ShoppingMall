@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Volo.Abp.Imaging.ImageSharp" Version="10.0.1" />
     <PackageReference Include="Volo.Abp.PermissionManagement.Application" Version="10.0.1" />
     <PackageReference Include="Volo.Abp.FeatureManagement.Application" Version="10.0.1" />
     <PackageReference Include="Volo.Abp.SettingManagement.Application" Version="10.0.1" />
