@@ -39,6 +39,13 @@ import { useUpdateProduct } from "@/hooks/products/update";
 import { WalleeMallProductsDtosProductDto } from "@/openapi";
 import { Label } from "../ui/label";
 import Image from "next/image";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+  InputGroupText,
+} from "@/components/ui/input-group";
+import { getDiscountText } from "@/lib/utils";
 
 type Props = {
   entity: WalleeMallProductsDtosProductDto;
@@ -48,15 +55,6 @@ const Update: FC<Props> = ({ entity }) => {
   const [open, setOpen] = useState(true);
   const { form, submit } = useUpdateProduct({ entity });
   const router = useRouter();
-
-  // 将折扣率转换为易读文本
-  const getDiscountText = (value: number | undefined) => {
-    if (!value) return "未设置";
-    if (value === 1) return "不打折";
-    const discount = value * 10;
-    return `${discount}折`;
-  };
-
   const handleSubmit = form.handleSubmit(async (data) => {
     await executeOperation(
       async () => {
@@ -86,7 +84,7 @@ const Update: FC<Props> = ({ entity }) => {
       <Form {...form}>
         <form onSubmit={handleSubmit} id="update-product-form">
           <DialogContent
-            className="sm:max-w-lg sm:max-h-[90vh] overflow-y-auto"
+            className="sm:max-w-lg sm:max-h-[80vh] overflow-y-auto"
             onInteractOutside={(e) => e.preventDefault()}
           >
             <DialogHeader>
@@ -155,14 +153,21 @@ const Update: FC<Props> = ({ entity }) => {
                   <FormItem>
                     <FormLabel>商品原价</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        value={field.value}
-                        onChange={(e) => {
-                          field.onChange(Number(e.target.value));
-                        }}
-                        readOnly={false}
-                      />
+                      <InputGroup>
+                        <InputGroupAddon>
+                          <InputGroupText>¥</InputGroupText>
+                        </InputGroupAddon>
+                        <InputGroupInput
+                          type="number"
+                          value={field.value}
+                          onChange={(e) => {
+                            field.onChange(Number(e.target.value));
+                          }}
+                        />
+                        <InputGroupAddon align="inline-end">
+                          <InputGroupText>CNY</InputGroupText>
+                        </InputGroupAddon>
+                      </InputGroup>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -176,18 +181,23 @@ const Update: FC<Props> = ({ entity }) => {
                   <FormItem>
                     <FormLabel>商品折扣率</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        value={field.value}
-                        onChange={(e) => {
-                          field.onChange(Number(e.target.value));
-                        }}
-                        readOnly={false}
-                      />
+                      <InputGroup>
+                        <InputGroupInput
+                          type="number"
+                          value={field.value}
+                          onChange={(e) => {
+                            field.onChange(Number(e.target.value));
+                          }}
+                        />
+                        <InputGroupAddon align="inline-end">
+                          <InputGroupText>
+                            {getDiscountText(field.value)}
+                          </InputGroupText>
+                        </InputGroupAddon>
+                      </InputGroup>
                     </FormControl>
                     <FormDescription>
-                      1表示不打折，0.9表示九折，0.8表示八折，以此类推。当前折扣率：
-                      {getDiscountText(field.value)}
+                      1表示不打折，0.9表示九折，0.8表示八折，以此类推。
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -201,15 +211,22 @@ const Update: FC<Props> = ({ entity }) => {
                   <FormItem>
                     <FormLabel>显示顺序</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        value={field.value}
-                        onChange={(e) => {
-                          field.onChange(Number(e.target.value));
-                        }}
-                        readOnly={false}
-                      />
+                      <InputGroup>
+                        <InputGroupInput
+                          type="number"
+                          value={field.value}
+                          onChange={(e) => {
+                            field.onChange(Number(e.target.value));
+                          }}
+                        />
+                        <InputGroupAddon align={"inline-end"}>
+                          <InputGroupText>序号</InputGroupText>
+                        </InputGroupAddon>
+                      </InputGroup>
                     </FormControl>
+                    <FormDescription>
+                      数值越小,商品显示越靠前,默认值为1。
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -247,7 +264,7 @@ const Update: FC<Props> = ({ entity }) => {
                 name="productCovers"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>已上传的商品封面</FormLabel>
+                    <FormLabel>旧商品封面</FormLabel>
                     <FormControl>
                       <div className="grid grid-cols-2 gap-4">
                         {field.value && field.value.length > 0 ? (
@@ -297,7 +314,7 @@ const Update: FC<Props> = ({ entity }) => {
                 name="newCovers"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>商品封面(最多十张)</FormLabel>
+                    <FormLabel>新商品封面(最多十张)</FormLabel>
                     <FormControl>
                       <FileUpload
                         value={field.value}
@@ -308,7 +325,7 @@ const Update: FC<Props> = ({ entity }) => {
                           <CloudUpload className="size-8" />
                           <FileUploadTrigger asChild>
                             <Button variant="link" size="sm" className="p-0">
-                              拖放文件或选择文件
+                              拖放文件或选择文件来上传新的商品封面
                             </Button>
                           </FileUploadTrigger>
                         </FileUploadDropzone>

@@ -35,19 +35,18 @@ import { CloudUpload, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+  InputGroupText,
+} from "@/components/ui/input-group";
+import { getDiscountText } from "@/lib/utils";
 
 const Create: FC = () => {
   const [open, setOpen] = useState(false);
   const { form, submit } = useCreateProduct();
   const router = useRouter();
-
-  // 将折扣率转换为易读文本
-  const getDiscountText = (value: number | undefined) => {
-    if (!value) return "未设置";
-    if (value === 1) return "不打折";
-    const discount = value * 10;
-    return `${discount}折`;
-  };
 
   const handleSubmit = form.handleSubmit(async (data) => {
     await executeOperation(
@@ -144,14 +143,21 @@ const Create: FC = () => {
                   <FormItem>
                     <FormLabel>商品原价</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        value={field.value}
-                        onChange={(e) => {
-                          field.onChange(Number(e.target.value));
-                        }}
-                        readOnly={false}
-                      />
+                      <InputGroup>
+                        <InputGroupAddon>
+                          <InputGroupText>¥</InputGroupText>
+                        </InputGroupAddon>
+                        <InputGroupInput
+                          type="number"
+                          value={field.value}
+                          onChange={(e) => {
+                            field.onChange(Number(e.target.value));
+                          }}
+                        />
+                        <InputGroupAddon align="inline-end">
+                          <InputGroupText>CNY</InputGroupText>
+                        </InputGroupAddon>
+                      </InputGroup>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -165,18 +171,23 @@ const Create: FC = () => {
                   <FormItem>
                     <FormLabel>商品折扣率</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        value={field.value}
-                        onChange={(e) => {
-                          field.onChange(Number(e.target.value));
-                        }}
-                        readOnly={false}
-                      />
+                      <InputGroup>
+                        <InputGroupInput
+                          type="number"
+                          value={field.value}
+                          onChange={(e) => {
+                            field.onChange(Number(e.target.value));
+                          }}
+                        />
+                        <InputGroupAddon align="inline-end">
+                          <InputGroupText>
+                            {getDiscountText(field.value)}
+                          </InputGroupText>
+                        </InputGroupAddon>
+                      </InputGroup>
                     </FormControl>
                     <FormDescription>
-                      1表示不打折，0.9表示九折，0.8表示八折，以此类推。当前折扣率：
-                      {getDiscountText(field.value)}
+                      1表示不打折，0.9表示九折，0.8表示八折，以此类推。
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -190,15 +201,22 @@ const Create: FC = () => {
                   <FormItem>
                     <FormLabel>显示顺序</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        value={field.value}
-                        onChange={(e) => {
-                          field.onChange(Number(e.target.value));
-                        }}
-                        readOnly={false}
-                      />
+                      <InputGroup>
+                        <InputGroupInput
+                          type="number"
+                          value={field.value}
+                          onChange={(e) => {
+                            field.onChange(Number(e.target.value));
+                          }}
+                        />
+                        <InputGroupAddon align={"inline-end"}>
+                          <InputGroupText>序号</InputGroupText>
+                        </InputGroupAddon>
+                      </InputGroup>
                     </FormControl>
+                    <FormDescription>
+                      数值越小,商品显示越靠前,默认值为1。
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}

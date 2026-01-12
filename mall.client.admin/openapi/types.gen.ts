@@ -1292,16 +1292,24 @@ export type WalleeMallProductsDtosProductDto = {
     productCovers?: Array<WalleeMallProductsDtosProductCoverDto> | null;
 };
 
+export type WalleeMallProductsDtosProductSkuAttributeDto = {
+    key?: string | null;
+    value?: string | null;
+};
+
 export type WalleeMallProductsDtosProductSkuDto = {
+    id?: string;
+    creationTime?: string;
+    creatorId?: string | null;
+    lastModificationTime?: string | null;
+    lastModifierId?: string | null;
     productId?: string;
     skuCode?: string | null;
     originalPrice?: number;
     jdPrice?: number | null;
     currency?: string | null;
     stockQuantity?: number;
-    attributes?: {
-        [key: string]: string;
-    } | null;
+    attributes?: Array<WalleeMallProductsDtosProductSkuAttributeDto> | null;
     discountRate?: number;
 };
 
@@ -1320,6 +1328,22 @@ export type WalleeMallProductsDtosUpdateProductDto = {
     discountRate?: number;
     sortOrder?: number;
     productCovers?: Array<string> | null;
+};
+
+export type WalleeMallProductsDtosUpdateProductSkuDto = {
+    id?: string;
+    skuCode?: string | null;
+    originalPrice?: number;
+    discountRate?: number;
+    jdPrice?: number | null;
+    currency?: string | null;
+    stockQuantity?: number;
+    attributes?: Array<WalleeMallProductsDtosProductSkuAttributeDto> | null;
+};
+
+export type WalleeMallProductsDtosUpsertProductSkusDto = {
+    items?: Array<WalleeMallProductsDtosUpdateProductSkuDto> | null;
+    validateSkuCodeUniqueness?: boolean;
 };
 
 export type WalleeMallTagsDtosCreateTagDto = {
@@ -3083,6 +3107,53 @@ export type MallMediaDownloadResponses = {
 
 export type MallMediaDownloadResponse = MallMediaDownloadResponses[keyof MallMediaDownloadResponses];
 
+export type MallMediaPreviewData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/mall/medias/preview/{id}';
+};
+
+export type MallMediaPreviewErrors = {
+    /**
+     * Bad Request
+     */
+    400: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Unauthorized
+     */
+    401: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Forbidden
+     */
+    403: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Not Found
+     */
+    404: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Internal Server Error
+     */
+    500: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Not Implemented
+     */
+    501: VoloAbpHttpRemoteServiceErrorResponse;
+};
+
+export type MallMediaPreviewError = MallMediaPreviewErrors[keyof MallMediaPreviewErrors];
+
+export type MallMediaPreviewResponses = {
+    /**
+     * OK
+     */
+    200: Blob | File;
+};
+
+export type MallMediaPreviewResponse = MallMediaPreviewResponses[keyof MallMediaPreviewResponses];
+
 export type PermissionsGetData = {
     body?: never;
     path?: never;
@@ -3474,6 +3545,146 @@ export type ProductUpdateResponses = {
 };
 
 export type ProductUpdateResponse = ProductUpdateResponses[keyof ProductUpdateResponses];
+
+export type ProductGetSkusData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/mall/products/{id}/skus';
+};
+
+export type ProductGetSkusErrors = {
+    /**
+     * Bad Request
+     */
+    400: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Unauthorized
+     */
+    401: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Forbidden
+     */
+    403: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Not Found
+     */
+    404: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Internal Server Error
+     */
+    500: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Not Implemented
+     */
+    501: VoloAbpHttpRemoteServiceErrorResponse;
+};
+
+export type ProductGetSkusError = ProductGetSkusErrors[keyof ProductGetSkusErrors];
+
+export type ProductGetSkusResponses = {
+    /**
+     * OK
+     */
+    200: Array<WalleeMallProductsDtosProductSkuDto>;
+};
+
+export type ProductGetSkusResponse = ProductGetSkusResponses[keyof ProductGetSkusResponses];
+
+export type ProductUpsertSkusData = {
+    body?: WalleeMallProductsDtosUpsertProductSkusDto;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/mall/products/{id}/skus';
+};
+
+export type ProductUpsertSkusErrors = {
+    /**
+     * Bad Request
+     */
+    400: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Unauthorized
+     */
+    401: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Forbidden
+     */
+    403: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Not Found
+     */
+    404: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Internal Server Error
+     */
+    500: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Not Implemented
+     */
+    501: VoloAbpHttpRemoteServiceErrorResponse;
+};
+
+export type ProductUpsertSkusError = ProductUpsertSkusErrors[keyof ProductUpsertSkusErrors];
+
+export type ProductUpsertSkusResponses = {
+    /**
+     * OK
+     */
+    200: WalleeMallProductsDtosProductDto;
+};
+
+export type ProductUpsertSkusResponse = ProductUpsertSkusResponses[keyof ProductUpsertSkusResponses];
+
+export type ProductDeleteSkuData = {
+    body?: never;
+    path: {
+        id: string;
+        skuId: string;
+    };
+    query?: never;
+    url: '/api/mall/products/{id}/skus/{skuId}';
+};
+
+export type ProductDeleteSkuErrors = {
+    /**
+     * Bad Request
+     */
+    400: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Unauthorized
+     */
+    401: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Forbidden
+     */
+    403: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Not Found
+     */
+    404: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Internal Server Error
+     */
+    500: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Not Implemented
+     */
+    501: VoloAbpHttpRemoteServiceErrorResponse;
+};
+
+export type ProductDeleteSkuError = ProductDeleteSkuErrors[keyof ProductDeleteSkuErrors];
+
+export type ProductDeleteSkuResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
 
 export type ProfileGetData = {
     body?: never;

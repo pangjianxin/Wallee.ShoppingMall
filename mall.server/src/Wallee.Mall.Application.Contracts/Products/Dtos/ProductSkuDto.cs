@@ -1,20 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using Volo.Abp.Application.Dtos;
 
 namespace Wallee.Mall.Products.Dtos
 {
-    public class ProductSkuDto
+    public class ProductSkuDto : AuditedEntityDto<Guid>
     {
-        public Guid ProductId { get;  set; }
-        public string SkuCode { get;  set; } = default!;
-        public decimal OriginalPrice { get;  set; }
+        public Guid ProductId { get; set; }
+        public string SkuCode { get; set; } = default!;
+        public decimal OriginalPrice { get; set; }
         /// <summary>
         /// 京东参考价（仅用于展示/比价，不参与系统销售价计算）。
         /// </summary>
-        public decimal? JdPrice { get;  set; }
-        public string Currency { get;  set; } = "CNY";
-        public int StockQuantity { get;  set; }
-        public Dictionary<string, string>? Attributes { get;  set; } = new(StringComparer.OrdinalIgnoreCase);
+        public decimal? JdPrice { get; set; }
+        public string Currency { get; set; } = "CNY";
+        public int StockQuantity { get; set; }
+        public List<ProductSkuAttributeDto> Attributes { get; set; } = [];
         /// <summary>
         /// SKU 折扣率：1 = 不打折，0.7 = 7 折。
         /// </summary>

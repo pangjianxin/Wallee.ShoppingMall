@@ -4,18 +4,18 @@ import { DataTableColumnHeader } from "@/components/data-table/data-table-column
 import { WalleeMallProductsDtosProductDto } from "@/openapi";
 import { Badge } from "@/components/ui/badge";
 import { PermissionButton } from "@/components/auth/permission-button";
+import { Text } from "lucide-react";
 
 export const createColumns = ({
   onUpdate,
-  onDelete,
+  onUpdateSkus,
 }: {
   onUpdate: (product: WalleeMallProductsDtosProductDto) => void;
-  onDelete: (product: WalleeMallProductsDtosProductDto) => void;
+  onUpdateSkus: (product: WalleeMallProductsDtosProductDto) => void;
 }): ColumnDef<WalleeMallProductsDtosProductDto>[] => {
   return [
     {
       accessorKey: "name",
-      meta: { label: "产品名称" },
       header: ({ column }) => (
         <DataTableColumnHeader column={column} label="产品名称" />
       ),
@@ -28,6 +28,8 @@ export const createColumns = ({
           </div>
         );
       },
+      meta: { label: "产品名称", placeholder: "搜索产品名称", icon: Text },
+      enableColumnFilter: true,
     },
     {
       accessorKey: "brand",
@@ -86,10 +88,7 @@ export const createColumns = ({
         <DataTableColumnHeader column={column} label="折扣(1表示不打折)" />
       ),
       cell: ({ row }) => {
-        const price = row.getValue("discountRate") as
-          | number
-          | null
-          | undefined;
+        const price = row.getValue("discountRate") as number | null | undefined;
         const currency = row.original.currency || "¥";
         return (
           <div className="flex space-x-2">
@@ -164,16 +163,17 @@ export const createColumns = ({
             >
               编辑
             </PermissionButton>
+            <PermissionButton
+              size={"sm"}
+              variant="outline"
+              onClick={() => onUpdateSkus?.(row.original)}
+              permission="Mall.Product.Update"
+            >
+              管理SKU
+            </PermissionButton>
           </div>
         </>
       ),
-    },
-    {
-      id: "filter",
-      enableColumnFilter: true,
-      meta: {
-        label: "全局搜索",
-      },
     },
   ];
 };

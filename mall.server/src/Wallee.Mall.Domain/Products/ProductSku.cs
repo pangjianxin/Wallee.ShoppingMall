@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Volo.Abp.Domain.Entities.Auditing;
+using Wallee.Mall.Utils;
 
 namespace Wallee.Mall.Products
 {
@@ -21,19 +22,32 @@ namespace Wallee.Mall.Products
 
         public string Currency { get; private set; } = "CNY";
         public int StockQuantity { get; private set; }
-        public Dictionary<string, string>? Attributes { get; private set; }
+        public ICollection<ProductSkuAttribute> Attributes { get; private set; } = [];
 
         private ProductSku()
         {
         }
 
-        public ProductSku(Guid id, Guid productId, string skuCode, decimal originalPrice)
+        public ProductSku(
+            Guid id,
+            Guid productId,
+            string skuCode,
+            decimal originalPrice,
+            decimal discountRate,
+            decimal? jdPrice,
+            string currency,
+            int StockQuantity,
+            IEnumerable<ProductSkuAttribute> attributes)
         {
             Id = id;
             ProductId = productId;
             SetSkuCode(skuCode);
             SetOriginalPrice(originalPrice);
-            SetDiscountRate(1m);
+            SetDiscountRate(discountRate);
+            SetJdPrice(jdPrice);
+            SetCurrency(currency);
+            SetStock(StockQuantity);
+            SetAttributes([.. attributes]);
         }
 
         public void SetSkuCode(string skuCode)
@@ -48,7 +62,7 @@ namespace Wallee.Mall.Products
 
         public void SetOriginalPrice(decimal price)
         {
-            OriginalPrice = RoundMoney(ValidatePrice(price));
+            OriginalPrice = price.ValidatePrice().RoundMoney();
         }
 
         public void SetDiscountRate(decimal discountRate)
@@ -73,7 +87,7 @@ namespace Wallee.Mall.Products
 
         public void SetJdPrice(decimal? price)
         {
-            JdPrice = price.HasValue ? RoundMoney(ValidatePrice(price.Value)) : null;
+            JdPrice = price.HasValue ? price.Value.ValidatePrice().RoundMoney() : null;
         }
 
         public void SetCurrency(string currency)
@@ -102,28 +116,14 @@ namespace Wallee.Mall.Products
             StockQuantity = newValue;
         }
 
-        public void SetAttributes(Dictionary<string, string>? attributes)
+        public void SetAttributes(List<ProductSkuAttribute>? attributes)
         {
-            Attributes = attributes == null
-                ? new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
-                : new Dictionary<string, string>(attributes, StringComparer.OrdinalIgnoreCase);
+            Attributes = attributes ?? [];
         }
 
         public decimal GetSellingPrice()
         {
-            return RoundMoney(OriginalPrice * DiscountRate);
-        }
-
-        private static decimal RoundMoney(decimal value) => Math.Round(value, 2, MidpointRounding.AwayFromZero);
-
-        private static decimal ValidatePrice(decimal price)
-        {
-            if (price < 0)
-            {
-                throw new ArgumentException("Price cannot be negative", nameof(price));
-            }
-
-            return price;
+            return (OriginalPrice * DiscountRate).RoundMoney();
         }
     }
 }

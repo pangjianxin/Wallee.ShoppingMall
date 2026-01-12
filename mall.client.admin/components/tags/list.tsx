@@ -1,41 +1,34 @@
 "use client";
 import {
-  VoloAbpApplicationDtosPagedResultDtoOfProductDto,
-  WalleeMallProductsDtosProductDto,
+  VoloAbpApplicationDtosPagedResultDtoOfTagDto,
+  WalleeMallTagsDtosTagDto,
 } from "@/openapi";
 import { FC, use, useMemo, useCallback } from "react";
 import { Card } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
-import { createColumns } from "@/components/products/columns";
+import { createColumns } from "@/components/tags/columns";
 import { DataTable } from "@/components/data-table/data-table";
 import { useDataTable } from "@/hooks/use-data-table";
 import { parseVoloAbpError } from "@/lib/remote-error-parser";
 import { DataTableFilterMenu } from "@/components/data-table/data-table-filter-menu";
 import { DataTableAdvancedToolbar } from "@/components/data-table/data-table-advanced-toolbar";
-import CreateProduct from "@/components/products/create";
+import CreateTag from "@/components/tags/create";
 
 type Props = {
   promise: Promise<{
-    data?: VoloAbpApplicationDtosPagedResultDtoOfProductDto;
+    data?: VoloAbpApplicationDtosPagedResultDtoOfTagDto;
     error?: unknown;
     pageCount: number;
   }>;
 };
 
-const ProductTable: FC<Props> = ({ promise }) => {
+const TagTable: FC<Props> = ({ promise }) => {
   const router = useRouter();
   const { data, error, pageCount } = use(promise);
 
   const handleUpdate = useCallback(
-    (v: WalleeMallProductsDtosProductDto) => {
-      router.push(`/products/${v.id}/update`);
-    },
-    [router]
-  );
-
-  const handleUpdateSkus = useCallback(
-    (v: WalleeMallProductsDtosProductDto) => {
-      router.push(`/products/${v.id}/update-skus`);
+    (v: WalleeMallTagsDtosTagDto) => {
+      router.push(`/tags/${v.id}/update`);
     },
     [router]
   );
@@ -43,12 +36,11 @@ const ProductTable: FC<Props> = ({ promise }) => {
   const columns = useMemo(() => {
     return createColumns({
       onUpdate: handleUpdate,
-      onUpdateSkus: handleUpdateSkus,
     });
-  }, [handleUpdate, handleUpdateSkus]);
+  }, [handleUpdate]);
 
   const { table, shallow, debounceMs, throttleMs } =
-    useDataTable<WalleeMallProductsDtosProductDto>({
+    useDataTable<WalleeMallTagsDtosTagDto>({
       data: data?.items || [],
       pageCount: pageCount,
       columns: columns,
@@ -78,7 +70,7 @@ const ProductTable: FC<Props> = ({ promise }) => {
               throttleMs={throttleMs}
             />
             <div className="flex-1"></div>
-            <CreateProduct />
+            <CreateTag />
           </DataTableAdvancedToolbar>
         </DataTable>
       </Card>
@@ -86,4 +78,4 @@ const ProductTable: FC<Props> = ({ promise }) => {
   );
 };
 
-export default ProductTable;
+export default TagTable;

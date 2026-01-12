@@ -126,10 +126,14 @@ public class MallDbContext(DbContextOptions<MallDbContext> options) :
             b.Property(s => s.DiscountRate).HasColumnType("decimal(18,4)").HasDefaultValue(1m);
             b.Property(s => s.JdPrice).HasColumnType("decimal(18,2)");
             b.Property(s => s.Currency).IsRequired().HasMaxLength(8);
-            b.Property(s => s.Attributes).HasColumnType("jsonb");
-
             b.HasIndex(s => new { s.ProductId, s.SkuCode }).IsUnique();
-            b.HasIndex(s => s.Attributes).HasMethod("gin");
+            b.OwnsMany(s => s.Attributes, a =>
+            {
+                a.ToJson();
+                a.Property(x => x.Key).HasMaxLength(128);
+                a.Property(x => x.Value).HasMaxLength(1024);
+            });
+            //b.HasIndex(s => s.Attributes).HasMethod("gin");
         });
 
         builder.Entity<Tag>(b =>

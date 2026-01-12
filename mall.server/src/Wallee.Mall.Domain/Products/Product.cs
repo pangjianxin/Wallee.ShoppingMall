@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
+using Wallee.Mall.Utils;
 
 namespace Wallee.Mall.Products
 {
     public class Product : FullAuditedAggregateRoot<Guid>
     {
-        private const int CurrencyDecimals = 2;
-
         public string Name { get; private set; } = default!;
         public string? Brand { get; private set; }
         public string? ShortDescription { get; private set; }
@@ -150,83 +149,85 @@ namespace Wallee.Mall.Products
 
         public decimal GetSellingPrice()
         {
-            return Math.Round(OriginalPrice * DiscountRate, CurrencyDecimals, MidpointRounding.AwayFromZero);
+            return (OriginalPrice * DiscountRate).RoundMoney();
         }
 
-        public ProductSku AddSku(Guid skuId, string skuCode, decimal originalPrice, decimal discountRate = 1m,
-            decimal? jdPrice = null, string? currency = null, int stockQuantity = 0, Dictionary<string, string>? attributes = null)
+        public void UpsertSkus(List<ProductSkuInput> inputs)
         {
-            Skus ??= new List<ProductSku>();
+            Skus ??= [];
+            inputs ??= [];
 
-            skuCode = (skuCode ?? string.Empty).Trim();
-            if (string.IsNullOrWhiteSpace(skuCode))
+            // 校验：SkuCode 不能为空
+            if (inputs.Any(x => string.IsNullOrWhiteSpace(x?.SkuCode)))
             {
-                throw new ArgumentException("Sku code cannot be empty", nameof(skuCode));
+                throw new ArgumentException("Sku code cannot be empty", nameof(inputs));
             }
 
-            if (Skus.Any(s => string.Equals(s.SkuCode, skuCode, StringComparison.OrdinalIgnoreCase)))
+            // 校验：Id 不能为空
+            if (inputs.Any(x => x.Id == Guid.Empty))
             {
-                throw new BusinessException("Mall:SkuCodeAlreadyExists").WithData("SkuCode", skuCode);
+                throw new ArgumentException("Sku id cannot be empty for upsert.", nameof(inputs));
             }
 
-            var sku = new ProductSku(skuId, Id, skuCode, originalPrice);
-            sku.SetDiscountRate(discountRate);
-            sku.SetJdPrice(jdPrice);
-            sku.SetCurrency(currency ?? Currency);
-            sku.SetStock(stockQuantity);
-            sku.SetAttributes(attributes);
+            // 校验：本次提交内 SkuCode 不重复（忽略大小写）
+            var duplicatedCode = inputs
+                .Select(x => x.SkuCode.Trim())
+                .GroupBy(x => x, StringComparer.OrdinalIgnoreCase)
+                .Where(g => g.Count() > 1)
+                .Select(g => g.Key)
+                .FirstOrDefault();
 
-            Skus.Add(sku);
-            return sku;
-        }
-
-        public ProductSku UpdateSku(Guid skuId, string skuCode, decimal originalPrice, decimal discountRate,
-            decimal? jdPrice, string? currency, int stockQuantity, Dictionary<string, string>? attributes)
-        {
-            var sku = FindSku(skuId);
-
-            skuCode = (skuCode ?? string.Empty).Trim();
-            if (string.IsNullOrWhiteSpace(skuCode))
+            if (duplicatedCode != null)
             {
-                throw new ArgumentException("Sku code cannot be empty", nameof(skuCode));
+                throw new BusinessException("Mall:SkuCodeAlreadyExists").WithData("SkuCode", duplicatedCode);
             }
 
-            if (Skus!.Any(s => s.Id != skuId && string.Equals(s.SkuCode, skuCode, StringComparison.OrdinalIgnoreCase)))
+            var inputById = inputs.ToDictionary(x => x.Id);
+
+            var existingIds = Skus.Select(x => x.Id).ToHashSet();
+            var inputIds = inputById.Keys.ToHashSet();
+
+            var toRemove = existingIds.Except(inputIds).ToList();
+            var toUpdate = existingIds.Intersect(inputIds).ToList();
+            var toAdd = inputIds.Except(existingIds).ToList();
+
+            foreach (var id in toRemove)
             {
-                throw new BusinessException("Mall:SkuCodeAlreadyExists").WithData("SkuCode", skuCode);
+                var existing = Skus.First(x => x.Id == id);
+                Skus.Remove(existing);
             }
 
-            sku.SetSkuCode(skuCode);
-            sku.SetOriginalPrice(originalPrice);
-            sku.SetDiscountRate(discountRate);
-            sku.SetJdPrice(jdPrice);
-            sku.SetCurrency(currency ?? sku.Currency);
-            sku.SetStock(stockQuantity);
-            sku.SetAttributes(attributes);
-
-            return sku;
-        }
-
-        public void RemoveSku(Guid skuId)
-        {
-            var sku = FindSku(skuId);
-            Skus!.Remove(sku);
-        }
-
-        public ProductSku FindSku(Guid skuId)
-        {
-            if (Skus == null)
+            foreach (var id in toUpdate)
             {
-                throw new BusinessException("Mall:SkuNotFound").WithData("SkuId", skuId);
+                var existing = Skus.First(x => x.Id == id);
+                var input = inputById[id];
+
+                existing.SetSkuCode(input.SkuCode);
+                existing.SetOriginalPrice(input.OriginalPrice);
+                existing.SetDiscountRate(input.DiscountRate);
+                existing.SetJdPrice(input.JdPrice);
+                existing.SetCurrency(input.Currency);
+                existing.SetStock(input.StockQuantity);
+                existing.SetAttributes(input.Attributes);
             }
 
-            var sku = Skus.FirstOrDefault(s => s.Id == skuId);
-            if (sku == null)
+            foreach (var id in toAdd)
             {
-                throw new BusinessException("Mall:SkuNotFound").WithData("SkuId", skuId);
-            }
+                var input = inputById[id];
 
-            return sku;
+                var sku = new ProductSku(
+                    input.Id,
+                    Id,
+                    input.SkuCode,
+                    input.OriginalPrice,
+                    input.DiscountRate,
+                    input.JdPrice,
+                    string.IsNullOrWhiteSpace(input.Currency) ? Currency : input.Currency,
+                    input.StockQuantity,
+                    input.Attributes);
+
+                Skus.Add(sku);
+            }
         }
     }
 }

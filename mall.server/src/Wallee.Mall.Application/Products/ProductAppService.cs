@@ -61,93 +61,62 @@ namespace Wallee.Mall.Products
             }
         }
 
-        public async Task<List<ProductSkuDto>> GetSkusAsync(Guid productId)
+        public async Task<List<ProductSkuDto>> GetSkusAsync(Guid id)
         {
-            var product = await LoadProductWithSkusAsync(productId);
+            var product = await Repository.GetAsync(id);
             var skus = product.Skus?.OrderBy(s => s.SkuCode).ToList() ?? [];
-            return skus.Select(ObjectMapper.Map<ProductSku, ProductSkuDto>).ToList();
+            return [.. skus.Select(ObjectMapper.Map<ProductSku, ProductSkuDto>)];
         }
 
-        public async Task<List<ProductSkuDto>> UpsertSkusAsync(Guid productId, UpsertProductSkusDto input)
+        public async Task<ProductDto> UpsertSkusAsync(Guid id, UpsertProductSkusDto input)
         {
-            var product = await LoadProductWithSkusAsync(productId);
+            var product = await Repository.GetAsync(id);
 
-            if (input.ValidateSkuCodeUniqueness)
+            var codes = (input.Items ?? [])
+                .Select(x => x.SkuCode)
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .Select(x => x.Trim())
+                .ToList();
+
+            var duplicated = codes
+                .GroupBy(x => x, StringComparer.OrdinalIgnoreCase)
+                .Where(g => g.Count() > 1)
+                .Select(g => g.Key)
+                .FirstOrDefault();
+
+            if (duplicated != null)
             {
-                var codes = input.Items
-                    .Select(x => x.SkuCode)
-                    .Where(x => !string.IsNullOrWhiteSpace(x))
-                    .Select(x => x.Trim())
-                    .ToList();
-
-                var duplicated = codes
-                    .GroupBy(x => x, StringComparer.OrdinalIgnoreCase)
-                    .Where(g => g.Count() > 1)
-                    .Select(g => g.Key)
-                    .FirstOrDefault();
-
-                if (duplicated != null)
-                {
-                    throw new UserFriendlyException($"SkuCode 重复：{duplicated}");
-                }
+                throw new UserFriendlyException($"SkuCode 重复：{duplicated}");
             }
 
-            foreach (var item in input.Items)
+            var items = input.Items ?? [];
+
+            var skuInputs = items.Select(item =>
             {
-                if (item.Id == Guid.Empty)
+                var skuId = item.Id ?? GuidGenerator.Create();
+
+                var attributes = item.Attributes != null
+                    ? item.Attributes.Select(static it => new ProductSkuAttribute(it.Key, it.Value)).ToList()
+                    : [];
+
+                return new ProductSkuInput
                 {
-                    product.AddSku(
-                        GuidGenerator.Create(),
-                        item.SkuCode,
-                        item.OriginalPrice,
-                        item.DiscountRate,
-                        item.JdPrice,
-                        item.Currency,
-                        item.StockQuantity,
-                        item.Attributes);
-                }
-                else
-                {
-                    product.UpdateSku(
-                        item.Id,
-                        item.SkuCode,
-                        item.OriginalPrice,
-                        item.DiscountRate,
-                        item.JdPrice,
-                        item.Currency,
-                        item.StockQuantity,
-                        item.Attributes);
-                }
-            }
+                    Id = skuId,
+                    SkuCode = item.SkuCode,
+                    OriginalPrice = item.OriginalPrice,
+                    DiscountRate = item.DiscountRate,
+                    JdPrice = item.JdPrice,
+                    Currency = item.Currency,
+                    StockQuantity = item.StockQuantity,
+                    Attributes = attributes
+                };
+            }).ToList();
+
+            product.UpsertSkus(skuInputs);
 
             await Repository.UpdateAsync(product, autoSave: true);
 
-            var resultSkus = product.Skus?.OrderBy(s => s.SkuCode).ToList() ?? [];
-            return resultSkus.Select(ObjectMapper.Map<ProductSku, ProductSkuDto>).ToList();
-        }
-
-        public async Task DeleteSkuAsync(Guid productId, Guid skuId)
-        {
-            var product = await LoadProductWithSkusAsync(productId);
-            product.RemoveSku(skuId);
-            await Repository.UpdateAsync(product, autoSave: true);
-        }
-
-        private async Task<Product> LoadProductWithSkusAsync(Guid productId)
-        {
-            var product = await Repository.GetAsync(productId, includeDetails: true);
-            if (product == null)
-            {
-                throw new UserFriendlyException($"Product not found: {productId}");
-            }
-
-            if (product.Skus == null)
-            {
-                // Ensure aggregate has collection initialized when includeDetails doesn't load.
-                // Domain methods will initialize when adding.
-            }
-
-            return product;
+            return await MapToGetOutputDtoAsync(product);
         }
     }
 }

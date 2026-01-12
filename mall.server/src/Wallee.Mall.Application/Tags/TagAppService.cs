@@ -4,41 +4,40 @@ using System.Linq;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Services;
+using Volo.Abp.Domain.Repositories;
 using Wallee.Mall.Localization;
 using Wallee.Mall.Tags.Dtos;
 
 namespace Wallee.Mall.Tags;
 
 
-public class TagAppService : CrudAppService<Tag, TagDto, Guid, TagGetListInput, CreateTagDto, UpdateTagDto>,
+public class TagAppService(ITagRepository repository) : CrudAppService<Tag, TagDto, Guid, TagGetListInput, CreateTagDto, UpdateTagDto>(repository),
     ITagAppService
 {
-    private readonly ITagRepository _repository;
-
-    public TagAppService(ITagRepository repository) : base(repository)
-    {
-        _repository = repository;
-
-        LocalizationResource = typeof(MallResource);
-        ObjectMapperContext = typeof(MallApplicationModule);
-    }
 
     public override async Task<TagDto> CreateAsync(CreateTagDto input)
     {
-        if (_repository.FindAsync(it => it.Name == input.Name) != null)
+        if (await Repository.AnyAsync(it => it.Name == input.Name) == true)
         {
             throw new UserFriendlyException("已存在标签，不能重复创建");
         }
         var entity = new Tag(GuidGenerator.Create(), input.Name);
-        await _repository.InsertAsync(entity);
+        await Repository.InsertAsync(entity);
         return await MapToGetOutputDtoAsync(entity);
     }
 
     public override async Task<TagDto> UpdateAsync(Guid id, UpdateTagDto input)
     {
-        var entity = await _repository.GetAsync(id);
+        var entity = await repository.GetAsync(id);
+        if (entity.NormalizedName != input.Name)
+        {
+            if (await Repository.AnyAsync(it => it.Name == input.Name) == true)
+            {
+                throw new UserFriendlyException("已存在标签，不能重复创建");
+            }
+        }
         entity.SetName(input.Name);
-        await _repository.UpdateAsync(entity);
+        await Repository.UpdateAsync(entity);
         return await MapToGetOutputDtoAsync(entity);
     }
 

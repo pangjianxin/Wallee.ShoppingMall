@@ -46,24 +46,17 @@ namespace Wallee.Mall.Products
         }
 
         [HttpGet]
-        [Route("{productId}/skus")]
-        public async Task<List<ProductSkuDto>> GetSkusAsync(Guid productId)
+        [Route("{id}/skus")]
+        public async Task<List<ProductSkuDto>> GetSkusAsync(Guid id)
         {
-            return await service.GetSkusAsync(productId);
+            return await service.GetSkusAsync(id);
         }
 
-        [HttpPost]
-        [Route("{productId}/skus:upsert")]
-        public async Task<List<ProductSkuDto>> UpsertSkusAsync(Guid productId, UpsertProductSkusDto input)
+        [HttpPut]
+        [Route("{id}/skus")]
+        public async Task<ProductDto> UpsertSkusAsync(Guid id, UpsertProductSkusDto input)
         {
-            return await service.UpsertSkusAsync(productId, input);
-        }
-
-        [HttpDelete]
-        [Route("{productId}/skus/{skuId}")]
-        public async Task DeleteSkuAsync(Guid productId, Guid skuId)
-        {
-            await service.DeleteSkuAsync(productId, skuId);
+            return await service.UpsertSkusAsync(id, input);
         }
     }
 }

@@ -31,7 +31,7 @@ public class EfCoreProductRepository(IDbContextProvider<MallDbContext> dbContext
         if (!string.IsNullOrWhiteSpace(normalizedTag))
         {
             var tag = normalizedTag.Trim().ToLowerInvariant();
-            predicate = predicate?.And(p => p.ProductTags.Any(pt => pt.NormalizedTagName == tag));
+            predicate = predicate?.And(p => p.ProductTags != null && p.ProductTags.Any(pt => pt.NormalizedTagName == tag));
         }
 
         return await GetListAsync(predicate!, includeDetails: true, cancellationToken: cancellationToken);

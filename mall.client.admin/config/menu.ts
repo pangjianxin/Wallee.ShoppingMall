@@ -43,6 +43,11 @@ export const navMain: MenuItemWithPermissions[] = [
         url: "/products",
         permissions: [],
       },
+      {
+        title: "标签管理",
+        url: "/tags",
+        permissions: [],
+      },
     ],
   },
   {
