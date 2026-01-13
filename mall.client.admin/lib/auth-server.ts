@@ -1,63 +1,53 @@
-/**
- * Custom session management for external JWT tokens
- * This implements a lightweight auth system that works with OpenIddict JWT tokens
- * while being compatible with better-auth client patterns
- */
-
-import { jwtDecode } from "jwt-decode";
-import { cookies } from "next/headers";
-import type { DecodedJWT, Session, User } from "@/types/auth-types";
-
-const SESSION_COOKIE_NAME = "app_session";
-const TOKEN_COOKIE_NAME = "app_access_token";
-const REFRESH_TOKEN_COOKIE_NAME = "app_refresh_token";
-const ID_TOKEN_COOKIE_NAME = "app_id_token";
+import { auth as betterAuthInstance } from "@/lib/auth";
+import { headers as getHeaders } from "next/headers";
+import type { Session } from "@/types/auth-types";
 
 /**
  * Server-side function to get the current session
  * Use this in server components, API routes, and server actions
  */
-export async function getSession(): Promise<Session | null> {
+export async function auth(): Promise<Session | null> {
   try {
-    const cookieStore = await cookies();
-    const accessToken = cookieStore.get(TOKEN_COOKIE_NAME)?.value;
-    
-    if (!accessToken) {
+    const headers = await getHeaders();
+    const cookieHeader = headers.get("cookie") || "";
+
+    // Get session from better-auth using the API
+    const sessionData = await betterAuthInstance.api.getSession({
+      headers: {
+        cookie: cookieHeader,
+      },
+    });
+
+    if (!sessionData || !sessionData.session || !sessionData.user) {
       return null;
     }
 
-    // Decode JWT to check expiration
-    const decoded = jwtDecode<DecodedJWT>(accessToken);
-    
-    // Check if token is expired
-    if (Date.now() >= decoded.exp * 1000) {
-      // Token expired
-      return null;
-    }
+    // Get account to retrieve tokens
+    const accounts = await betterAuthInstance.api.listUserAccounts({
+      headers: {
+        cookie: cookieHeader,
+      },
+    });
 
-    // Get other tokens
-    const refreshToken = cookieStore.get(REFRESH_TOKEN_COOKIE_NAME)?.value;
-    const idToken = cookieStore.get(ID_TOKEN_COOKIE_NAME)?.value;
+    const account = accounts?.[0];
 
-    // Build session from decoded JWT
-    const user: User = {
-      id: decoded.sub,
-      name: decoded.preferred_username,
-      username: decoded.preferred_username,
-      email: decoded.email,
-      image: "/images/avatar.jpg",
-      roles: decoded.role,
-      organization_unit_code: decoded.organization_unit_code,
-      organization_unit_id: decoded.organization_unit_id,
-      supplier_id: decoded.supplier_id,
-    };
-
+    // Return session in the expected format
     return {
-      user,
-      accessToken,
-      refreshToken,
-      idToken,
-      expiresAt: decoded.exp,
+      user: {
+        id: sessionData.user.id,
+        name: sessionData.user.name || "",
+        username: (sessionData.user as any).username || "",
+        email: sessionData.user.email || "",
+        image: sessionData.user.image || undefined,
+        roles: (sessionData.user as any).roles,
+        organization_unit_code: (sessionData.user as any).organization_unit_code,
+        organization_unit_id: (sessionData.user as any).organization_unit_id,
+        supplier_id: (sessionData.user as any).supplier_id,
+      },
+      accessToken: account?.accessToken,
+      refreshToken: account?.refreshToken,
+      idToken: account?.idToken,
+      expiresAt: account?.expiresAt,
     };
   } catch (error) {
     console.error("Error getting session:", error);
@@ -65,69 +55,5 @@ export async function getSession(): Promise<Session | null> {
   }
 }
 
-// Alias for compatibility
-export const auth = getSession;
-
-/**
- * Create a new session (called after successful login)
- */
-export async function createSession(tokens: {
-  access_token: string;
-  refresh_token?: string;
-  id_token?: string;
-}): Promise<Session> {
-  const decoded = jwtDecode<DecodedJWT>(tokens.access_token);
-  
-  const cookieStore = await cookies();
-  
-  // Set tokens in httpOnly cookies
-  const cookieOptions = {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax" as const,
-    path: "/",
-    maxAge: 60 * 60 * 24, // 24 hours
-  };
-
-  cookieStore.set(TOKEN_COOKIE_NAME, tokens.access_token, cookieOptions);
-  cookieStore.set(SESSION_COOKIE_NAME, "true", cookieOptions);
-  
-  if (tokens.refresh_token) {
-    cookieStore.set(REFRESH_TOKEN_COOKIE_NAME, tokens.refresh_token, cookieOptions);
-  }
-  
-  if (tokens.id_token) {
-    cookieStore.set(ID_TOKEN_COOKIE_NAME, tokens.id_token, cookieOptions);
-  }
-
-  const user: User = {
-    id: decoded.sub,
-    name: decoded.preferred_username,
-    username: decoded.preferred_username,
-    email: decoded.email,
-    image: "/images/avatar.jpg",
-    roles: decoded.role,
-    organization_unit_code: decoded.organization_unit_code,
-    organization_unit_id: decoded.organization_unit_id,
-    supplier_id: decoded.supplier_id,
-  };
-
-  return {
-    user,
-    accessToken: tokens.access_token,
-    refreshToken: tokens.refresh_token,
-    idToken: tokens.id_token,
-    expiresAt: decoded.exp,
-  };
-}
-
-/**
- * Destroy the current session
- */
-export async function destroySession(): Promise<void> {
-  const cookieStore = await cookies();
-  cookieStore.delete(SESSION_COOKIE_NAME);
-  cookieStore.delete(TOKEN_COOKIE_NAME);
-  cookieStore.delete(REFRESH_TOKEN_COOKIE_NAME);
-  cookieStore.delete(ID_TOKEN_COOKIE_NAME);
-}
+// Export for compatibility
+export const getSession = auth;
