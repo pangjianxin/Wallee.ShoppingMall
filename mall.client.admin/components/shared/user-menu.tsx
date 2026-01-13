@@ -1,5 +1,6 @@
 "use client";
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
+import { signOut } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import {
@@ -20,29 +21,37 @@ type Props = {
   size: "sm" | "lg" | "icon" | "icon-sm" | "icon-lg";
 };
 const UserMenu: FC<Props> = ({ className, size = "sm" }) => {
-  const session = useSession();
+  const { data: sessionData, isPending } = useSession();
   const router = useRouter();
   const handleSignin = () => {
     router.push(`/account/login`);
   };
   //redirectTo: "/"
   const handleSignOut = async () => {
-    await signOut({ redirect: false });
+    await signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          window.location.href = "/account/login";
+        },
+      },
+    });
   };
 
-  if (session.status === "authenticated") {
+  const isAuthenticated = !!sessionData?.user;
+
+  if (isAuthenticated) {
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size={size} className={cn(className)}>
             <span className="inline">
-              {session.data?.user?.name?.substring(0, 10)}
+              {sessionData?.user?.name?.substring(0, 10)}
             </span>
             <ChevronDown className="ml-1 h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[150px]">
-          <DropdownMenuLabel> {session.data?.user?.email}</DropdownMenuLabel>
+          <DropdownMenuLabel> {sessionData?.user?.email}</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuItem

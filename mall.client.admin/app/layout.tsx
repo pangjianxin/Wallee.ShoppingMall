@@ -1,10 +1,8 @@
 import type React from "react";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { SessionProvider } from "next-auth/react";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme/theme-provider";
-import { auth } from "@/auth";
 import { Toaster } from "@/components/ui/sonner";
 import { TanstackQueryProvider } from "@/lib/tanstack-query-provider";
 import { AuthProvider } from "@/contexts/auth-context";
@@ -31,7 +29,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await auth();
   return (
     <html lang="zh-CN" suppressHydrationWarning>
       <head>
@@ -43,19 +40,17 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-background`}
       >
         <NuqsAdapter>
-          <SessionProvider session={session}>
-            <TanstackQueryProvider>
-              <ThemeProvider
-                attribute="class"
-                defaultTheme="light"
-                enableSystem={false}
-                disableTransitionOnChange
-              >
-                <AuthProvider>{children}</AuthProvider>
-              </ThemeProvider>
-            </TanstackQueryProvider>
-            <Toaster position="top-right" closeButton />
-          </SessionProvider>
+          <TanstackQueryProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="light"
+              enableSystem={false}
+              disableTransitionOnChange
+            >
+              <AuthProvider>{children}</AuthProvider>
+            </ThemeProvider>
+          </TanstackQueryProvider>
+          <Toaster position="top-right" closeButton />
         </NuqsAdapter>
       </body>
     </html>

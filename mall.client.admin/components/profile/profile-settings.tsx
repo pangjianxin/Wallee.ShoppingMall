@@ -22,7 +22,7 @@ import { useProfileSettings } from "@/hooks/profile/use-profile-settings";
 import { LoadingButton } from "@/components/ui/loading-button";
 import { FC } from "react";
 import { toast } from "sonner";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import { useOrganizationUnit } from "@/hooks/identity/organization-units/use-organization-unit";
 
 type ProfileProps = {

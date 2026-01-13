@@ -1,4 +1,5 @@
-import { User } from "next-auth";
+import type { User } from "@/types/auth-types";
+
 export type AuthContextType = {
   user?: User;
   permissions: { [key: string]: boolean };

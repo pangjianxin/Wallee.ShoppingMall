@@ -9,7 +9,8 @@ import {
   Signature,
   Sparkles,
 } from "lucide-react";
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
+import { signOut } from "@/lib/auth-client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -31,12 +32,17 @@ import { useRouter } from "next/navigation";
 
 export default function NavUser() {
   const { isMobile } = useSidebar();
-  const { data: session } = useSession();
+  const { data: sessionData } = useSession();
   const router = useRouter();
   const handleLogout = async () => {
     try {
-      // Then sign out from NextAuth
-      await signOut({ callbackUrl: "/login" });
+      await signOut({
+        fetchOptions: {
+          onSuccess: () => {
+            window.location.href = "/account/login";
+          },
+        },
+      });
     } catch (error) {
       console.error("Logout error:", error);
     }
@@ -50,9 +56,9 @@ export default function NavUser() {
     router.push("/signature-descriptors");
   };
   const displayUser = {
-    name: session?.user?.name || "用户",
-    email: session?.user?.email || "user@example.com",
-    avatar: session?.user?.image || "/placeholder.svg",
+    name: sessionData?.user?.name || "用户",
+    email: sessionData?.user?.email || "user@example.com",
+    avatar: sessionData?.user?.image || "/placeholder.svg",
   };
 
   return (

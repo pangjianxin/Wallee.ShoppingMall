@@ -3,7 +3,7 @@ import { type FC, type HTMLAttributes } from "react";
 import type React from "react";
 import { ModeToggle } from "@/components/theme/toggle-mode";
 import { motion } from "motion/react";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import Image from "next/image";
 
 interface TopNavProps extends HTMLAttributes<HTMLElement> {
@@ -11,7 +11,7 @@ interface TopNavProps extends HTMLAttributes<HTMLElement> {
 }
 
 export const NavTop: FC<TopNavProps> = ({ sidebarTrigger }) => {
-  const { data: session, status } = useSession();
+  const { data: sessionData, isPending } = useSession();
   return (
     <motion.nav
       initial={{ y: -100 }}

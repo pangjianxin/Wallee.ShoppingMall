@@ -16,7 +16,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { signIn } from "next-auth/react";
+import { signInWithCredentials } from "@/lib/auth-client";
 import { VerificationCodeImage } from "@/components/captcha/captcha-code";
 import { Label } from "@/components/ui/label";
 import { schema, type FormValues } from "@/hooks/account/login-form-validator";
@@ -55,18 +55,17 @@ const Login: FC<Props> = ({ returnUrl }: Props) => {
     setError(null);
 
     try {
-      const result = await signIn("credentials", {
+      const result = await signInWithCredentials({
         username: data.username,
         password: data.password,
         captchaid: data.captchaid,
         captchacode: data.captchacode,
-        redirect: false,
       });
 
-      if (result?.code) {
-        setError(ERROR_MESSAGES[result.code] || ERROR_MESSAGES.invalid_grant);
-      } else {
-        router.push(returnUrl || "/");
+      if (result.error) {
+        setError(ERROR_MESSAGES[result.error] || ERROR_MESSAGES.invalid_grant);
+      } else if (result.success) {
+        // Redirect is handled by signInWithCredentials
       }
     } catch {
       setError("登录过程中发生错误，请稍后再试");

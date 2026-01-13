@@ -1,10 +1,11 @@
 "use client";
 
 import { createContext, useContext, useMemo, useEffect, type ReactNode } from "react";
-import { useSession, signOut } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
+import { signOut } from "@/lib/auth-client";
 import { useAppConfig } from "@/hooks/use-app-config";
 import type { AuthContextType } from "@/types/auth";
-import { User } from "next-auth";
+import type { User } from "@/types/auth-types";
 import { useQueryClient } from "@tanstack/react-query";
 import { abpApplicationConfigurationGetQueryKey } from "@/openapi/@tanstack/react-query.gen";
 
@@ -15,10 +16,14 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const { data: session, status } = useSession();
+  const { data: sessionData, isPending: isSessionPending } = useSession();
   const queryClient = useQueryClient();
 
   const { data: config, isLoading: isConfigLoading } = useAppConfig();
+
+  // Determine authentication status
+  const isAuthenticated = !!sessionData?.user;
+  const status = isSessionPending ? "loading" : isAuthenticated ? "authenticated" : "unauthenticated";
 
   // 当用户完成登录时，使 appConfig 的缓存失效以刷新配置数据
   useEffect(() => {
@@ -55,11 +60,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
   };
 
   const logout = async () => {
-    await signOut({ callbackUrl: "/" });
+    await signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          window.location.href = "/account/login";
+        },
+      },
+    });
   };
 
   const value: AuthContextType = {
-    user: session?.user as User | undefined,
+    user: sessionData?.user as User | undefined,
     permissions,
     hasPermission,
     hasAnyPermission,
