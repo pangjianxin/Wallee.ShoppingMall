@@ -8,25 +8,6 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: false,
   },
-  socialProviders: {
-    oidc: {
-      clientId: process.env.NEXTAUTH_CLIENT_ID || "",
-      clientSecret: process.env.NEXTAUTH_CLIENT_SECRET || "",
-      issuer: process.env.OPENIDDICT_INTERNAL_ISSUER || "",
-      discoveryUrl: process.env.OPENIDDICT_WELL_KNOWN,
-      scopes: (process.env.NEXTAUTH_SCOPE || "openid profile email").split(" "),
-      authorizationEndpoint: `${process.env.OPENIDDICT_EXTERNAL_ISSUER}/connect/authorize`,
-      mapProfileToUser: (profile: any) => {
-        return {
-          id: profile.sub,
-          name: profile.unique_name || profile.name || profile.preferred_username,
-          email: profile.email || `${profile.sub}@local.user`,
-          emailVerified: profile.email_verified === true,
-          image: "/images/avatar.jpg",
-        };
-      },
-    },
-  },
   user: {
     additionalFields: {
       username: {

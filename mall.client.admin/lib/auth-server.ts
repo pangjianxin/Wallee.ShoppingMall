@@ -19,38 +19,37 @@ export async function auth(): Promise<Session | null> {
       return null;
     }
 
-    // Get session from better-auth
-    const session = await betterAuthInstance.api.getSession({
-      headers: {
-        cookie: cookieHeader,
-      },
-    });
+    // Get session from better-auth using internal adapter
+    const adapter = betterAuthInstance.options.database.adapter;
+    const sessionData = await adapter.findSession(sessionToken);
 
-    if (!session) {
+    if (!sessionData) {
+      return null;
+    }
+
+    // Get user
+    const user = await adapter.findUserById(sessionData.userId);
+    
+    if (!user) {
       return null;
     }
 
     // Get account to retrieve tokens
-    const accounts = await betterAuthInstance.api.listAccounts({
-      headers: {
-        cookie: cookieHeader,
-      },
-    });
-
+    const accounts = await adapter.findAccounts({ userId: user.id });
     const account = accounts?.[0];
 
     // Return session in the expected format
     return {
       user: {
-        id: session.user.id,
-        name: session.user.name,
-        username: (session.user as any).username,
-        email: session.user.email,
-        image: session.user.image,
-        roles: (session.user as any).roles,
-        organization_unit_code: (session.user as any).organization_unit_code,
-        organization_unit_id: (session.user as any).organization_unit_id,
-        supplier_id: (session.user as any).supplier_id,
+        id: user.id,
+        name: user.name || "",
+        username: (user as any).username || "",
+        email: user.email || "",
+        image: user.image || undefined,
+        roles: (user as any).roles,
+        organization_unit_code: (user as any).organization_unit_code,
+        organization_unit_id: (user as any).organization_unit_id,
+        supplier_id: (user as any).supplier_id,
       },
       accessToken: account?.accessToken,
       refreshToken: account?.refreshToken,

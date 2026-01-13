@@ -41,9 +41,9 @@ export const NavTop: FC<TopNavProps> = ({ sidebarTrigger }) => {
         {/* 右侧：主题切换按钮和移动端菜单 */}
 
         <div className="flex items-center space-x-2">
-          {status === "authenticated" && (
+          {sessionData?.user && (
             <span className="hidden md:inline-block mr-4">
-              欢迎，{session.user?.name}
+              欢迎，{sessionData.user?.name}
             </span>
           )}
           {sidebarTrigger}

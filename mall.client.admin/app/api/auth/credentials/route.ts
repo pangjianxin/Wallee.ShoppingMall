@@ -143,17 +143,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Set session cookie
-    const cookieValue = await auth.api.signInEmail({
-      body: {
-        email: user.email,
-        password: "", // Not used, we're bypassing email/password
-      },
-      asResponse: true,
-    });
-
-    // Actually, we need to set the cookie manually since we can't use signInEmail
-    // Let's use the session token
-    const response = NextResponse.json({
+    const finalResponse = NextResponse.json({
       success: true,
       user,
       session: {
@@ -162,18 +152,20 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Set the session cookie
-    response.cookies.set({
-      name: "better-auth.session_token",
-      value: session.token,
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      path: "/",
-      maxAge: 60 * 60 * 24, // 24 hours
-    });
+    // Set the session cookie using the correct cookie name
+    finalResponse.cookies.set(
+      "better-auth.session_token",
+      session.token,
+      {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+        maxAge: 60 * 60 * 24, // 24 hours
+      }
+    );
 
-    return response;
+    return finalResponse;
   } catch (error) {
     console.error("Credentials sign-in error:", error);
     return NextResponse.json(
