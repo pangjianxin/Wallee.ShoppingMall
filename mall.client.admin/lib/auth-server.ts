@@ -6,8 +6,7 @@
 
 import { jwtDecode } from "jwt-decode";
 import { cookies } from "next/headers";
-import type { DecodedJWT } from "@/types/next-auth";
-import type { Session, User } from "@/types/auth-types";
+import type { DecodedJWT, Session, User } from "@/types/auth-types";
 
 const SESSION_COOKIE_NAME = "app_session";
 const TOKEN_COOKIE_NAME = "app_access_token";

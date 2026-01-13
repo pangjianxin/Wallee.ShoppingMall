@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtDecode } from "jwt-decode";
-import type { DecodedJWT } from "@/types/next-auth";
+import type { DecodedJWT } from "@/types/auth-types";
 import { createSession } from "@/lib/auth-server";
 
 export async function POST(request: NextRequest) {

@@ -1,36 +1,4 @@
-// Types for better-auth session
-export interface BetterAuthSession {
-  user: BetterAuthUser;
-  session: {
-    token: string;
-    expiresAt: Date;
-  };
-}
-
-export interface BetterAuthUser {
-  id: string;
-  name: string;
-  username?: string;
-  email: string;
-  emailVerified: boolean;
-  image?: string;
-  roles?: string | string[];
-  organization_unit_code?: string;
-  organization_unit_id?: string;
-  supplier_id?: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-// Extended session type that includes tokens
-export interface ExtendedSession extends BetterAuthSession {
-  accessToken?: string;
-  refreshToken?: string;
-  idToken?: string;
-  expiresAt?: number;
-}
-
-// For backward compatibility with existing code
+// Types for session
 export interface User {
   id: string;
   name?: string;
@@ -51,7 +19,7 @@ export interface Session {
   expiresAt?: number;
 }
 
-// DecodedJWT type (keeping existing)
+// DecodedJWT type for OpenIddict JWT tokens
 export interface DecodedJWT {
   // 标准 JWT 声明
   iss?: string;

@@ -127,10 +127,3 @@ export async function signInWithOIDC() {
     callbackURL: "/",
   });
 }
-
-// Export authClient for compatibility
-export const authClient = {
-  useSession,
-  signIn,
-  signOut,
-};
