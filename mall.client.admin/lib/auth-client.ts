@@ -22,7 +22,7 @@ export async function signInWithCredentials({
   captchaid: string;
   captchacode: string;
 }) {
-  const response = await fetch("/api/auth/sign-in/credentials", {
+  const response = await fetch("/api/auth/credentials", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
