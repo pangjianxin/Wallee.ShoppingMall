@@ -1,5 +1,6 @@
 import { credentialsClient } from "@/lib/plugins/credentials/client";
-import { createAuthClient, User } from "better-auth/client";
+import { createAuthClient } from "better-auth/react";
+import type { User } from "better-auth/types";
 import { inputSchema } from "@/lib/auth";
 
 export const authClient = createAuthClient({
@@ -28,7 +29,7 @@ export async function signInWithCredentials({
   captchacode: string;
 }) {
   try {
-    const result = await (authClient as any).signInCredentials({
+    const result = await authClient.signInCredentials({
       username,
       password,
       captchaid,
