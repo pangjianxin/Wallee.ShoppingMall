@@ -1,29 +1,33 @@
-import { betterAuth } from "better-auth";
+import { betterAuth, User } from "better-auth";
 import { credentials } from "better-auth-credentials-plugin";
 import { z } from "zod";
 import { jwtDecode } from "jwt-decode";
 import type { DecodedJWT } from "@/types/auth-types";
+import { createAuthMiddleware } from "better-auth/plugins";
+
+export const inputSchema = z.object({
+  username: z.string(),
+  password: z.string(),
+  captchaid: z.string(),
+  captchacode: z.string(),
+});
 
 export const auth = betterAuth({
-  database: {
-    provider: "sqlite",
-    url: ":memory:",
-  },
   emailAndPassword: {
     enabled: false,
   },
   // OIDC provider for OpenIddict
-  socialProviders: {
-    oidc: {
-      clientId: process.env.NEXTAUTH_CLIENT_ID || "",
-      clientSecret: process.env.NEXTAUTH_CLIENT_SECRET || "",
-      issuer: process.env.OPENIDDICT_INTERNAL_ISSUER || "",
-      discoveryUrl: process.env.OPENIDDICT_WELL_KNOWN,
-      scopes: (process.env.NEXTAUTH_SCOPE || "openid profile email").split(" "),
-      // Override authorization endpoint to use external issuer
-      authorizationEndpoint: `${process.env.OPENIDDICT_EXTERNAL_ISSUER}/connect/authorize`,
-    },
-  },
+  // socialProviders: {
+  //   oidc: {
+  //     clientId: process.env.NEXTAUTH_CLIENT_ID || "",
+  //     clientSecret: process.env.NEXTAUTH_CLIENT_SECRET || "",
+  //     issuer: process.env.OPENIDDICT_INTERNAL_ISSUER || "",
+  //     discoveryUrl: process.env.OPENIDDICT_WELL_KNOWN,
+  //     scopes: (process.env.NEXTAUTH_SCOPE || "openid profile email").split(" "),
+  //     // Override authorization endpoint to use external issuer
+  //     authorizationEndpoint: `${process.env.OPENIDDICT_EXTERNAL_ISSUER}/connect/authorize`,
+  //   },
+  // },
   user: {
     additionalFields: {
       username: {
@@ -31,18 +35,6 @@ export const auth = betterAuth({
         required: false,
       },
       roles: {
-        type: "string",
-        required: false,
-      },
-      organization_unit_code: {
-        type: "string",
-        required: false,
-      },
-      organization_unit_id: {
-        type: "string",
-        required: false,
-      },
-      supplier_id: {
         type: "string",
         required: false,
       },
@@ -78,13 +70,12 @@ export const auth = betterAuth({
   plugins: [
     credentials({
       autoSignUp: true,
+      UserType: {} as User & {
+        username: string;
+        roles: string | string[];
+      },
       path: "/sign-in/credentials",
-      inputSchema: z.object({
-        username: z.string(),
-        password: z.string(),
-        captchaid: z.string(),
-        captchacode: z.string(),
-      }),
+      inputSchema: inputSchema,
       async callback(ctx, parsed) {
         // Call OpenIddict token endpoint with credentials and captcha
         const tokenResponse = await fetch(
@@ -112,7 +103,7 @@ export const auth = betterAuth({
         if (!tokenResponse.ok || !data.access_token) {
           // Handle error responses
           const errorDesc = data.error_description?.toLowerCase() || "";
-          
+
           if (
             errorDesc.includes("username") ||
             errorDesc.includes("用户名") ||
@@ -138,13 +129,10 @@ export const auth = betterAuth({
           email: decodedJWT.email || `${decodedJWT.sub}@local.user`,
           name: decodedJWT.preferred_username,
           username: decodedJWT.preferred_username,
-          roles: typeof decodedJWT.role === "string" 
-            ? decodedJWT.role 
-            : JSON.stringify(decodedJWT.role),
-          organization_unit_code: decodedJWT.organization_unit_code,
-          organization_unit_id: decodedJWT.organization_unit_id,
-          supplier_id: decodedJWT.supplier_id,
-          image: "/images/avatar.jpg",
+          roles:
+            typeof decodedJWT.role === "string"
+              ? decodedJWT.role
+              : JSON.stringify(decodedJWT.role),
 
           onSignIn(userData, user, account) {
             // Update user on each sign-in
@@ -152,12 +140,10 @@ export const auth = betterAuth({
               ...userData,
               name: decodedJWT.preferred_username,
               username: decodedJWT.preferred_username,
-              roles: typeof decodedJWT.role === "string" 
-                ? decodedJWT.role 
-                : JSON.stringify(decodedJWT.role),
-              organization_unit_code: decodedJWT.organization_unit_code,
-              organization_unit_id: decodedJWT.organization_unit_id,
-              supplier_id: decodedJWT.supplier_id,
+              roles:
+                typeof decodedJWT.role === "string"
+                  ? decodedJWT.role
+                  : JSON.stringify(decodedJWT.role),
             };
           },
 
@@ -181,37 +167,30 @@ export const auth = betterAuth({
   ],
   // Hook to add tokens from OIDC provider to account
   hooks: {
-    after: [
-      {
-        matcher: (context) => {
-          return context.path?.includes("/sign-in/social") || 
-                 context.path?.includes("/callback/oidc");
-        },
-        handler: async (context) => {
-          // Extract and store additional OIDC claims
-          if (context.user && context.session) {
-            const accounts = await context.context.internalAdapter.findAccounts({
-              userId: context.user.id,
-            });
-            
-            if (accounts && accounts.length > 0 && accounts[0].idToken) {
-              const decoded = jwtDecode<DecodedJWT>(accounts[0].idToken);
-              
-              // Update user with additional fields from OIDC
-              await context.context.internalAdapter.updateUser(context.user.id, {
-                username: decoded.preferred_username || decoded.unique_name,
-                roles: typeof decoded.role === "string" 
-                  ? decoded.role 
-                  : JSON.stringify(decoded.role),
-                organization_unit_code: decoded.organization_unit_code,
-                organization_unit_id: decoded.organization_unit_id,
-                supplier_id: decoded.supplier_id,
-              });
-            }
-          }
-        },
-      },
-    ],
+    after: createAuthMiddleware(async (ctx) => {
+      // Extract and store additional OIDC claims
+      if (ctx.context.user && ctx.context.session) {
+        const accounts = await ctx.context.internalAdapter.findAccounts(
+          ctx.context.session.user.id
+        );
+
+        if (accounts && accounts.length > 0 && accounts[0].idToken) {
+          const decoded = jwtDecode<DecodedJWT>(accounts[0].idToken);
+
+          // Update user with additional fields from OIDC
+          await ctx.context.internalAdapter.updateUser(ctx.context.user.id, {
+            username: decoded.preferred_username || decoded.unique_name,
+            roles:
+              typeof decoded.role === "string"
+                ? decoded.role
+                : JSON.stringify(decoded.role),
+            organization_unit_code: decoded.organization_unit_code,
+            organization_unit_id: decoded.organization_unit_id,
+            supplier_id: decoded.supplier_id,
+          });
+        }
+      }
+    }),
   },
 });
 

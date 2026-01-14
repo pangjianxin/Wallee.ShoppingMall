@@ -26,7 +26,8 @@ async function handleErrorResponse(
   customMessage?: string
 ): Promise<Response> {
   const status = response.status;
-  const message = customMessage || ERROR_MESSAGES[status] || `请求失败 (${status})`;
+  const message =
+    customMessage || ERROR_MESSAGES[status] || `请求失败 (${status})`;
 
   // 尝试读取原始响应体
   let originalError: any = null;

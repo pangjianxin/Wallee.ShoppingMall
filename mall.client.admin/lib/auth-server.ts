@@ -40,7 +40,8 @@ export async function auth(): Promise<Session | null> {
         email: sessionData.user.email || "",
         image: sessionData.user.image || undefined,
         roles: (sessionData.user as any).roles,
-        organization_unit_code: (sessionData.user as any).organization_unit_code,
+        organization_unit_code: (sessionData.user as any)
+          .organization_unit_code,
         organization_unit_id: (sessionData.user as any).organization_unit_id,
         supplier_id: (sessionData.user as any).supplier_id,
       },

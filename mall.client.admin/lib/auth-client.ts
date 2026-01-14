@@ -1,13 +1,15 @@
-import { createAuthClient } from "better-auth/react";
-import { credentialsClient, defaultCredentialsSchema } from "better-auth-credentials-plugin/client";
-import type { Session } from "@/types/auth-types";
+import { credentialsClient } from "better-auth-credentials-plugin/client";
+import { createAuthClient, User } from "better-auth/client";
+import { inputSchema } from "@/lib/auth";
 
 export const authClient = createAuthClient({
   baseURL: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:4201",
   plugins: [
-    credentialsClient({
-      path: "/sign-in/credentials",
-    }),
+    credentialsClient<
+      User & { roles: string | string[]; username: string },
+      "/sign-in/credentials",
+      typeof inputSchema
+    >(),
   ],
 });
 
@@ -32,13 +34,13 @@ export async function signInWithCredentials({
       captchaid,
       captchacode,
     });
-    
+
     if (result.error) {
       return {
         error: result.error.message || "invalid_grant",
       };
     }
-    
+
     // Reload to update session
     window.location.href = "/";
     return { success: true };

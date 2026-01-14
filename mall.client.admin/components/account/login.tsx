@@ -31,7 +31,6 @@ type Props = {
 };
 
 const Login: FC<Props> = ({ returnUrl }: Props) => {
-  const router = useRouter();
   const searchParams = useSearchParams();
 
   const errorCode = searchParams.get("error");
