@@ -4,6 +4,75 @@
 
 Successfully migrated `mall.client.admin` from next-auth@5 to **better-auth** with the **better-auth-credentials-plugin**, providing a mature authentication library that supports both custom credentials (with captcha) and OIDC integration with OpenIddict.
 
+## Latest Updates (2026-01-14)
+
+### ✅ Completed Optimizations
+
+1. **Token Management Enhanced**
+   - Enabled accessToken, refreshToken, idToken in session
+   - Implemented customSession plugin to extract tokens from account
+   - Simplified auth-server.ts to read tokens directly from session
+
+2. **User Fields Extended**
+   - Added organization_unit_code, organization_unit_id, supplier_id
+   - All user fields properly mapped from JWT to session
+   - Fields available in both client and server components
+
+3. **Code Quality**
+   - Removed unused imports
+   - Fixed TypeScript errors
+   - All auth-related files pass type checking
+
+### Session Structure (Updated)
+
+```typescript
+{
+  user: {
+    id: string;
+    name: string;
+    username: string;
+    email: string;
+    roles: string | string[];
+    organization_unit_code?: string;
+    organization_unit_id?: string;
+    supplier_id?: string;
+  },
+  accessToken: string;
+  refreshToken?: string;
+  idToken?: string;
+  expiresAt?: number;
+}
+```
+
+### Key Implementation Details
+
+**lib/auth.ts - customSession Plugin:**
+```typescript
+customSession(async (sessionData, ctx) => {
+  // Extract tokens from account and add to session
+  const accounts = await ctx.context.internalAdapter.findAccounts(sessionData.user.id);
+  const account = accounts?.[0];
+  return {
+    ...sessionData.session,
+    accessToken: account?.accessToken,
+    refreshToken: account?.refreshToken,
+    idToken: account?.idToken,
+  };
+})
+```
+
+**lib/auth-server.ts - Simplified Token Retrieval:**
+```typescript
+// Tokens are already in session from customSession plugin
+return {
+  user: { /* user fields */ },
+  accessToken: sessionData.session?.accessToken,
+  refreshToken: sessionData.session?.refreshToken,
+  idToken: sessionData.session?.idToken,
+  expiresAt: sessionData.session?.expiresAt,
+};
+```
+
 ## Why better-auth with credentials plugin?
 
 Better-auth is a modern, type-safe authentication library for TypeScript. With the credentials plugin:

@@ -1,5 +1,34 @@
 # 包头分行工单系统 (WorkOrder System)
 
+## 🔐 身份认证 (Authentication)
+
+本项目使用 **Better-auth** 与后端 ASP.NET Core + OpenIddict 集成实现身份认证。
+
+### 快速开始
+
+1. **配置环境变量**
+   ```bash
+   cp .env.example .env.local
+   # 编辑 .env.local，填入正确的配置值
+   ```
+
+2. **查看完整文档**
+   - [BETTER_AUTH_GUIDE.md](./BETTER_AUTH_GUIDE.md) - 完整的集成指南
+   - [AUTH_MIGRATION.md](./AUTH_MIGRATION.md) - 迁移说明和历史
+
+3. **核心功能**
+   - ✅ 用户名/密码/验证码登录
+   - ✅ Session 管理（Cookie 存储）
+   - ✅ Token 管理（accessToken, refreshToken, idToken）
+   - ✅ 用户信息展示（姓名、角色、组织信息）
+   - ✅ 权限控制
+
+### 验证身份认证
+
+启动应用后访问：
+- 登录页面: `http://localhost:4201/account/login`
+- 用户信息显示在页面右上角（登录后）
+
 ## BUG
 ```bash
 ### NEXTJS 16.0.3

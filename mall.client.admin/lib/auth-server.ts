@@ -1,4 +1,4 @@
-import { auth as betterAuthInstance } from "@/lib/auth";
+import { auth as betterAuthInstance, ExtendedSessionData, ExtendedUserData } from "@/lib/auth";
 import { headers as getHeaders } from "next/headers";
 import { Session } from "better-auth";
 
@@ -22,30 +22,26 @@ export async function auth(): Promise<Session | null> {
       return null;
     }
 
-    // Get account to retrieve tokens
-    const accounts = await betterAuthInstance.api.listUserAccounts({
-      headers: {
-        cookie: cookieHeader,
-      },
-    });
-
-    const account = accounts?.[0];
+    // Type-safe access to session and user data
+    const session = sessionData.session as unknown as ExtendedSessionData;
+    const user = sessionData.user as unknown as ExtendedUserData;
 
     // Return session in the expected format
+    // Tokens should already be in session from customSession plugin
     return {
       user: {
-        id: sessionData.user.id,
-        name: sessionData.user.name || "",
-        username: (sessionData.user as any).username || "",
-        email: sessionData.user.email || "",
+        id: user.id,
+        name: user.name || "",
+        username: user.username || "",
+        email: user.email || "",
         image: sessionData.user.image || undefined,
-        roles: (sessionData.user as any).roles,
+        roles: user.roles,
       },
-      // accessToken: account?.accessToken,
-      // refreshToken: account?.refreshToken,
-      // idToken: account?.idToken,
-      // expiresAt: account?.expiresAt,
-    };
+      accessToken: session.accessToken,
+      refreshToken: session.refreshToken,
+      idToken: session.idToken,
+      expiresAt: session.expiresAt,
+    } as any;
   } catch (error) {
     console.error("Error getting session:", error);
     return null;

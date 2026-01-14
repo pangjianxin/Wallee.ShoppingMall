@@ -1,11 +1,10 @@
 import { betterAuth, User } from "better-auth";
-import { credentials } from "better-auth-credentials-plugin";
+import { credentials } from "@/lib/plugins/credentials";
 import { z } from "zod";
 import { jwtDecode } from "jwt-decode";
 import type { DecodedJWT } from "@/types/auth-types";
 import { createAuthMiddleware } from "better-auth/plugins";
 import { customSession } from "better-auth/plugins";
-import { a } from "motion/react-client";
 
 export const inputSchema = z.object({
   username: z.string(),
@@ -13,6 +12,14 @@ export const inputSchema = z.object({
   captchaid: z.string(),
   captchacode: z.string(),
 });
+
+/**
+ * 规范化角色数据为字符串格式
+ */
+function normalizeRole(role: string | string[] | undefined): string {
+  if (!role) return "";
+  return typeof role === "string" ? role : JSON.stringify(role);
+}
 
 export const auth = betterAuth({
   //https://www.better-auth.com/docs/concepts/session-management#stateless-session-management
@@ -76,21 +83,25 @@ export const auth = betterAuth({
     useSecureCookies: process.env.NODE_ENV === "production",
   },
   plugins: [
-    customSession(async (user, session) => {
-      // const data = await abpApplicationConfigurationGet({
-      //   query: {
-      //     IncludeLocalizationResources: false,
-      //   },
-      // });
-      console.log("Custom session plugin invoked for user:", user);
-      return session;
+    customSession(async (sessionData, ctx) => {
+      // Get the user's accounts to retrieve tokens
+      const accounts = await ctx.context.internalAdapter.findAccounts(sessionData.user.id);
+      const account = accounts?.[0] as ExtendedAccountData | undefined;
+      
+      // Add tokens to session from account
+      const extendedSession: ExtendedSessionData = {
+        accessToken: account?.accessToken,
+        refreshToken: account?.refreshToken,
+        idToken: account?.idToken,
+      };
+      
+      return {
+        ...sessionData.session,
+        ...extendedSession,
+      };
     }),
     credentials({
       autoSignUp: true,
-      UserType: {} as User & {
-        username: string;
-        roles: string | string[];
-      },
       path: "/sign-in/credentials",
       inputSchema: inputSchema,
       async callback(ctx, parsed) {
@@ -116,8 +127,6 @@ export const auth = betterAuth({
         );
 
         const data = await tokenResponse.json();
-
-        console.log(data);
 
         if (!tokenResponse.ok || !data.access_token) {
           // Handle error responses
@@ -148,10 +157,7 @@ export const auth = betterAuth({
           email: decodedJWT.email || `${decodedJWT.sub}@local.user`,
           name: decodedJWT.preferred_username,
           username: decodedJWT.preferred_username,
-          roles:
-            typeof decodedJWT.role === "string"
-              ? decodedJWT.role
-              : JSON.stringify(decodedJWT.role),
+          roles: normalizeRole(decodedJWT.role),
 
           onSignIn(userData, user, account) {
             // Update user on each sign-in
@@ -159,10 +165,7 @@ export const auth = betterAuth({
               ...userData,
               name: decodedJWT.preferred_username,
               username: decodedJWT.preferred_username,
-              roles:
-                typeof decodedJWT.role === "string"
-                  ? decodedJWT.role
-                  : JSON.stringify(decodedJWT.role),
+              roles: normalizeRole(decodedJWT.role),
             };
           },
 
@@ -199,13 +202,7 @@ export const auth = betterAuth({
           // Update user with additional fields from OIDC
           await ctx.context.internalAdapter.updateUser(ctx.context.user.id, {
             username: decoded.preferred_username || decoded.unique_name,
-            roles:
-              typeof decoded.role === "string"
-                ? decoded.role
-                : JSON.stringify(decoded.role),
-            organization_unit_code: decoded.organization_unit_code,
-            organization_unit_id: decoded.organization_unit_id,
-            supplier_id: decoded.supplier_id,
+            roles: normalizeRole(decoded.role),
           });
         }
       }
@@ -213,4 +210,28 @@ export const auth = betterAuth({
   },
 });
 
-export type Session = typeof auth.$Infer.Session;
+// Infer session type from better-auth configuration
+export type BetterAuthSession = typeof auth.$Infer.Session;
+
+// Extended types for session with additional fields
+export type ExtendedSessionData = {
+  accessToken?: string;
+  refreshToken?: string;
+  idToken?: string;
+  expiresAt?: number;
+};
+
+export type ExtendedUserData = {
+  id: string;
+  name: string;
+  username?: string;
+  email: string;
+  roles?: string;
+};
+
+export type ExtendedAccountData = {
+  accessToken?: string;
+  refreshToken?: string;
+  idToken?: string;
+  expiresAt?: number;
+};
