@@ -6,9 +6,6 @@ export interface User {
   email?: string;
   image?: string;
   roles?: string | string[];
-  organization_unit_code?: string;
-  organization_unit_id?: string;
-  supplier_id?: string;
 }
 
 export interface Session {
@@ -41,7 +38,7 @@ export interface DecodedJWT {
   // 权限和角色
   role: string | string[];
 
-  // 组织单位信息
+  // 组织单位信息（JWT中可能包含，但当前系统不使用）
   organization_unit_code?: string;
   organization_unit_id?: string;
   supplier_id?: string;

@@ -1,5 +1,5 @@
 import { betterAuth, User } from "better-auth";
-import { credentials } from "better-auth-credentials-plugin";
+import { credentials } from "@/lib/plugins/credentials";
 import { z } from "zod";
 import { jwtDecode } from "jwt-decode";
 import type { DecodedJWT } from "@/types/auth-types";
@@ -12,6 +12,14 @@ export const inputSchema = z.object({
   captchaid: z.string(),
   captchacode: z.string(),
 });
+
+/**
+ * 规范化角色数据为字符串格式
+ */
+function normalizeRole(role: string | string[] | undefined): string {
+  if (!role) return "";
+  return typeof role === "string" ? role : JSON.stringify(role);
+}
 
 export const auth = betterAuth({
   //https://www.better-auth.com/docs/concepts/session-management#stateless-session-management
@@ -69,18 +77,6 @@ export const auth = betterAuth({
         type: "string",
         required: false,
       },
-      organization_unit_code: {
-        type: "string",
-        required: false,
-      },
-      organization_unit_id: {
-        type: "string",
-        required: false,
-      },
-      supplier_id: {
-        type: "string",
-        required: false,
-      },
     },
   },
   advanced: {
@@ -106,10 +102,6 @@ export const auth = betterAuth({
     }),
     credentials({
       autoSignUp: true,
-      UserType: {} as User & {
-        username: string;
-        roles: string | string[];
-      },
       path: "/sign-in/credentials",
       inputSchema: inputSchema,
       async callback(ctx, parsed) {
@@ -167,13 +159,7 @@ export const auth = betterAuth({
           email: decodedJWT.email || `${decodedJWT.sub}@local.user`,
           name: decodedJWT.preferred_username,
           username: decodedJWT.preferred_username,
-          roles:
-            typeof decodedJWT.role === "string"
-              ? decodedJWT.role
-              : JSON.stringify(decodedJWT.role),
-          organization_unit_code: decodedJWT.organization_unit_code,
-          organization_unit_id: decodedJWT.organization_unit_id,
-          supplier_id: decodedJWT.supplier_id,
+          roles: normalizeRole(decodedJWT.role),
 
           onSignIn(userData, user, account) {
             // Update user on each sign-in
@@ -181,13 +167,7 @@ export const auth = betterAuth({
               ...userData,
               name: decodedJWT.preferred_username,
               username: decodedJWT.preferred_username,
-              roles:
-                typeof decodedJWT.role === "string"
-                  ? decodedJWT.role
-                  : JSON.stringify(decodedJWT.role),
-              organization_unit_code: decodedJWT.organization_unit_code,
-              organization_unit_id: decodedJWT.organization_unit_id,
-              supplier_id: decodedJWT.supplier_id,
+              roles: normalizeRole(decodedJWT.role),
             };
           },
 
@@ -224,13 +204,7 @@ export const auth = betterAuth({
           // Update user with additional fields from OIDC
           await ctx.context.internalAdapter.updateUser(ctx.context.user.id, {
             username: decoded.preferred_username || decoded.unique_name,
-            roles:
-              typeof decoded.role === "string"
-                ? decoded.role
-                : JSON.stringify(decoded.role),
-            organization_unit_code: decoded.organization_unit_code,
-            organization_unit_id: decoded.organization_unit_id,
-            supplier_id: decoded.supplier_id,
+            roles: normalizeRole(decoded.role),
           });
         }
       }
@@ -255,9 +229,6 @@ export type ExtendedUserData = {
   username?: string;
   email: string;
   roles?: string;
-  organization_unit_code?: string;
-  organization_unit_id?: string;
-  supplier_id?: string;
 };
 
 export type ExtendedAccountData = {

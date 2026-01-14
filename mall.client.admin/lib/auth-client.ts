@@ -1,4 +1,4 @@
-import { credentialsClient } from "better-auth-credentials-plugin/client";
+import { credentialsClient } from "@/lib/plugins/credentials/client";
 import { createAuthClient, User } from "better-auth/client";
 import { inputSchema } from "@/lib/auth";
 
@@ -28,7 +28,7 @@ export async function signInWithCredentials({
   captchacode: string;
 }) {
   try {
-    const result = await authClient.signIn.credentials({
+    const result = await (authClient as any).signInCredentials({
       username,
       password,
       captchaid,
