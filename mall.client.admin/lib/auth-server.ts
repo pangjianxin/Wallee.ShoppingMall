@@ -1,6 +1,6 @@
 import { auth as betterAuthInstance } from "@/lib/auth";
 import { headers as getHeaders } from "next/headers";
-import type { Session } from "@/types/auth-types";
+import { Session } from "better-auth";
 
 /**
  * Server-side function to get the current session
@@ -40,15 +40,11 @@ export async function auth(): Promise<Session | null> {
         email: sessionData.user.email || "",
         image: sessionData.user.image || undefined,
         roles: (sessionData.user as any).roles,
-        organization_unit_code: (sessionData.user as any)
-          .organization_unit_code,
-        organization_unit_id: (sessionData.user as any).organization_unit_id,
-        supplier_id: (sessionData.user as any).supplier_id,
       },
-      accessToken: account?.accessToken,
-      refreshToken: account?.refreshToken,
-      idToken: account?.idToken,
-      expiresAt: account?.expiresAt,
+      // accessToken: account?.accessToken,
+      // refreshToken: account?.refreshToken,
+      // idToken: account?.idToken,
+      // expiresAt: account?.expiresAt,
     };
   } catch (error) {
     console.error("Error getting session:", error);

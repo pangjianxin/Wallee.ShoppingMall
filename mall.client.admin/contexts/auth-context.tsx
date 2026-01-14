@@ -1,6 +1,12 @@
 "use client";
 
-import { createContext, useContext, useMemo, useEffect, type ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useMemo,
+  useEffect,
+  type ReactNode,
+} from "react";
 import { useSession } from "@/lib/auth-client";
 import { signOut } from "@/lib/auth-client";
 import { useAppConfig } from "@/hooks/use-app-config";
@@ -23,7 +29,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   // Determine authentication status
   const isAuthenticated = !!sessionData?.user;
-  const status = isSessionPending ? "loading" : isAuthenticated ? "authenticated" : "unauthenticated";
+  const status = isSessionPending
+    ? "loading"
+    : isAuthenticated
+    ? "authenticated"
+    : "unauthenticated";
 
   // 当用户完成登录时，使 appConfig 的缓存失效以刷新配置数据
   useEffect(() => {

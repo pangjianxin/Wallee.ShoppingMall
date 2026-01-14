@@ -4,6 +4,8 @@ import { z } from "zod";
 import { jwtDecode } from "jwt-decode";
 import type { DecodedJWT } from "@/types/auth-types";
 import { createAuthMiddleware } from "better-auth/plugins";
+import { customSession } from "better-auth/plugins";
+import { a } from "motion/react-client";
 
 export const inputSchema = z.object({
   username: z.string(),
@@ -13,34 +15,32 @@ export const inputSchema = z.object({
 });
 
 export const auth = betterAuth({
-  emailAndPassword: {
-    enabled: false,
-  },
-  // OIDC provider for OpenIddict
-  // socialProviders: {
-  //   oidc: {
-  //     clientId: process.env.NEXTAUTH_CLIENT_ID || "",
-  //     clientSecret: process.env.NEXTAUTH_CLIENT_SECRET || "",
-  //     issuer: process.env.OPENIDDICT_INTERNAL_ISSUER || "",
-  //     discoveryUrl: process.env.OPENIDDICT_WELL_KNOWN,
-  //     scopes: (process.env.NEXTAUTH_SCOPE || "openid profile email").split(" "),
-  //     // Override authorization endpoint to use external issuer
-  //     authorizationEndpoint: `${process.env.OPENIDDICT_EXTERNAL_ISSUER}/connect/authorize`,
-  //   },
-  // },
-  user: {
+  //https://www.better-auth.com/docs/concepts/session-management#stateless-session-management
+  session: {
+    cookieCache: {
+      enabled: true,
+      maxAge: 7 * 24 * 60 * 60, // 7 days cache duration
+      strategy: "jwe", // can be "jwt" or "compact"
+      refreshCache: true, // Enable stateless refresh
+    },
     additionalFields: {
-      username: {
+      accessToken: {
         type: "string",
         required: false,
       },
-      roles: {
+      refreshToken: {
+        type: "string",
+        required: false,
+      },
+      idToken: {
         type: "string",
         required: false,
       },
     },
   },
   account: {
+    storeStateStrategy: "cookie",
+    storeAccountCookie: true, // Store account data after OAuth flow in a cookie (useful for database-less flows)
     additionalFields: {
       accessToken: {
         type: "string",
@@ -60,14 +60,31 @@ export const auth = betterAuth({
       },
     },
   },
-  session: {
-    expiresIn: 60 * 60 * 24, // 24 hours
-    updateAge: 60 * 60, // 1 hour
+  user: {
+    additionalFields: {
+      username: {
+        type: "string",
+        required: false,
+      },
+      roles: {
+        type: "string",
+        required: false,
+      },
+    },
   },
   advanced: {
     useSecureCookies: process.env.NODE_ENV === "production",
   },
   plugins: [
+    customSession(async (user, session) => {
+      // const data = await abpApplicationConfigurationGet({
+      //   query: {
+      //     IncludeLocalizationResources: false,
+      //   },
+      // });
+      console.log("Custom session plugin invoked for user:", user);
+      return session;
+    }),
     credentials({
       autoSignUp: true,
       UserType: {} as User & {
@@ -99,6 +116,8 @@ export const auth = betterAuth({
         );
 
         const data = await tokenResponse.json();
+
+        console.log(data);
 
         if (!tokenResponse.ok || !data.access_token) {
           // Handle error responses
