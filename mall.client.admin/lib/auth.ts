@@ -90,14 +90,18 @@ export const auth = betterAuth({
     customSession(async (sessionData, ctx) => {
       // Get the user's accounts to retrieve tokens
       const accounts = await ctx.context.internalAdapter.findAccounts(sessionData.user.id);
-      const account = accounts?.[0];
+      const account = accounts?.[0] as ExtendedAccountData | undefined;
       
       // Add tokens to session from account
+      const extendedSession: ExtendedSessionData = {
+        accessToken: account?.accessToken,
+        refreshToken: account?.refreshToken,
+        idToken: account?.idToken,
+      };
+      
       return {
         ...sessionData.session,
-        accessToken: (account as any)?.accessToken,
-        refreshToken: (account as any)?.refreshToken,
-        idToken: (account as any)?.idToken,
+        ...extendedSession,
       };
     }),
     credentials({
@@ -234,4 +238,31 @@ export const auth = betterAuth({
   },
 });
 
-export type Session = typeof auth.$Infer.Session;
+// Infer session type from better-auth configuration
+export type BetterAuthSession = typeof auth.$Infer.Session;
+
+// Extended types for session with additional fields
+export type ExtendedSessionData = {
+  accessToken?: string;
+  refreshToken?: string;
+  idToken?: string;
+  expiresAt?: number;
+};
+
+export type ExtendedUserData = {
+  id: string;
+  name: string;
+  username?: string;
+  email: string;
+  roles?: string;
+  organization_unit_code?: string;
+  organization_unit_id?: string;
+  supplier_id?: string;
+};
+
+export type ExtendedAccountData = {
+  accessToken?: string;
+  refreshToken?: string;
+  idToken?: string;
+  expiresAt?: number;
+};
