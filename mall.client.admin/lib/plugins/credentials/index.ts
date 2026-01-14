@@ -98,7 +98,7 @@ export function credentials<TSchema extends z.ZodSchema>(
         // 1. 解析输入数据
         const parsed = ctx.body as z.infer<TSchema>;
         
-        if (!parsed || typeof parsed !== "object") {
+        if (!parsed || typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) {
           throw new APIError("UNPROCESSABLE_ENTITY", {
             message: ERROR_CODES.UNEXPECTED_ERROR
           });
@@ -129,10 +129,14 @@ export function credentials<TSchema extends z.ZodSchema>(
         // 3. 提取用户数据和回调函数
         const { onSignIn, onSignUp, onLinkAccount, email: callbackEmail, ...userData } = callbackResult;
         
-        // 确定 email
-        let email = callbackEmail;
-        if (!email && "email" in parsed && typeof (parsed as any).email === "string") {
-          email = (parsed as any).email;
+        // 确定 email - 从 callback 结果或 parsed 输入中获取
+        let email: string | undefined = callbackEmail;
+        const parsedEmail = "email" in parsed && typeof (parsed as any).email === "string" 
+          ? (parsed as any).email 
+          : undefined;
+        
+        if (!email) {
+          email = parsedEmail;
         }
         
         if (!email) {

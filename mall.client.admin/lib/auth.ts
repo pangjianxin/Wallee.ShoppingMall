@@ -128,8 +128,6 @@ export const auth = betterAuth({
 
         const data = await tokenResponse.json();
 
-        console.log(data);
-
         if (!tokenResponse.ok || !data.access_token) {
           // Handle error responses
           const errorDesc = data.error_description?.toLowerCase() || "";
