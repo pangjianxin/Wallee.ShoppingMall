@@ -22,16 +22,8 @@ export async function auth(): Promise<Session | null> {
       return null;
     }
 
-    // Get account to retrieve tokens
-    const accounts = await betterAuthInstance.api.listUserAccounts({
-      headers: {
-        cookie: cookieHeader,
-      },
-    });
-
-    const account = accounts?.[0];
-
     // Return session in the expected format
+    // Tokens should already be in session from customSession plugin
     return {
       user: {
         id: sessionData.user.id,
@@ -40,12 +32,15 @@ export async function auth(): Promise<Session | null> {
         email: sessionData.user.email || "",
         image: sessionData.user.image || undefined,
         roles: (sessionData.user as any).roles,
+        organization_unit_code: (sessionData.user as any).organization_unit_code,
+        organization_unit_id: (sessionData.user as any).organization_unit_id,
+        supplier_id: (sessionData.user as any).supplier_id,
       },
-      // accessToken: account?.accessToken,
-      // refreshToken: account?.refreshToken,
-      // idToken: account?.idToken,
-      // expiresAt: account?.expiresAt,
-    };
+      accessToken: (sessionData.session as any)?.accessToken,
+      refreshToken: (sessionData.session as any)?.refreshToken,
+      idToken: (sessionData.session as any)?.idToken,
+      expiresAt: (sessionData.session as any)?.expiresAt,
+    } as any;
   } catch (error) {
     console.error("Error getting session:", error);
     return null;

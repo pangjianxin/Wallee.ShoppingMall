@@ -5,7 +5,6 @@ import { jwtDecode } from "jwt-decode";
 import type { DecodedJWT } from "@/types/auth-types";
 import { createAuthMiddleware } from "better-auth/plugins";
 import { customSession } from "better-auth/plugins";
-import { a } from "motion/react-client";
 
 export const inputSchema = z.object({
   username: z.string(),
@@ -70,20 +69,36 @@ export const auth = betterAuth({
         type: "string",
         required: false,
       },
+      organization_unit_code: {
+        type: "string",
+        required: false,
+      },
+      organization_unit_id: {
+        type: "string",
+        required: false,
+      },
+      supplier_id: {
+        type: "string",
+        required: false,
+      },
     },
   },
   advanced: {
     useSecureCookies: process.env.NODE_ENV === "production",
   },
   plugins: [
-    customSession(async (user, session) => {
-      // const data = await abpApplicationConfigurationGet({
-      //   query: {
-      //     IncludeLocalizationResources: false,
-      //   },
-      // });
-      console.log("Custom session plugin invoked for user:", user);
-      return session;
+    customSession(async (sessionData, ctx) => {
+      // Get the user's accounts to retrieve tokens
+      const accounts = await ctx.context.internalAdapter.findAccounts(sessionData.user.id);
+      const account = accounts?.[0];
+      
+      // Add tokens to session from account
+      return {
+        ...sessionData.session,
+        accessToken: (account as any)?.accessToken,
+        refreshToken: (account as any)?.refreshToken,
+        idToken: (account as any)?.idToken,
+      };
     }),
     credentials({
       autoSignUp: true,
@@ -152,6 +167,9 @@ export const auth = betterAuth({
             typeof decodedJWT.role === "string"
               ? decodedJWT.role
               : JSON.stringify(decodedJWT.role),
+          organization_unit_code: decodedJWT.organization_unit_code,
+          organization_unit_id: decodedJWT.organization_unit_id,
+          supplier_id: decodedJWT.supplier_id,
 
           onSignIn(userData, user, account) {
             // Update user on each sign-in
@@ -163,6 +181,9 @@ export const auth = betterAuth({
                 typeof decodedJWT.role === "string"
                   ? decodedJWT.role
                   : JSON.stringify(decodedJWT.role),
+              organization_unit_code: decodedJWT.organization_unit_code,
+              organization_unit_id: decodedJWT.organization_unit_id,
+              supplier_id: decodedJWT.supplier_id,
             };
           },
 
