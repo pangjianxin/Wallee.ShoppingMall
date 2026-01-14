@@ -1,61 +1,87 @@
-# Authentication Migration: next-auth@5 to better-auth-compatible Implementation
+# Authentication Migration: next-auth@5 to better-auth with credentials plugin
 
 ## Summary
 
-Successfully migrated `mall.client.admin` from next-auth@5 to a custom authentication implementation that follows better-auth patterns while being compatible with the existing OpenIddict JWT-based architecture.
+Successfully migrated `mall.client.admin` from next-auth@5 to **better-auth** with the **better-auth-credentials-plugin**, providing a mature authentication library that supports both custom credentials (with captcha) and OIDC integration with OpenIddict.
 
-## Why Custom Implementation?
+## Why better-auth with credentials plugin?
 
-Better-auth is designed for applications where it manages user authentication and stores user data in a database. However, this application:
+Better-auth is a modern, type-safe authentication library for TypeScript. With the credentials plugin:
 
-- Uses **external JWT tokens** from OpenIddict (ASP.NET Core backend)
-- Does **not store user data locally** in the frontend
-- Requires **custom credentials fields** (username, password, captchaid, captchacode)
-- Relies on **JWT token validation** rather than session database queries
+- **Mature security practices**: Built-in protection against common vulnerabilities
+- **Custom credentials support**: Full control over authentication logic via callbacks
+- **OIDC native support**: Built-in OIDC provider integration
+- **Flexible**: Custom input schemas, routes, and callbacks
+- **Type-safe**: Full TypeScript support with type inference
+- **Active maintenance**: Regular updates and security patches
 
-The mismatch between better-auth's database-centric architecture and the requirements necessitated a custom implementation that:
-
-1. **Follows better-auth patterns**: Client-side hooks (useSession, signOut, signIn)
-2. **Maintains API compatibility**: Drop-in replacement for next-auth usage
-3. **Preserves existing behavior**: All session fields and error codes maintained
-4. **Works with external JWTs**: No local user database required
+The `better-auth-credentials-plugin` allows us to:
+- Handle custom fields (username, password, captchaid, captchacode)
+- Integrate with external authentication systems (OpenIddict)
+- Automatically manage user creation and sessions
+- Work alongside OIDC provider for single sign-on
 
 ## Implementation Details
 
+### Dependencies
+
+- **better-auth**: Core authentication library
+- **better-auth-credentials-plugin**: Plugin for custom credentials authentication
+
 ### Authentication Flows
 
-#### 1. Credentials Login
-- **Endpoint**: `POST /api/auth/credentials`
+#### 1. Credentials Login (with Captcha)
+- **Endpoint**: `POST /api/auth/sign-in/credentials`
+- **Plugin**: `better-auth-credentials-plugin`
 - **Fields**: username, password, captchaid, captchacode
 - **Flow**:
-  1. Client sends credentials to `/api/auth/credentials`
-  2. Server calls OpenIddict token endpoint (`/connect/token` with `grant_type=password`)
-  3. On success, JWT tokens are stored in httpOnly cookies
-  4. Session is established with decoded JWT claims
+  1. Client submits credentials to `/api/auth/sign-in/credentials`
+  2. Better-auth calls our custom callback function
+  3. Callback exchanges credentials with OpenIddict token endpoint
+  4. On success, callback returns user data
+  5. Better-auth automatically creates/updates user and session
+  6. JWT tokens stored in account record
 
 #### 2. OIDC Login (Authorization Code Flow)
-- **Initiation**: `GET /api/auth/signin/oidc`
-- **Callback**: `GET /api/auth/callback/oidc`
+- **Endpoint**: Built-in better-auth OIDC endpoints
+- **Provider**: OpenIddict
 - **Flow**:
-  1. User clicks OIDC login, redirected to `/api/auth/signin/oidc`
-  2. Server builds authorization URL and redirects to OpenIddict
+  1. User initiates OIDC login
+  2. Better-auth redirects to OpenIddict authorization endpoint
   3. User authenticates at OpenIddict
-  4. OpenIddict redirects back to `/api/auth/callback/oidc` with auth code
-  5. Server exchanges code for tokens
-  6. Tokens stored in httpOnly cookies, user redirected to app
+  4. OpenIddict redirects back with auth code
+  5. Better-auth exchanges code for tokens
+  6. User and session created automatically
+  7. Additional claims mapped via hooks
 
 ### Session Management
 
 **Server-Side** (`lib/auth-server.ts`):
-- `getSession()` / `auth()`: Get current session from cookies
-- `createSession()`: Store tokens after successful login
-- `destroySession()`: Clear session cookies on logout
+- `auth()` / `getSession()`: Get current session from better-auth
+- Uses better-auth's built-in session management
+- Returns session with user data and tokens
 
 **Client-Side** (`lib/auth-client.ts`):
-- `useSession()`: React hook for accessing session
-- `signOut()`: Logout function
-- `signInWithCredentials()`: Credentials login
-- `signInWithOIDC()`: OIDC login trigger
+- `useSession()`: React hook for accessing session (from better-auth/react)
+- `signOut()`: Logout function (from better-auth/react)
+- `signInWithCredentials()`: Wrapper for credentials login with captcha
+- `signInWithOIDC()`: Wrapper for OIDC login
+
+**Configuration** (`lib/auth.ts`):
+- `betterAuth()`: Main server configuration
+- Credentials plugin for custom authentication
+- OIDC provider for OpenIddict
+- User and account schemas with custom fields
+- Hooks for mapping OIDC claims
+
+### Key Features
+
+1. **Automatic User Management**: Better-auth handles user creation and updates
+2. **Session Security**: HttpOnly cookies, CSRF protection built-in
+3. **Token Storage**: Access/refresh/ID tokens stored in account records
+4. **Type Safety**: Full TypeScript support with type inference
+5. **Error Handling**: Custom error codes for different failure scenarios
+6. **Flexible**: Easy to extend with additional providers or plugins
 
 ### Session Data Structure
 
