@@ -1,7 +1,7 @@
 "use client";
 import { useState, FC } from "react";
 import NextImage from "next/image";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
@@ -96,7 +96,9 @@ const Login: FC<Props> = ({ returnUrl }: Props) => {
               className="object-contain dark:invert"
             />
           </div>
-          <h1 className="text-2xl font-medium text-white">{process.env.NEXT_PUBLIC_APP_NAME}</h1>
+          <h1 className="text-2xl font-medium text-white">
+            {process.env.NEXT_PUBLIC_APP_NAME}
+          </h1>
           <p className="text-white/80 text-sm">用户登录</p>
         </div>
 

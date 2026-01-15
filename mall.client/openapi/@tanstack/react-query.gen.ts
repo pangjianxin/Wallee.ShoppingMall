@@ -3,8 +3,8 @@
 import { type DefaultError, queryOptions, type UseMutationOptions } from '@tanstack/react-query';
 
 import { client } from '../client.gen';
-import { abpApiDefinitionGet, abpApplicationConfigurationGet, abpApplicationLocalizationGet, abpTenantFindTenantById, abpTenantFindTenantByName, accountRegister, accountResetPassword, accountSendPasswordResetCode, accountVerifyPasswordResetToken, auditLogGet, auditLogGetList, backgroundJobDelete, backgroundJobGet, backgroundJobGetList, backgroundJobGetWaitingJobs, backgroundJobPending, captchaGenerate, dynamicClaimsRefresh, emailSettingsGet, emailSettingsSendTestEmail, emailSettingsUpdate, featuresDelete, featuresGet, featuresUpdate, loginCheckPassword, loginLogin, loginLogout, mallMediaCreate, mallMediaDelete, mallMediaDownload, mallMediaGet, mallMediaGetList, type Options, permissionsGet, permissionsGetByGroup, permissionsUpdate, profileChangePassword, profileGet, profileUpdate, roleCreate, roleDelete, roleGet, roleGetAllList, roleGetList, roleUpdate, tenantCreate, tenantDelete, tenantDeleteDefaultConnectionString, tenantGet, tenantGetDefaultConnectionString, tenantGetList, tenantUpdate, tenantUpdateDefaultConnectionString, timeZoneSettingsGet, timeZoneSettingsGetTimezones, timeZoneSettingsUpdate, userCreate, userDelete, userFindByEmail, userFindByUsername, userGet, userGetAssignableRoles, userGetList, userGetRoles, userLookupFindById, userLookupFindByUserName, userLookupGetCount, userLookupSearch, userUpdate, userUpdateRoles } from '../sdk.gen';
-import type { AbpApiDefinitionGetData, AbpApiDefinitionGetError, AbpApiDefinitionGetResponse, AbpApplicationConfigurationGetData, AbpApplicationConfigurationGetError, AbpApplicationConfigurationGetResponse, AbpApplicationLocalizationGetData, AbpApplicationLocalizationGetError, AbpApplicationLocalizationGetResponse, AbpTenantFindTenantByIdData, AbpTenantFindTenantByIdError, AbpTenantFindTenantByIdResponse, AbpTenantFindTenantByNameData, AbpTenantFindTenantByNameError, AbpTenantFindTenantByNameResponse, AccountRegisterData, AccountRegisterError, AccountRegisterResponse, AccountResetPasswordData, AccountResetPasswordError, AccountSendPasswordResetCodeData, AccountSendPasswordResetCodeError, AccountVerifyPasswordResetTokenData, AccountVerifyPasswordResetTokenError, AccountVerifyPasswordResetTokenResponse, AuditLogGetData, AuditLogGetError, AuditLogGetListData, AuditLogGetListError, AuditLogGetListResponse, AuditLogGetResponse, BackgroundJobDeleteData, BackgroundJobDeleteError, BackgroundJobGetData, BackgroundJobGetError, BackgroundJobGetListData, BackgroundJobGetListError, BackgroundJobGetListResponse, BackgroundJobGetResponse, BackgroundJobGetWaitingJobsData, BackgroundJobGetWaitingJobsError, BackgroundJobGetWaitingJobsResponse, BackgroundJobPendingData, BackgroundJobPendingError, BackgroundJobPendingResponse, CaptchaGenerateData, CaptchaGenerateResponse, DynamicClaimsRefreshData, DynamicClaimsRefreshError, EmailSettingsGetData, EmailSettingsGetError, EmailSettingsGetResponse, EmailSettingsSendTestEmailData, EmailSettingsSendTestEmailError, EmailSettingsUpdateData, EmailSettingsUpdateError, FeaturesDeleteData, FeaturesDeleteError, FeaturesGetData, FeaturesGetError, FeaturesGetResponse, FeaturesUpdateData, FeaturesUpdateError, LoginCheckPasswordData, LoginCheckPasswordError, LoginCheckPasswordResponse, LoginLoginData, LoginLoginError, LoginLoginResponse, LoginLogoutData, LoginLogoutError, MallMediaCreateData, MallMediaCreateError, MallMediaCreateResponse, MallMediaDeleteData, MallMediaDeleteError, MallMediaDownloadData, MallMediaDownloadError, MallMediaDownloadResponse, MallMediaGetData, MallMediaGetError, MallMediaGetListData, MallMediaGetListError, MallMediaGetListResponse, MallMediaGetResponse, PermissionsGetByGroupData, PermissionsGetByGroupError, PermissionsGetByGroupResponse, PermissionsGetData, PermissionsGetError, PermissionsGetResponse, PermissionsUpdateData, PermissionsUpdateError, ProfileChangePasswordData, ProfileChangePasswordError, ProfileGetData, ProfileGetError, ProfileGetResponse, ProfileUpdateData, ProfileUpdateError, ProfileUpdateResponse, RoleCreateData, RoleCreateError, RoleCreateResponse, RoleDeleteData, RoleDeleteError, RoleGetAllListData, RoleGetAllListError, RoleGetAllListResponse, RoleGetData, RoleGetError, RoleGetListData, RoleGetListError, RoleGetListResponse, RoleGetResponse, RoleUpdateData, RoleUpdateError, RoleUpdateResponse, TenantCreateData, TenantCreateError, TenantCreateResponse, TenantDeleteData, TenantDeleteDefaultConnectionStringData, TenantDeleteDefaultConnectionStringError, TenantDeleteError, TenantGetData, TenantGetDefaultConnectionStringData, TenantGetDefaultConnectionStringError, TenantGetDefaultConnectionStringResponse, TenantGetError, TenantGetListData, TenantGetListError, TenantGetListResponse, TenantGetResponse, TenantUpdateData, TenantUpdateDefaultConnectionStringData, TenantUpdateDefaultConnectionStringError, TenantUpdateError, TenantUpdateResponse, TimeZoneSettingsGetData, TimeZoneSettingsGetError, TimeZoneSettingsGetResponse, TimeZoneSettingsGetTimezonesData, TimeZoneSettingsGetTimezonesError, TimeZoneSettingsGetTimezonesResponse, TimeZoneSettingsUpdateData, TimeZoneSettingsUpdateError, UserCreateData, UserCreateError, UserCreateResponse, UserDeleteData, UserDeleteError, UserFindByEmailData, UserFindByEmailError, UserFindByEmailResponse, UserFindByUsernameData, UserFindByUsernameError, UserFindByUsernameResponse, UserGetAssignableRolesData, UserGetAssignableRolesError, UserGetAssignableRolesResponse, UserGetData, UserGetError, UserGetListData, UserGetListError, UserGetListResponse, UserGetResponse, UserGetRolesData, UserGetRolesError, UserGetRolesResponse, UserLookupFindByIdData, UserLookupFindByIdError, UserLookupFindByIdResponse, UserLookupFindByUserNameData, UserLookupFindByUserNameError, UserLookupFindByUserNameResponse, UserLookupGetCountData, UserLookupGetCountError, UserLookupGetCountResponse, UserLookupSearchData, UserLookupSearchError, UserLookupSearchResponse, UserUpdateData, UserUpdateError, UserUpdateResponse, UserUpdateRolesData, UserUpdateRolesError } from '../types.gen';
+import { abpApiDefinitionGet, abpApplicationConfigurationGet, abpApplicationLocalizationGet, abpTenantFindTenantById, abpTenantFindTenantByName, accountRegister, accountResetPassword, accountSendPasswordResetCode, accountVerifyPasswordResetToken, auditLogGet, auditLogGetList, backgroundJobDelete, backgroundJobGet, backgroundJobGetList, backgroundJobGetWaitingJobs, backgroundJobPending, captchaGenerate, carouselCreate, carouselDelete, carouselGet, carouselGetList, carouselUpdate, dynamicClaimsRefresh, emailSettingsGet, emailSettingsSendTestEmail, emailSettingsUpdate, featuresDelete, featuresGet, featuresUpdate, loginCheckPassword, loginLogin, loginLogout, mallMediaCreate, mallMediaDelete, mallMediaDownload, mallMediaGet, mallMediaGetList, mallMediaPreview, type Options, permissionsGet, permissionsGetByGroup, permissionsUpdate, postAgUiAmap, postAgUiComprehensive, productCreate, productDelete, productGet, productGetList, productGetSkus, productUpdate, productUpsertSkus, profileChangePassword, profileGet, profileUpdate, roleCreate, roleDelete, roleGet, roleGetAllList, roleGetList, roleUpdate, tagCreate, tagDelete, tagGet, tagGetList, tagUpdate, tenantCreate, tenantDelete, tenantDeleteDefaultConnectionString, tenantGet, tenantGetDefaultConnectionString, tenantGetList, tenantUpdate, tenantUpdateDefaultConnectionString, timeZoneSettingsGet, timeZoneSettingsGetTimezones, timeZoneSettingsUpdate, userCreate, userDelete, userFindByEmail, userFindByUsername, userGet, userGetAssignableRoles, userGetList, userGetRoles, userLookupFindById, userLookupFindByUserName, userLookupGetCount, userLookupSearch, userUpdate, userUpdateRoles } from '../sdk.gen';
+import type { AbpApiDefinitionGetData, AbpApiDefinitionGetError, AbpApiDefinitionGetResponse, AbpApplicationConfigurationGetData, AbpApplicationConfigurationGetError, AbpApplicationConfigurationGetResponse, AbpApplicationLocalizationGetData, AbpApplicationLocalizationGetError, AbpApplicationLocalizationGetResponse, AbpTenantFindTenantByIdData, AbpTenantFindTenantByIdError, AbpTenantFindTenantByIdResponse, AbpTenantFindTenantByNameData, AbpTenantFindTenantByNameError, AbpTenantFindTenantByNameResponse, AccountRegisterData, AccountRegisterError, AccountRegisterResponse, AccountResetPasswordData, AccountResetPasswordError, AccountSendPasswordResetCodeData, AccountSendPasswordResetCodeError, AccountVerifyPasswordResetTokenData, AccountVerifyPasswordResetTokenError, AccountVerifyPasswordResetTokenResponse, AuditLogGetData, AuditLogGetError, AuditLogGetListData, AuditLogGetListError, AuditLogGetListResponse, AuditLogGetResponse, BackgroundJobDeleteData, BackgroundJobDeleteError, BackgroundJobGetData, BackgroundJobGetError, BackgroundJobGetListData, BackgroundJobGetListError, BackgroundJobGetListResponse, BackgroundJobGetResponse, BackgroundJobGetWaitingJobsData, BackgroundJobGetWaitingJobsError, BackgroundJobGetWaitingJobsResponse, BackgroundJobPendingData, BackgroundJobPendingError, BackgroundJobPendingResponse, CaptchaGenerateData, CaptchaGenerateResponse, CarouselCreateData, CarouselCreateError, CarouselCreateResponse, CarouselDeleteData, CarouselDeleteError, CarouselGetData, CarouselGetError, CarouselGetListData, CarouselGetListError, CarouselGetListResponse, CarouselGetResponse, CarouselUpdateData, CarouselUpdateError, CarouselUpdateResponse, DynamicClaimsRefreshData, DynamicClaimsRefreshError, EmailSettingsGetData, EmailSettingsGetError, EmailSettingsGetResponse, EmailSettingsSendTestEmailData, EmailSettingsSendTestEmailError, EmailSettingsUpdateData, EmailSettingsUpdateError, FeaturesDeleteData, FeaturesDeleteError, FeaturesGetData, FeaturesGetError, FeaturesGetResponse, FeaturesUpdateData, FeaturesUpdateError, LoginCheckPasswordData, LoginCheckPasswordError, LoginCheckPasswordResponse, LoginLoginData, LoginLoginError, LoginLoginResponse, LoginLogoutData, LoginLogoutError, MallMediaCreateData, MallMediaCreateError, MallMediaCreateResponse, MallMediaDeleteData, MallMediaDeleteError, MallMediaDownloadData, MallMediaDownloadError, MallMediaDownloadResponse, MallMediaGetData, MallMediaGetError, MallMediaGetListData, MallMediaGetListError, MallMediaGetListResponse, MallMediaGetResponse, MallMediaPreviewData, MallMediaPreviewError, MallMediaPreviewResponse, PermissionsGetByGroupData, PermissionsGetByGroupError, PermissionsGetByGroupResponse, PermissionsGetData, PermissionsGetError, PermissionsGetResponse, PermissionsUpdateData, PermissionsUpdateError, PostAgUiAmapData, PostAgUiComprehensiveData, ProductCreateData, ProductCreateError, ProductCreateResponse, ProductDeleteData, ProductDeleteError, ProductGetData, ProductGetError, ProductGetListData, ProductGetListError, ProductGetListResponse, ProductGetResponse, ProductGetSkusData, ProductGetSkusError, ProductGetSkusResponse, ProductUpdateData, ProductUpdateError, ProductUpdateResponse, ProductUpsertSkusData, ProductUpsertSkusError, ProductUpsertSkusResponse, ProfileChangePasswordData, ProfileChangePasswordError, ProfileGetData, ProfileGetError, ProfileGetResponse, ProfileUpdateData, ProfileUpdateError, ProfileUpdateResponse, RoleCreateData, RoleCreateError, RoleCreateResponse, RoleDeleteData, RoleDeleteError, RoleGetAllListData, RoleGetAllListError, RoleGetAllListResponse, RoleGetData, RoleGetError, RoleGetListData, RoleGetListError, RoleGetListResponse, RoleGetResponse, RoleUpdateData, RoleUpdateError, RoleUpdateResponse, TagCreateData, TagCreateError, TagCreateResponse, TagDeleteData, TagDeleteError, TagGetData, TagGetError, TagGetListData, TagGetListError, TagGetListResponse, TagGetResponse, TagUpdateData, TagUpdateError, TagUpdateResponse, TenantCreateData, TenantCreateError, TenantCreateResponse, TenantDeleteData, TenantDeleteDefaultConnectionStringData, TenantDeleteDefaultConnectionStringError, TenantDeleteError, TenantGetData, TenantGetDefaultConnectionStringData, TenantGetDefaultConnectionStringError, TenantGetDefaultConnectionStringResponse, TenantGetError, TenantGetListData, TenantGetListError, TenantGetListResponse, TenantGetResponse, TenantUpdateData, TenantUpdateDefaultConnectionStringData, TenantUpdateDefaultConnectionStringError, TenantUpdateError, TenantUpdateResponse, TimeZoneSettingsGetData, TimeZoneSettingsGetError, TimeZoneSettingsGetResponse, TimeZoneSettingsGetTimezonesData, TimeZoneSettingsGetTimezonesError, TimeZoneSettingsGetTimezonesResponse, TimeZoneSettingsUpdateData, TimeZoneSettingsUpdateError, UserCreateData, UserCreateError, UserCreateResponse, UserDeleteData, UserDeleteError, UserFindByEmailData, UserFindByEmailError, UserFindByEmailResponse, UserFindByUsernameData, UserFindByUsernameError, UserFindByUsernameResponse, UserGetAssignableRolesData, UserGetAssignableRolesError, UserGetAssignableRolesResponse, UserGetData, UserGetError, UserGetListData, UserGetListError, UserGetListResponse, UserGetResponse, UserGetRolesData, UserGetRolesError, UserGetRolesResponse, UserLookupFindByIdData, UserLookupFindByIdError, UserLookupFindByIdResponse, UserLookupFindByUserNameData, UserLookupFindByUserNameError, UserLookupFindByUserNameResponse, UserLookupGetCountData, UserLookupGetCountError, UserLookupGetCountResponse, UserLookupSearchData, UserLookupSearchError, UserLookupSearchResponse, UserUpdateData, UserUpdateError, UserUpdateResponse, UserUpdateRolesData, UserUpdateRolesError } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
@@ -288,6 +288,78 @@ export const captchaGenerateOptions = (options?: Options<CaptchaGenerateData>) =
     queryKey: captchaGenerateQueryKey(options)
 });
 
+export const carouselGetListQueryKey = (options?: Options<CarouselGetListData>) => createQueryKey('carouselGetList', options);
+
+export const carouselGetListOptions = (options?: Options<CarouselGetListData>) => queryOptions<CarouselGetListResponse, CarouselGetListError, CarouselGetListResponse, ReturnType<typeof carouselGetListQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await carouselGetList({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: carouselGetListQueryKey(options)
+});
+
+export const carouselCreateMutation = (options?: Partial<Options<CarouselCreateData>>): UseMutationOptions<CarouselCreateResponse, CarouselCreateError, Options<CarouselCreateData>> => {
+    const mutationOptions: UseMutationOptions<CarouselCreateResponse, CarouselCreateError, Options<CarouselCreateData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await carouselCreate({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const carouselDeleteMutation = (options?: Partial<Options<CarouselDeleteData>>): UseMutationOptions<unknown, CarouselDeleteError, Options<CarouselDeleteData>> => {
+    const mutationOptions: UseMutationOptions<unknown, CarouselDeleteError, Options<CarouselDeleteData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await carouselDelete({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const carouselGetQueryKey = (options: Options<CarouselGetData>) => createQueryKey('carouselGet', options);
+
+export const carouselGetOptions = (options: Options<CarouselGetData>) => queryOptions<CarouselGetResponse, CarouselGetError, CarouselGetResponse, ReturnType<typeof carouselGetQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await carouselGet({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: carouselGetQueryKey(options)
+});
+
+export const carouselUpdateMutation = (options?: Partial<Options<CarouselUpdateData>>): UseMutationOptions<CarouselUpdateResponse, CarouselUpdateError, Options<CarouselUpdateData>> => {
+    const mutationOptions: UseMutationOptions<CarouselUpdateResponse, CarouselUpdateError, Options<CarouselUpdateData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await carouselUpdate({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
 export const dynamicClaimsRefreshMutation = (options?: Partial<Options<DynamicClaimsRefreshData>>): UseMutationOptions<unknown, DynamicClaimsRefreshError, Options<DynamicClaimsRefreshData>> => {
     const mutationOptions: UseMutationOptions<unknown, DynamicClaimsRefreshError, Options<DynamicClaimsRefreshData>> = {
         mutationFn: async (fnOptions) => {
@@ -504,6 +576,21 @@ export const mallMediaDownloadOptions = (options: Options<MallMediaDownloadData>
     queryKey: mallMediaDownloadQueryKey(options)
 });
 
+export const mallMediaPreviewQueryKey = (options: Options<MallMediaPreviewData>) => createQueryKey('mallMediaPreview', options);
+
+export const mallMediaPreviewOptions = (options: Options<MallMediaPreviewData>) => queryOptions<MallMediaPreviewResponse, MallMediaPreviewError, MallMediaPreviewResponse, ReturnType<typeof mallMediaPreviewQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await mallMediaPreview({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: mallMediaPreviewQueryKey(options)
+});
+
 export const permissionsGetQueryKey = (options?: Options<PermissionsGetData>) => createQueryKey('permissionsGet', options);
 
 export const permissionsGetOptions = (options?: Options<PermissionsGetData>) => queryOptions<PermissionsGetResponse, PermissionsGetError, PermissionsGetResponse, ReturnType<typeof permissionsGetQueryKey>>({
@@ -547,6 +634,107 @@ export const permissionsGetByGroupOptions = (options?: Options<PermissionsGetByG
     },
     queryKey: permissionsGetByGroupQueryKey(options)
 });
+
+export const productGetListQueryKey = (options?: Options<ProductGetListData>) => createQueryKey('productGetList', options);
+
+export const productGetListOptions = (options?: Options<ProductGetListData>) => queryOptions<ProductGetListResponse, ProductGetListError, ProductGetListResponse, ReturnType<typeof productGetListQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await productGetList({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: productGetListQueryKey(options)
+});
+
+export const productCreateMutation = (options?: Partial<Options<ProductCreateData>>): UseMutationOptions<ProductCreateResponse, ProductCreateError, Options<ProductCreateData>> => {
+    const mutationOptions: UseMutationOptions<ProductCreateResponse, ProductCreateError, Options<ProductCreateData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await productCreate({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const productDeleteMutation = (options?: Partial<Options<ProductDeleteData>>): UseMutationOptions<unknown, ProductDeleteError, Options<ProductDeleteData>> => {
+    const mutationOptions: UseMutationOptions<unknown, ProductDeleteError, Options<ProductDeleteData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await productDelete({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const productGetQueryKey = (options: Options<ProductGetData>) => createQueryKey('productGet', options);
+
+export const productGetOptions = (options: Options<ProductGetData>) => queryOptions<ProductGetResponse, ProductGetError, ProductGetResponse, ReturnType<typeof productGetQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await productGet({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: productGetQueryKey(options)
+});
+
+export const productUpdateMutation = (options?: Partial<Options<ProductUpdateData>>): UseMutationOptions<ProductUpdateResponse, ProductUpdateError, Options<ProductUpdateData>> => {
+    const mutationOptions: UseMutationOptions<ProductUpdateResponse, ProductUpdateError, Options<ProductUpdateData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await productUpdate({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const productGetSkusQueryKey = (options: Options<ProductGetSkusData>) => createQueryKey('productGetSkus', options);
+
+export const productGetSkusOptions = (options: Options<ProductGetSkusData>) => queryOptions<ProductGetSkusResponse, ProductGetSkusError, ProductGetSkusResponse, ReturnType<typeof productGetSkusQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await productGetSkus({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: productGetSkusQueryKey(options)
+});
+
+export const productUpsertSkusMutation = (options?: Partial<Options<ProductUpsertSkusData>>): UseMutationOptions<ProductUpsertSkusResponse, ProductUpsertSkusError, Options<ProductUpsertSkusData>> => {
+    const mutationOptions: UseMutationOptions<ProductUpsertSkusResponse, ProductUpsertSkusError, Options<ProductUpsertSkusData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await productUpsertSkus({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
 
 export const profileGetQueryKey = (options?: Options<ProfileGetData>) => createQueryKey('profileGet', options);
 
@@ -668,6 +856,78 @@ export const roleUpdateMutation = (options?: Partial<Options<RoleUpdateData>>): 
     const mutationOptions: UseMutationOptions<RoleUpdateResponse, RoleUpdateError, Options<RoleUpdateData>> = {
         mutationFn: async (fnOptions) => {
             const { data } = await roleUpdate({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const tagGetListQueryKey = (options?: Options<TagGetListData>) => createQueryKey('tagGetList', options);
+
+export const tagGetListOptions = (options?: Options<TagGetListData>) => queryOptions<TagGetListResponse, TagGetListError, TagGetListResponse, ReturnType<typeof tagGetListQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await tagGetList({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: tagGetListQueryKey(options)
+});
+
+export const tagCreateMutation = (options?: Partial<Options<TagCreateData>>): UseMutationOptions<TagCreateResponse, TagCreateError, Options<TagCreateData>> => {
+    const mutationOptions: UseMutationOptions<TagCreateResponse, TagCreateError, Options<TagCreateData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await tagCreate({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const tagDeleteMutation = (options?: Partial<Options<TagDeleteData>>): UseMutationOptions<unknown, TagDeleteError, Options<TagDeleteData>> => {
+    const mutationOptions: UseMutationOptions<unknown, TagDeleteError, Options<TagDeleteData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await tagDelete({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const tagGetQueryKey = (options: Options<TagGetData>) => createQueryKey('tagGet', options);
+
+export const tagGetOptions = (options: Options<TagGetData>) => queryOptions<TagGetResponse, TagGetError, TagGetResponse, ReturnType<typeof tagGetQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await tagGet({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: tagGetQueryKey(options)
+});
+
+export const tagUpdateMutation = (options?: Partial<Options<TagUpdateData>>): UseMutationOptions<TagUpdateResponse, TagUpdateError, Options<TagUpdateData>> => {
+    const mutationOptions: UseMutationOptions<TagUpdateResponse, TagUpdateError, Options<TagUpdateData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await tagUpdate({
                 ...options,
                 ...fnOptions,
                 throwOnError: true
@@ -1042,3 +1302,31 @@ export const userLookupGetCountOptions = (options?: Options<UserLookupGetCountDa
     },
     queryKey: userLookupGetCountQueryKey(options)
 });
+
+export const postAgUiComprehensiveMutation = (options?: Partial<Options<PostAgUiComprehensiveData>>): UseMutationOptions<unknown, DefaultError, Options<PostAgUiComprehensiveData>> => {
+    const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<PostAgUiComprehensiveData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await postAgUiComprehensive({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const postAgUiAmapMutation = (options?: Partial<Options<PostAgUiAmapData>>): UseMutationOptions<unknown, DefaultError, Options<PostAgUiAmapData>> => {
+    const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<PostAgUiAmapData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await postAgUiAmap({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};

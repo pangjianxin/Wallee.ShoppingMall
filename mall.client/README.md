@@ -267,3 +267,24 @@ export default function TestPage() {
 | 状态显示不对 | 检查 `isEmpty` 条件是否正确 |
 | 样式不符合预期 | 查看源代码或示例文件 |
 | 需要自定义内容 | 使用 `errorContent` 和 `emptyContent` props |
+
+
+OPENIDDICT_INTERNAL_ISSUER=http://localhost:44301
+#对于用户浏览器的授权重定向，使用外部地址
+OPENIDDICT_EXTERNAL_ISSUER=http://localhost:44301
+#对于服务器端的 .well-known/openid-configuration 请求，使用集群内部地址
+OPENIDDICT_WELL_KNOWN=http://localhost:44301/.well-known/openid-configuration
+#经由NEXTJS的route handler进行处理，所以这里是NEXTJS的访问地址
+NEXTAUTH_URL=http://localhost:4200
+#k8s集群内部地址
+NEXTAUTH_URL_INTERNAL=http://localhost:4200
+NEXTAUTH_CLIENT_ID=Mall_App
+NEXTAUTH_CLIENT_SECRET=""
+NEXTAUTH_SCOPE='openid profile email offline_access Mall'
+NEXT_PUBLIC_API_URL=http://localhost:44301
+NEXT_PUBLIC_APP_URL=http://localhost:4200
+NEXT_PUBLIC_APP_NAME=包头机构智能图谱
+NEXT_PUBLIC_APP_ENG_NAME=BAOTOU BRANCH AI ORG MAP
+NEXT_PUBLIC_MEDIA_DOWNLOAD_URL=/api/org-map/media/download
+NEXT_PUBLIC_MEDIA_PREVIEW_URL=/api/org-map/media/preview
+NEXT_PUBLIC_AMAP_KEY=d797bbfdaee329d2e1be5858313cc7a1

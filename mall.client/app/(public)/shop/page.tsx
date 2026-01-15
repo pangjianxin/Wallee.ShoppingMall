@@ -1,7 +1,7 @@
-import { ProductGrid } from "@/components/mobile/layout/product-grid";
+import { ProductGrid } from "@/components/mobile/products/product-grid";
 import { NextPage } from "next";
 const Page: NextPage = () => {
-  return <ProductGrid />;
+  return <ProductGrid products={[]} />;
 };
 Page.displayName = "ShopPage";
 export default Page;

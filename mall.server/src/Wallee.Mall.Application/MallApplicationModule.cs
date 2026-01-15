@@ -43,7 +43,8 @@ public class MallApplicationModule : AbpModule
         {
             var client = DeepSeekClientFactory.Create();  // OpenAIClient
             var model = "deepseek-chat";
-            return client.GetChatClient(model).AsIChatClient();
+            var chatClient = client.GetChatClient(model).AsIChatClient();
+            return chatClient;
         });
 
         context.Services.AddAIAgent("amap", (sp, key) =>

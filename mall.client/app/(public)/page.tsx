@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Hero } from "@/components/mobile/layout/hero";
-import { CategoryGrid } from "@/components/mobile/layout/category-grid";
-import { FeaturedProducts } from "@/components/mobile/layout/featured-products";
+import { CategoryGrid } from "@/components/mobile/products/category-grid";
+import { FeaturedProducts } from "@/components/mobile/products/featured-products";
 import { LifestyleSection } from "@/components/mobile/layout/life-style-section";
 export default function Home() {
   return (

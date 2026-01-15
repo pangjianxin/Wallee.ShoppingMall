@@ -21,16 +21,15 @@ import { schema, type FormValues } from "@/hooks/account/login-form-validator";
 import { VerificationCodeImage } from "../captcha/captcha-code";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { signInWithCredentials } from "@/lib/auth-client";
 
 const ERROR_MESSAGES: Record<string, string> = {
   invalid_username_or_password: "用户名或密码不存在或输入错误",
   invalid_captcha: "图形验证码错误，请刷新后重新输入",
   invalid_grant: "登录失败，请检查用户名、密码或图形验证码",
 };
-
 type Props = {
   callbackUrl?: string;
 };
@@ -38,6 +37,7 @@ type Props = {
 const Login: FC<Props> = ({ callbackUrl }: Props) => {
   const searchParams = useSearchParams();
   const errorCode = searchParams.get("error");
+  const redirectUrl = callbackUrl || searchParams.get("callbackUrl") || "/";
   const [error, setError] = useState<string | null>(
     errorCode ? ERROR_MESSAGES[errorCode] || ERROR_MESSAGES.invalid_grant : null
   );
@@ -59,17 +59,18 @@ const Login: FC<Props> = ({ callbackUrl }: Props) => {
     setError(null);
 
     try {
-      const result = await signIn("credentials", {
+      const result = await signInWithCredentials({
         username: data.username,
         password: data.password,
         captchaid: data.captchaid,
         captchacode: data.captchacode,
-        redirect: false,
       });
-      if (result?.code) {
-        setError(ERROR_MESSAGES[result.code] || ERROR_MESSAGES.invalid_grant);
-      } else {
-        router.push(callbackUrl || "/");
+
+      if (result.error) {
+        setError(ERROR_MESSAGES[result.error] || ERROR_MESSAGES.invalid_grant);
+      } else if (result.success) {
+        // 登录成功，重定向到回调地址或首页
+        router.push(redirectUrl);
       }
     } catch {
       setError("登录过程中发生错误，请稍后再试");

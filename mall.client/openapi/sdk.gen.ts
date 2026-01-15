@@ -2,7 +2,7 @@
 
 import { type Client, formDataBodySerializer, type Options as Options2, type TDataShape } from './client';
 import { client } from './client.gen';
-import type { AbpApiDefinitionGetData, AbpApiDefinitionGetErrors, AbpApiDefinitionGetResponses, AbpApplicationConfigurationGetData, AbpApplicationConfigurationGetErrors, AbpApplicationConfigurationGetResponses, AbpApplicationLocalizationGetData, AbpApplicationLocalizationGetErrors, AbpApplicationLocalizationGetResponses, AbpTenantFindTenantByIdData, AbpTenantFindTenantByIdErrors, AbpTenantFindTenantByIdResponses, AbpTenantFindTenantByNameData, AbpTenantFindTenantByNameErrors, AbpTenantFindTenantByNameResponses, AccountRegisterData, AccountRegisterErrors, AccountRegisterResponses, AccountResetPasswordData, AccountResetPasswordErrors, AccountResetPasswordResponses, AccountSendPasswordResetCodeData, AccountSendPasswordResetCodeErrors, AccountSendPasswordResetCodeResponses, AccountVerifyPasswordResetTokenData, AccountVerifyPasswordResetTokenErrors, AccountVerifyPasswordResetTokenResponses, AuditLogGetData, AuditLogGetErrors, AuditLogGetListData, AuditLogGetListErrors, AuditLogGetListResponses, AuditLogGetResponses, BackgroundJobDeleteData, BackgroundJobDeleteErrors, BackgroundJobDeleteResponses, BackgroundJobGetData, BackgroundJobGetErrors, BackgroundJobGetListData, BackgroundJobGetListErrors, BackgroundJobGetListResponses, BackgroundJobGetResponses, BackgroundJobGetWaitingJobsData, BackgroundJobGetWaitingJobsErrors, BackgroundJobGetWaitingJobsResponses, BackgroundJobPendingData, BackgroundJobPendingErrors, BackgroundJobPendingResponses, CaptchaGenerateData, CaptchaGenerateResponses, DynamicClaimsRefreshData, DynamicClaimsRefreshErrors, DynamicClaimsRefreshResponses, EmailSettingsGetData, EmailSettingsGetErrors, EmailSettingsGetResponses, EmailSettingsSendTestEmailData, EmailSettingsSendTestEmailErrors, EmailSettingsSendTestEmailResponses, EmailSettingsUpdateData, EmailSettingsUpdateErrors, EmailSettingsUpdateResponses, FeaturesDeleteData, FeaturesDeleteErrors, FeaturesDeleteResponses, FeaturesGetData, FeaturesGetErrors, FeaturesGetResponses, FeaturesUpdateData, FeaturesUpdateErrors, FeaturesUpdateResponses, LoginCheckPasswordData, LoginCheckPasswordErrors, LoginCheckPasswordResponses, LoginLoginData, LoginLoginErrors, LoginLoginResponses, LoginLogoutData, LoginLogoutErrors, LoginLogoutResponses, MallMediaCreateData, MallMediaCreateErrors, MallMediaCreateResponses, MallMediaDeleteData, MallMediaDeleteErrors, MallMediaDeleteResponses, MallMediaDownloadData, MallMediaDownloadErrors, MallMediaDownloadResponses, MallMediaGetData, MallMediaGetErrors, MallMediaGetListData, MallMediaGetListErrors, MallMediaGetListResponses, MallMediaGetResponses, PermissionsGetByGroupData, PermissionsGetByGroupErrors, PermissionsGetByGroupResponses, PermissionsGetData, PermissionsGetErrors, PermissionsGetResponses, PermissionsUpdateData, PermissionsUpdateErrors, PermissionsUpdateResponses, ProfileChangePasswordData, ProfileChangePasswordErrors, ProfileChangePasswordResponses, ProfileGetData, ProfileGetErrors, ProfileGetResponses, ProfileUpdateData, ProfileUpdateErrors, ProfileUpdateResponses, RoleCreateData, RoleCreateErrors, RoleCreateResponses, RoleDeleteData, RoleDeleteErrors, RoleDeleteResponses, RoleGetAllListData, RoleGetAllListErrors, RoleGetAllListResponses, RoleGetData, RoleGetErrors, RoleGetListData, RoleGetListErrors, RoleGetListResponses, RoleGetResponses, RoleUpdateData, RoleUpdateErrors, RoleUpdateResponses, TenantCreateData, TenantCreateErrors, TenantCreateResponses, TenantDeleteData, TenantDeleteDefaultConnectionStringData, TenantDeleteDefaultConnectionStringErrors, TenantDeleteDefaultConnectionStringResponses, TenantDeleteErrors, TenantDeleteResponses, TenantGetData, TenantGetDefaultConnectionStringData, TenantGetDefaultConnectionStringErrors, TenantGetDefaultConnectionStringResponses, TenantGetErrors, TenantGetListData, TenantGetListErrors, TenantGetListResponses, TenantGetResponses, TenantUpdateData, TenantUpdateDefaultConnectionStringData, TenantUpdateDefaultConnectionStringErrors, TenantUpdateDefaultConnectionStringResponses, TenantUpdateErrors, TenantUpdateResponses, TimeZoneSettingsGetData, TimeZoneSettingsGetErrors, TimeZoneSettingsGetResponses, TimeZoneSettingsGetTimezonesData, TimeZoneSettingsGetTimezonesErrors, TimeZoneSettingsGetTimezonesResponses, TimeZoneSettingsUpdateData, TimeZoneSettingsUpdateErrors, TimeZoneSettingsUpdateResponses, UserCreateData, UserCreateErrors, UserCreateResponses, UserDeleteData, UserDeleteErrors, UserDeleteResponses, UserFindByEmailData, UserFindByEmailErrors, UserFindByEmailResponses, UserFindByUsernameData, UserFindByUsernameErrors, UserFindByUsernameResponses, UserGetAssignableRolesData, UserGetAssignableRolesErrors, UserGetAssignableRolesResponses, UserGetData, UserGetErrors, UserGetListData, UserGetListErrors, UserGetListResponses, UserGetResponses, UserGetRolesData, UserGetRolesErrors, UserGetRolesResponses, UserLookupFindByIdData, UserLookupFindByIdErrors, UserLookupFindByIdResponses, UserLookupFindByUserNameData, UserLookupFindByUserNameErrors, UserLookupFindByUserNameResponses, UserLookupGetCountData, UserLookupGetCountErrors, UserLookupGetCountResponses, UserLookupSearchData, UserLookupSearchErrors, UserLookupSearchResponses, UserUpdateData, UserUpdateErrors, UserUpdateResponses, UserUpdateRolesData, UserUpdateRolesErrors, UserUpdateRolesResponses } from './types.gen';
+import type { AbpApiDefinitionGetData, AbpApiDefinitionGetErrors, AbpApiDefinitionGetResponses, AbpApplicationConfigurationGetData, AbpApplicationConfigurationGetErrors, AbpApplicationConfigurationGetResponses, AbpApplicationLocalizationGetData, AbpApplicationLocalizationGetErrors, AbpApplicationLocalizationGetResponses, AbpTenantFindTenantByIdData, AbpTenantFindTenantByIdErrors, AbpTenantFindTenantByIdResponses, AbpTenantFindTenantByNameData, AbpTenantFindTenantByNameErrors, AbpTenantFindTenantByNameResponses, AccountRegisterData, AccountRegisterErrors, AccountRegisterResponses, AccountResetPasswordData, AccountResetPasswordErrors, AccountResetPasswordResponses, AccountSendPasswordResetCodeData, AccountSendPasswordResetCodeErrors, AccountSendPasswordResetCodeResponses, AccountVerifyPasswordResetTokenData, AccountVerifyPasswordResetTokenErrors, AccountVerifyPasswordResetTokenResponses, AuditLogGetData, AuditLogGetErrors, AuditLogGetListData, AuditLogGetListErrors, AuditLogGetListResponses, AuditLogGetResponses, BackgroundJobDeleteData, BackgroundJobDeleteErrors, BackgroundJobDeleteResponses, BackgroundJobGetData, BackgroundJobGetErrors, BackgroundJobGetListData, BackgroundJobGetListErrors, BackgroundJobGetListResponses, BackgroundJobGetResponses, BackgroundJobGetWaitingJobsData, BackgroundJobGetWaitingJobsErrors, BackgroundJobGetWaitingJobsResponses, BackgroundJobPendingData, BackgroundJobPendingErrors, BackgroundJobPendingResponses, CaptchaGenerateData, CaptchaGenerateResponses, CarouselCreateData, CarouselCreateErrors, CarouselCreateResponses, CarouselDeleteData, CarouselDeleteErrors, CarouselDeleteResponses, CarouselGetData, CarouselGetErrors, CarouselGetListData, CarouselGetListErrors, CarouselGetListResponses, CarouselGetResponses, CarouselUpdateData, CarouselUpdateErrors, CarouselUpdateResponses, DynamicClaimsRefreshData, DynamicClaimsRefreshErrors, DynamicClaimsRefreshResponses, EmailSettingsGetData, EmailSettingsGetErrors, EmailSettingsGetResponses, EmailSettingsSendTestEmailData, EmailSettingsSendTestEmailErrors, EmailSettingsSendTestEmailResponses, EmailSettingsUpdateData, EmailSettingsUpdateErrors, EmailSettingsUpdateResponses, FeaturesDeleteData, FeaturesDeleteErrors, FeaturesDeleteResponses, FeaturesGetData, FeaturesGetErrors, FeaturesGetResponses, FeaturesUpdateData, FeaturesUpdateErrors, FeaturesUpdateResponses, LoginCheckPasswordData, LoginCheckPasswordErrors, LoginCheckPasswordResponses, LoginLoginData, LoginLoginErrors, LoginLoginResponses, LoginLogoutData, LoginLogoutErrors, LoginLogoutResponses, MallMediaCreateData, MallMediaCreateErrors, MallMediaCreateResponses, MallMediaDeleteData, MallMediaDeleteErrors, MallMediaDeleteResponses, MallMediaDownloadData, MallMediaDownloadErrors, MallMediaDownloadResponses, MallMediaGetData, MallMediaGetErrors, MallMediaGetListData, MallMediaGetListErrors, MallMediaGetListResponses, MallMediaGetResponses, MallMediaPreviewData, MallMediaPreviewErrors, MallMediaPreviewResponses, PermissionsGetByGroupData, PermissionsGetByGroupErrors, PermissionsGetByGroupResponses, PermissionsGetData, PermissionsGetErrors, PermissionsGetResponses, PermissionsUpdateData, PermissionsUpdateErrors, PermissionsUpdateResponses, PostAgUiAmapData, PostAgUiAmapResponses, PostAgUiComprehensiveData, PostAgUiComprehensiveResponses, ProductCreateData, ProductCreateErrors, ProductCreateResponses, ProductDeleteData, ProductDeleteErrors, ProductDeleteResponses, ProductGetData, ProductGetErrors, ProductGetListData, ProductGetListErrors, ProductGetListResponses, ProductGetResponses, ProductGetSkusData, ProductGetSkusErrors, ProductGetSkusResponses, ProductUpdateData, ProductUpdateErrors, ProductUpdateResponses, ProductUpsertSkusData, ProductUpsertSkusErrors, ProductUpsertSkusResponses, ProfileChangePasswordData, ProfileChangePasswordErrors, ProfileChangePasswordResponses, ProfileGetData, ProfileGetErrors, ProfileGetResponses, ProfileUpdateData, ProfileUpdateErrors, ProfileUpdateResponses, RoleCreateData, RoleCreateErrors, RoleCreateResponses, RoleDeleteData, RoleDeleteErrors, RoleDeleteResponses, RoleGetAllListData, RoleGetAllListErrors, RoleGetAllListResponses, RoleGetData, RoleGetErrors, RoleGetListData, RoleGetListErrors, RoleGetListResponses, RoleGetResponses, RoleUpdateData, RoleUpdateErrors, RoleUpdateResponses, TagCreateData, TagCreateErrors, TagCreateResponses, TagDeleteData, TagDeleteErrors, TagDeleteResponses, TagGetData, TagGetErrors, TagGetListData, TagGetListErrors, TagGetListResponses, TagGetResponses, TagUpdateData, TagUpdateErrors, TagUpdateResponses, TenantCreateData, TenantCreateErrors, TenantCreateResponses, TenantDeleteData, TenantDeleteDefaultConnectionStringData, TenantDeleteDefaultConnectionStringErrors, TenantDeleteDefaultConnectionStringResponses, TenantDeleteErrors, TenantDeleteResponses, TenantGetData, TenantGetDefaultConnectionStringData, TenantGetDefaultConnectionStringErrors, TenantGetDefaultConnectionStringResponses, TenantGetErrors, TenantGetListData, TenantGetListErrors, TenantGetListResponses, TenantGetResponses, TenantUpdateData, TenantUpdateDefaultConnectionStringData, TenantUpdateDefaultConnectionStringErrors, TenantUpdateDefaultConnectionStringResponses, TenantUpdateErrors, TenantUpdateResponses, TimeZoneSettingsGetData, TimeZoneSettingsGetErrors, TimeZoneSettingsGetResponses, TimeZoneSettingsGetTimezonesData, TimeZoneSettingsGetTimezonesErrors, TimeZoneSettingsGetTimezonesResponses, TimeZoneSettingsUpdateData, TimeZoneSettingsUpdateErrors, TimeZoneSettingsUpdateResponses, UserCreateData, UserCreateErrors, UserCreateResponses, UserDeleteData, UserDeleteErrors, UserDeleteResponses, UserFindByEmailData, UserFindByEmailErrors, UserFindByEmailResponses, UserFindByUsernameData, UserFindByUsernameErrors, UserFindByUsernameResponses, UserGetAssignableRolesData, UserGetAssignableRolesErrors, UserGetAssignableRolesResponses, UserGetData, UserGetErrors, UserGetListData, UserGetListErrors, UserGetListResponses, UserGetResponses, UserGetRolesData, UserGetRolesErrors, UserGetRolesResponses, UserLookupFindByIdData, UserLookupFindByIdErrors, UserLookupFindByIdResponses, UserLookupFindByUserNameData, UserLookupFindByUserNameErrors, UserLookupFindByUserNameResponses, UserLookupGetCountData, UserLookupGetCountErrors, UserLookupGetCountResponses, UserLookupSearchData, UserLookupSearchErrors, UserLookupSearchResponses, UserUpdateData, UserUpdateErrors, UserUpdateResponses, UserUpdateRolesData, UserUpdateRolesErrors, UserUpdateRolesResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -90,31 +90,31 @@ export const accountResetPassword = <ThrowOnError extends boolean = false>(optio
 
 export const auditLogGet = <ThrowOnError extends boolean = false>(options: Options<AuditLogGetData, ThrowOnError>) => (options.client ?? client).get<AuditLogGetResponses, AuditLogGetErrors, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/admin/audit-log/{id}',
+    url: '/api/mall/audit-logs/{id}',
     ...options
 });
 
 export const auditLogGetList = <ThrowOnError extends boolean = false>(options?: Options<AuditLogGetListData, ThrowOnError>) => (options?.client ?? client).get<AuditLogGetListResponses, AuditLogGetListErrors, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/admin/audit-log',
+    url: '/api/mall/audit-logs',
     ...options
 });
 
 export const backgroundJobDelete = <ThrowOnError extends boolean = false>(options: Options<BackgroundJobDeleteData, ThrowOnError>) => (options.client ?? client).delete<BackgroundJobDeleteResponses, BackgroundJobDeleteErrors, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/hr-tools/background-jobs/{id}',
+    url: '/api/mall/background-jobs/{id}',
     ...options
 });
 
 export const backgroundJobGet = <ThrowOnError extends boolean = false>(options: Options<BackgroundJobGetData, ThrowOnError>) => (options.client ?? client).get<BackgroundJobGetResponses, BackgroundJobGetErrors, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/hr-tools/background-jobs/{id}',
+    url: '/api/mall/background-jobs/{id}',
     ...options
 });
 
 export const backgroundJobPending = <ThrowOnError extends boolean = false>(options: Options<BackgroundJobPendingData, ThrowOnError>) => (options.client ?? client).put<BackgroundJobPendingResponses, BackgroundJobPendingErrors, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/hr-tools/background-jobs/{id}',
+    url: '/api/mall/background-jobs/{id}',
     ...options,
     headers: {
         'Content-Type': 'application/json',
@@ -124,13 +124,13 @@ export const backgroundJobPending = <ThrowOnError extends boolean = false>(optio
 
 export const backgroundJobGetList = <ThrowOnError extends boolean = false>(options?: Options<BackgroundJobGetListData, ThrowOnError>) => (options?.client ?? client).get<BackgroundJobGetListResponses, BackgroundJobGetListErrors, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/hr-tools/background-jobs',
+    url: '/api/mall/background-jobs',
     ...options
 });
 
 export const backgroundJobGetWaitingJobs = <ThrowOnError extends boolean = false>(options: Options<BackgroundJobGetWaitingJobsData, ThrowOnError>) => (options.client ?? client).get<BackgroundJobGetWaitingJobsResponses, BackgroundJobGetWaitingJobsErrors, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/hr-tools/background-jobs/waiting/{maxCount}',
+    url: '/api/mall/background-jobs/waiting/{maxCount}',
     ...options
 });
 
@@ -138,6 +138,44 @@ export const captchaGenerate = <ThrowOnError extends boolean = false>(options?: 
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/api/identity/captcha/generate',
     ...options
+});
+
+export const carouselGetList = <ThrowOnError extends boolean = false>(options?: Options<CarouselGetListData, ThrowOnError>) => (options?.client ?? client).get<CarouselGetListResponses, CarouselGetListErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/mall/carousels',
+    ...options
+});
+
+export const carouselCreate = <ThrowOnError extends boolean = false>(options?: Options<CarouselCreateData, ThrowOnError>) => (options?.client ?? client).post<CarouselCreateResponses, CarouselCreateErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/mall/carousels',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options?.headers
+    }
+});
+
+export const carouselDelete = <ThrowOnError extends boolean = false>(options: Options<CarouselDeleteData, ThrowOnError>) => (options.client ?? client).delete<CarouselDeleteResponses, CarouselDeleteErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/mall/carousels/{id}',
+    ...options
+});
+
+export const carouselGet = <ThrowOnError extends boolean = false>(options: Options<CarouselGetData, ThrowOnError>) => (options.client ?? client).get<CarouselGetResponses, CarouselGetErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/mall/carousels/{id}',
+    ...options
+});
+
+export const carouselUpdate = <ThrowOnError extends boolean = false>(options: Options<CarouselUpdateData, ThrowOnError>) => (options.client ?? client).put<CarouselUpdateResponses, CarouselUpdateErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/mall/carousels/{id}',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
 });
 
 export const dynamicClaimsRefresh = <ThrowOnError extends boolean = false>(options?: Options<DynamicClaimsRefreshData, ThrowOnError>) => (options?.client ?? client).post<DynamicClaimsRefreshResponses, DynamicClaimsRefreshErrors, ThrowOnError>({
@@ -222,14 +260,14 @@ export const loginCheckPassword = <ThrowOnError extends boolean = false>(options
 
 export const mallMediaGetList = <ThrowOnError extends boolean = false>(options?: Options<MallMediaGetListData, ThrowOnError>) => (options?.client ?? client).get<MallMediaGetListResponses, MallMediaGetListErrors, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/hr-tools/media',
+    url: '/api/mall/medias',
     ...options
 });
 
 export const mallMediaCreate = <ThrowOnError extends boolean = false>(options?: Options<MallMediaCreateData, ThrowOnError>) => (options?.client ?? client).post<MallMediaCreateResponses, MallMediaCreateErrors, ThrowOnError>({
     ...formDataBodySerializer,
     security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/hr-tools/media',
+    url: '/api/mall/medias',
     ...options,
     headers: {
         'Content-Type': null,
@@ -239,19 +277,25 @@ export const mallMediaCreate = <ThrowOnError extends boolean = false>(options?: 
 
 export const mallMediaDelete = <ThrowOnError extends boolean = false>(options: Options<MallMediaDeleteData, ThrowOnError>) => (options.client ?? client).delete<MallMediaDeleteResponses, MallMediaDeleteErrors, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/hr-tools/media/{id}',
+    url: '/api/mall/medias/{id}',
     ...options
 });
 
 export const mallMediaGet = <ThrowOnError extends boolean = false>(options: Options<MallMediaGetData, ThrowOnError>) => (options.client ?? client).get<MallMediaGetResponses, MallMediaGetErrors, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/hr-tools/media/{id}',
+    url: '/api/mall/medias/{id}',
     ...options
 });
 
 export const mallMediaDownload = <ThrowOnError extends boolean = false>(options: Options<MallMediaDownloadData, ThrowOnError>) => (options.client ?? client).get<MallMediaDownloadResponses, MallMediaDownloadErrors, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/hr-tools/media/download/{id}',
+    url: '/api/mall/medias/download/{id}',
+    ...options
+});
+
+export const mallMediaPreview = <ThrowOnError extends boolean = false>(options: Options<MallMediaPreviewData, ThrowOnError>) => (options.client ?? client).get<MallMediaPreviewResponses, MallMediaPreviewErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/mall/medias/preview/{id}',
     ...options
 });
 
@@ -275,6 +319,60 @@ export const permissionsGetByGroup = <ThrowOnError extends boolean = false>(opti
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/api/permission-management/permissions/by-group',
     ...options
+});
+
+export const productGetList = <ThrowOnError extends boolean = false>(options?: Options<ProductGetListData, ThrowOnError>) => (options?.client ?? client).get<ProductGetListResponses, ProductGetListErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/mall/products',
+    ...options
+});
+
+export const productCreate = <ThrowOnError extends boolean = false>(options?: Options<ProductCreateData, ThrowOnError>) => (options?.client ?? client).post<ProductCreateResponses, ProductCreateErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/mall/products',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options?.headers
+    }
+});
+
+export const productDelete = <ThrowOnError extends boolean = false>(options: Options<ProductDeleteData, ThrowOnError>) => (options.client ?? client).delete<ProductDeleteResponses, ProductDeleteErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/mall/products/{id}',
+    ...options
+});
+
+export const productGet = <ThrowOnError extends boolean = false>(options: Options<ProductGetData, ThrowOnError>) => (options.client ?? client).get<ProductGetResponses, ProductGetErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/mall/products/{id}',
+    ...options
+});
+
+export const productUpdate = <ThrowOnError extends boolean = false>(options: Options<ProductUpdateData, ThrowOnError>) => (options.client ?? client).put<ProductUpdateResponses, ProductUpdateErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/mall/products/{id}',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+export const productGetSkus = <ThrowOnError extends boolean = false>(options: Options<ProductGetSkusData, ThrowOnError>) => (options.client ?? client).get<ProductGetSkusResponses, ProductGetSkusErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/mall/products/{id}/skus',
+    ...options
+});
+
+export const productUpsertSkus = <ThrowOnError extends boolean = false>(options: Options<ProductUpsertSkusData, ThrowOnError>) => (options.client ?? client).put<ProductUpsertSkusResponses, ProductUpsertSkusErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/mall/products/{id}/skus',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
 });
 
 export const profileGet = <ThrowOnError extends boolean = false>(options?: Options<ProfileGetData, ThrowOnError>) => (options?.client ?? client).get<ProfileGetResponses, ProfileGetErrors, ThrowOnError>({
@@ -341,6 +439,44 @@ export const roleGet = <ThrowOnError extends boolean = false>(options: Options<R
 export const roleUpdate = <ThrowOnError extends boolean = false>(options: Options<RoleUpdateData, ThrowOnError>) => (options.client ?? client).put<RoleUpdateResponses, RoleUpdateErrors, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/api/identity/roles/{id}',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+export const tagGetList = <ThrowOnError extends boolean = false>(options?: Options<TagGetListData, ThrowOnError>) => (options?.client ?? client).get<TagGetListResponses, TagGetListErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/mall/tags',
+    ...options
+});
+
+export const tagCreate = <ThrowOnError extends boolean = false>(options?: Options<TagCreateData, ThrowOnError>) => (options?.client ?? client).post<TagCreateResponses, TagCreateErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/mall/tags',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options?.headers
+    }
+});
+
+export const tagDelete = <ThrowOnError extends boolean = false>(options: Options<TagDeleteData, ThrowOnError>) => (options.client ?? client).delete<TagDeleteResponses, TagDeleteErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/mall/tags/{id}',
+    ...options
+});
+
+export const tagGet = <ThrowOnError extends boolean = false>(options: Options<TagGetData, ThrowOnError>) => (options.client ?? client).get<TagGetResponses, TagGetErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/mall/tags/{id}',
+    ...options
+});
+
+export const tagUpdate = <ThrowOnError extends boolean = false>(options: Options<TagUpdateData, ThrowOnError>) => (options.client ?? client).put<TagUpdateResponses, TagUpdateErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/mall/tags/{id}',
     ...options,
     headers: {
         'Content-Type': 'application/json',
@@ -518,4 +654,24 @@ export const userLookupGetCount = <ThrowOnError extends boolean = false>(options
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/api/identity/users/lookup/count',
     ...options
+});
+
+export const postAgUiComprehensive = <ThrowOnError extends boolean = false>(options?: Options<PostAgUiComprehensiveData, ThrowOnError>) => (options?.client ?? client).post<PostAgUiComprehensiveResponses, unknown, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/ag-ui/comprehensive',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options?.headers
+    }
+});
+
+export const postAgUiAmap = <ThrowOnError extends boolean = false>(options?: Options<PostAgUiAmapData, ThrowOnError>) => (options?.client ?? client).post<PostAgUiAmapResponses, unknown, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/ag-ui/amap',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options?.headers
+    }
 });

@@ -8,5 +8,3 @@ export const client = createClient({
     return session?.accessToken;
   },
 });
-
-

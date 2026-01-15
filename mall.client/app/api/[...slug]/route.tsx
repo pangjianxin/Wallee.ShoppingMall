@@ -1,4 +1,4 @@
-import { auth } from "@/auth";
+import { auth } from "@/lib/auth-server";
 import { NextRequest, NextResponse } from "next/server";
 const EXTERNAL_API_URL = process.env.NEXT_PUBLIC_API_URL;
 

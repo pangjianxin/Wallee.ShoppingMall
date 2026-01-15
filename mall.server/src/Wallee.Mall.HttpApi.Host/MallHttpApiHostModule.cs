@@ -1,3 +1,5 @@
+using Microsoft.Agents.AI;
+using Microsoft.Agents.AI.Hosting.AGUI.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Extensions.DependencyInjection;
@@ -322,6 +324,9 @@ public class MallHttpApiHostModule : AbpModule
         var app = context.GetApplicationBuilder();
         var env = context.GetEnvironment();
 
+        var amapAgent = context.ServiceProvider.GetKeyedService<AIAgent>("amap");
+        var comprehensiveAgent = context.ServiceProvider.GetKeyedService<AIAgent>("comprehensive");
+
         app.UseForwardedHeaders();
 
         if (env.IsDevelopment())
@@ -363,7 +368,13 @@ public class MallHttpApiHostModule : AbpModule
         });
         app.UseAuditing();
         app.UseAbpSerilogEnrichers();
-        app.UseConfiguredEndpoints();
+        app.UseConfiguredEndpoints(it =>
+        {
+            
+            it.MapAGUI("/ag-ui/comprehensive", comprehensiveAgent!);
+            it.MapAGUI("/ag-ui/amap", amapAgent!);
+            //it.MapAGUIAgent("/ag-ui-agent/comprehensive", comprehensiveAgent!);
+        });
     }
 
     public override async Task OnPostApplicationInitializationAsync(ApplicationInitializationContext context)
