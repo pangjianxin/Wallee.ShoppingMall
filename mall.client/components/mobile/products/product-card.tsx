@@ -1,16 +1,15 @@
 "use client";
-import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
 } from "@/components/ui/carousel";
 import { cn } from "@/lib/utils";
 import type { WalleeMallProductsDtosProductDto } from "@/openapi";
 import Image from "next/image";
+import Autoplay from "embla-carousel-autoplay";
+import { useCallback, useState } from "react";
 
 interface ProductCardProps {
   product: WalleeMallProductsDtosProductDto;
@@ -18,7 +17,8 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, className }: ProductCardProps) {
-  // 计算折扣价格
+  const [currentIndex, setCurrentIndex] = useState(0);
+
   const discountRate = product.discountRate ?? 1;
   const hasDiscount = discountRate < 1;
   const discountPrice =
@@ -26,85 +26,126 @@ export function ProductCard({ product, className }: ProductCardProps) {
       ? product.originalPrice * discountRate
       : null;
 
+  const imageSizes = "(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw";
+
+  const onSelect = useCallback((api: any) => {
+    if (!api) return;
+    setCurrentIndex(api.selectedScrollSnap());
+  }, []);
+
+  const hasMultipleImages =
+    product.productCovers && product.productCovers.length > 1;
+
   return (
-    <Card className={cn("overflow-hidden bg-card", className)}>
-      <div className="relative aspect-square bg-muted">
+    <div
+      className={cn(
+        "overflow-hidden rounded-lg border bg-card text-card-foreground shadow-sm",
+        className
+      )}
+    >
+      <div className="relative aspect-square w-full overflow-hidden bg-muted">
         {product.productCovers && product.productCovers.length > 0 ? (
-          <Carousel className="h-full w-full">
-            <CarouselContent>
+          <Carousel
+            className="h-full w-full"
+            opts={{
+              loop: hasMultipleImages as boolean,
+            }}
+            plugins={
+              hasMultipleImages
+                ? [Autoplay({ delay: 3000, stopOnInteraction: true })]
+                : []
+            }
+            setApi={(api) => {
+              if (api) {
+                api.on("select", () => onSelect(api));
+              }
+            }}
+          >
+            <CarouselContent className="ml-0 h-full">
               {product.productCovers.map((image, index) => (
-                <CarouselItem key={index}>
+                <CarouselItem
+                  key={index}
+                  className="relative aspect-square pl-0"
+                >
                   <Image
-                    src={`${process.env.NEXT_PUBLIC_MEDIA_PREVIEW_URL}${image.mallMediaId}`}
+                    src={`${process.env.NEXT_PUBLIC_MEDIA_PREVIEW_URL}/${image.mallMediaId}`}
                     alt={`${product.name || "商品"} - 图片 ${index + 1}`}
                     className="object-cover"
                     fill
-                    sizes="100%"
+                    sizes={imageSizes}
+                    {...(index === 0
+                      ? { priority: true }
+                      : { loading: "lazy" as const })}
                   />
                 </CarouselItem>
               ))}
             </CarouselContent>
-            {product.productCovers.length > 1 && (
-              <>
-                <CarouselPrevious className="left-2 bg-background/80 backdrop-blur-sm" />
-                <CarouselNext className="right-2 bg-background/80 backdrop-blur-sm" />
-              </>
-            )}
           </Carousel>
         ) : (
-          <div className="relative flex h-full w-full items-center justify-center">
-            <Image
-              src="/placeholder.svg?height=300&width=300"
-              alt="暂无图片"
-              className="object-cover"
-              fill
-              sizes="100%"
-            />
+          <Image
+            src="/placeholder.svg?height=300&width=300"
+            alt="暂无图片"
+            className="object-cover"
+            fill
+            sizes={imageSizes}
+            loading="lazy"
+          />
+        )}
+
+        {hasMultipleImages && (
+          <div className="absolute bottom-1.5 left-1/2 z-10 flex -translate-x-1/2 gap-1">
+            {product.productCovers!.map((_, index) => (
+              <span
+                key={index}
+                className={cn(
+                  "h-1 w-1 rounded-full transition-colors",
+                  index === currentIndex ? "bg-white" : "bg-white/50"
+                )}
+              />
+            ))}
           </div>
         )}
 
-        {/* 折扣标签 */}
         {hasDiscount && (
-          <Badge variant="destructive" className="absolute left-3 top-3 z-10">
-            {Math.round((1 - discountRate) * 100)}% OFF
+          <Badge
+            variant="destructive"
+            className="absolute left-1.5 top-1.5 z-10 px-1.5 py-0.5 text-[10px] sm:left-2 sm:top-2 sm:text-xs"
+          >
+            折扣
           </Badge>
         )}
       </div>
 
-      {/* 商品信息区域 */}
-      <div className="p-4">
+      <div className="p-2 sm:p-3">
         {/* 品牌 */}
         {product.brand && (
-          <p className="mb-1 text-xs text-muted-foreground">{product.brand}</p>
+          <p className="mb-0.5 truncate text-[10px] text-muted-foreground">
+            {product.brand}
+          </p>
         )}
 
-        {/* 商品名称 */}
-        <h3 className="mb-3 line-clamp-2 text-base font-medium leading-snug text-foreground">
+        <h3 className="mb-1.5 line-clamp-2 text-xs font-medium leading-tight text-foreground sm:mb-2 sm:text-sm sm:leading-snug">
           {product.name || "商品名称"}
         </h3>
 
-        {/* 价格区域 */}
-        <div className="flex items-end gap-2">
+        <div className="flex flex-wrap items-baseline gap-1">
           {/* 折扣价或原价 */}
-          <div className="flex items-baseline gap-1">
-            <span className="text-lg font-bold text-destructive">
-              ¥
-              {hasDiscount && discountPrice
-                ? discountPrice.toFixed(2)
-                : product.originalPrice?.toFixed(2) || "0.00"}
-            </span>
-          </div>
+          <span className="text-sm font-bold text-destructive sm:text-base">
+            ¥
+            {hasDiscount && discountPrice
+              ? discountPrice.toFixed(2)
+              : product.originalPrice?.toFixed(2) || "0.00"}
+          </span>
 
           {/* 原价（有折扣时显示删除线） */}
           {hasDiscount && product.originalPrice && (
-            <span className="text-sm text-muted-foreground line-through">
+            <span className="text-[10px] text-muted-foreground line-through sm:text-xs">
               ¥{product.originalPrice.toFixed(2)}
             </span>
           )}
 
-          {/* 京东价 */}
           {product.jdPrice && (
-            <span className="ml-auto text-xs text-muted-foreground">
+            <span className="ml-auto text-[10px] text-muted-foreground">
               京东 ¥{product.jdPrice.toFixed(2)}
             </span>
           )}
@@ -112,18 +153,18 @@ export function ProductCard({ product, className }: ProductCardProps) {
 
         {/* 简短描述 */}
         {product.shortDescription && (
-          <p className="mt-2 line-clamp-1 text-xs text-muted-foreground">
+          <p className="mt-1 line-clamp-1 text-[10px] text-muted-foreground sm:mt-1.5">
             {product.shortDescription}
           </p>
         )}
 
         {/* 销量 */}
         {product.salesCount !== undefined && product.salesCount > 0 && (
-          <p className="mt-2 text-xs text-muted-foreground">
+          <p className="mt-1 text-[10px] text-muted-foreground sm:mt-1.5">
             已售 {product.salesCount}
           </p>
         )}
       </div>
-    </Card>
+    </div>
   );
 }

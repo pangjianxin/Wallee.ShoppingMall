@@ -39,7 +39,7 @@ const Wrapper: FC<{ searchParams: Promise<SearchParams> }> = async ({
       ? Math.ceil(res.data.totalCount / (search.perPage || 10))
       : 0,
   }));
-  return <ProductGrid products={promise} />;
+  return <ProductGrid promise={promise} />;
 };
 
 export default AuditLogsPage;

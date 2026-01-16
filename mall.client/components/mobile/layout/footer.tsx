@@ -59,7 +59,7 @@ export default function MobileBottomNav() {
   const navItems = [
     {
       name: "购物",
-      href: "/shop",
+      href: "/products",
       icon: ShoppingBag,
       permissions: [],
     },

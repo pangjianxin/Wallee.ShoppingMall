@@ -12,6 +12,12 @@ namespace Wallee.Mall.Products
         public string Name { get; private set; } = default!;
         public string? Brand { get; private set; }
         public string? ShortDescription { get; private set; }
+        // 状态字段（便于筛选上架/下架商品）
+        public bool IsActive { get; private set; } = true;
+        // 排序权重（用于首页推荐、热销榜等）
+        public int SortOrder { get; private set; } = 0;
+        // 销量统计（冗余字段，便于排序，定期从订单同步）
+        public int SalesCount { get; private set; } = 0;
 
         // 商品默认价格（可被 SKU 覆盖）
         public decimal OriginalPrice { get; private set; }
@@ -27,15 +33,6 @@ namespace Wallee.Mall.Products
         public decimal? JdPrice { get; private set; }
 
         public string Currency { get; private set; } = "CNY";
-
-        // 状态字段（便于筛选上架/下架商品）
-        public bool IsActive { get; private set; } = true;
-
-        // 排序权重（用于首页推荐、热销榜等）
-        public int SortOrder { get; private set; } = 0;
-
-        // 销量统计（冗余字段，便于排序，定期从订单同步）
-        public int SalesCount { get; private set; } = 0;
 
         // 多对多标签
         public ICollection<ProductTag>? ProductTags { get; private set; }
