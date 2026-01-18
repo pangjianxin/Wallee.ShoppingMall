@@ -4,6 +4,7 @@ using System.Linq;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
 using Wallee.Mall.Utils;
+using Wallee.Mall.Products.Pricing;
 
 namespace Wallee.Mall.Products
 {
@@ -225,6 +226,19 @@ namespace Wallee.Mall.Products
 
                 Skus.Add(sku);
             }
+        }
+
+        public void ApplyPriceSnapshot(ProductPriceSnapshot snapshot)
+        {
+            if (snapshot is null)
+            {
+                throw new ArgumentNullException(nameof(snapshot));
+            }
+
+            SetOriginalPrice(snapshot.OriginalPrice);
+            SetDiscountRate(snapshot.DiscountRate);
+            SetJdPrice(snapshot.JdPrice);
+            SetCurrency(snapshot.Currency);
         }
     }
 }

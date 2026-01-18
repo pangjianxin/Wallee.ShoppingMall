@@ -21,35 +21,35 @@ export const Hero = () => {
 
   const stats = [
     {
-      label: "考勤记录",
+      label: "商品管理",
       value: "99.9%",
-      subtext: "准确率",
+      subtext: "库存准确率",
       icon: CalendarCheck,
     },
-    { label: "审批效率", value: "3x", subtext: "提升", icon: TrendingUp },
-    { label: "数据分析", value: "实时", subtext: "洞察", icon: BarChart3 },
+    { label: "订单处理", value: "3x", subtext: "效率提升", icon: TrendingUp },
+    { label: "销售分析", value: "实时", subtext: "数据洞察", icon: BarChart3 },
   ];
 
   const features = [
     {
       icon: Clock,
-      title: "智能考勤",
-      description: "多终端打卡、GPS定位、人脸识别，自动统计加班与异常",
+      title: "商品管理",
+      description: "多规格商品、库存管理、价格策略，智能库存预警与补货",
     },
     {
       icon: CalendarCheck,
-      title: "灵活排班",
-      description: "支持复杂班次规则，智能冲突检测，一键批量排班",
+      title: "订单处理",
+      description: "订单全流程跟踪，智能分单配货，一键批量发货",
     },
     {
       icon: Users,
-      title: "假勤管理",
-      description: "在线申请审批、余额自动计算、与薪资无缝对接",
+      title: "客户管理",
+      description: "会员体系、积分管理、营销活动，提升客户复购率",
     },
     {
       icon: BarChart3,
-      title: "数据洞察",
-      description: "实时出勤分析、用工成本监控、自定义报表导出",
+      title: "数据分析",
+      description: "实时销售统计、经营分析报表、自定义数据导出",
     },
   ];
 
@@ -77,7 +77,7 @@ export const Hero = () => {
             >
               <Shield className="h-4 w-4 text-primary" />
               <span className="text-sm font-medium text-foreground">
-                企业级人力资源管理平台
+                企业级电商管理平台
               </span>
             </motion.div>
 
@@ -89,13 +89,13 @@ export const Hero = () => {
                 </span>
               </h1>
               <p className="text-xl md:text-2xl text-muted-foreground text-pretty leading-relaxed max-w-xl">
-                为 HR 团队打造的一站式人力资源效率平台，让数据驱动每一个决策
+                为商家打造的一站式电商管理平台，让数据驱动每一个经营决策
               </p>
             </div>
 
             {/* Description */}
             <p className="text-base text-muted-foreground leading-relaxed max-w-xl">
-              整合考勤打卡、智能排班、假勤审批、员工档案与数据分析，帮助企业建立可信的人力数据源，降低人工统计成本，实现合规透明的用工管理。
+              整合商品管理、订单处理、库存管理、客户运营与数据分析，帮助商家建立高效的电商运营体系，降低运营成本，提升销售业绩。
             </p>
 
             {/* CTA Buttons */}
@@ -142,8 +142,8 @@ export const Hero = () => {
           >
             <div className="relative aspect-4/3 w-full rounded-2xl overflow-hidden border border-border shadow-2xl">
               <Image
-                src="/images/building.jpg"
-                alt="HR管理系统演示"
+                src="/images/shopping-mall.png"
+                alt="商城管理系统演示"
                 fill
                 className="object-cover"
                 priority
@@ -167,7 +167,7 @@ export const Hero = () => {
                         {process.env.NEXT_PUBLIC_APP_NAME}
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        包头分行金融科技中心提供支持
+                        专业电商解决方案提供商
                       </p>
                     </div>
                   </div>
@@ -189,7 +189,7 @@ export const Hero = () => {
               核心功能
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              覆盖人力资源管理全场景，助力企业数字化转型
+              覆盖电商运营全场景，助力商家业务增长
             </p>
           </div>
 

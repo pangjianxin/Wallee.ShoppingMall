@@ -7,10 +7,14 @@ using Volo.Abp.Application.Services;
 using Volo.Abp.BackgroundJobs;
 using Wallee.Mall.Medias.BackgroundJobs;
 using Wallee.Mall.Products.Dtos;
+using Wallee.Mall.Products.Pricing;
 
 namespace Wallee.Mall.Products
 {
-    public class ProductAppService(IProductRepository repository, IBackgroundJobManager backgroundJobManager)
+    public class ProductAppService(
+        IProductRepository repository,
+        IBackgroundJobManager backgroundJobManager,
+        IProductPriceSyncStrategy productPriceSyncStrategy)
         : CrudAppService<Product, ProductDto, Guid, ProductGetListInput, CreateProductDto, UpdateProductDto>(repository), IProductAppService
     {
         public override async Task<ProductDto> CreateAsync(CreateProductDto input)
@@ -113,6 +117,9 @@ namespace Wallee.Mall.Products
             }).ToList();
 
             product.UpsertSkus(skuInputs);
+
+            var snapshot = await productPriceSyncStrategy.CalculateAsync(product);
+            product.ApplyPriceSnapshot(snapshot);
 
             await Repository.UpdateAsync(product, autoSave: true);
 

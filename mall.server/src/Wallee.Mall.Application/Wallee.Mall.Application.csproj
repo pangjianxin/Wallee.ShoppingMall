@@ -10,6 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="MallApplicationModule.cs~RF19bc9a9.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Wallee.Mall.Domain\Wallee.Mall.Domain.csproj" />
     <ProjectReference Include="..\Wallee.Mall.Application.Contracts\Wallee.Mall.Application.Contracts.csproj" />
   </ItemGroup>
@@ -31,6 +35,10 @@
 		<PackageReference Include="Microsoft.Extensions.AI" Version="10.2.0" />
 		<PackageReference Include="Microsoft.Agents.AI" Version="1.0.0-preview.260108.1" />
 		<PackageReference Include="Microsoft.Agents.AI.OpenAI" Version="1.0.0-preview.260108.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Products\Tool\" />
   </ItemGroup>
 
 </Project>

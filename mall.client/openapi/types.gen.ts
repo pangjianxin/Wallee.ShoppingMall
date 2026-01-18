@@ -1307,10 +1307,10 @@ export type WalleeMallProductsDtosProductDto = {
     name?: string | null;
     brand?: string | null;
     shortDescription?: string | null;
-    originalPrice?: number;
+    originalPrice?: number | null;
     jdPrice?: number | null;
-    currency?: string | null;
     discountRate?: number;
+    currency?: string | null;
     isActive?: boolean;
     sortOrder?: number;
     salesCount?: number;

@@ -323,9 +323,7 @@ public class MallHttpApiHostModule : AbpModule
     {
         var app = context.GetApplicationBuilder();
         var env = context.GetEnvironment();
-
-        var amapAgent = context.ServiceProvider.GetKeyedService<AIAgent>("amap");
-        var comprehensiveAgent = context.ServiceProvider.GetKeyedService<AIAgent>("comprehensive");
+        var productsAgent = context.ServiceProvider.GetKeyedService<AIAgent>("products");
 
         app.UseForwardedHeaders();
 
@@ -371,9 +369,7 @@ public class MallHttpApiHostModule : AbpModule
         app.UseConfiguredEndpoints(it =>
         {
             
-            it.MapAGUI("/ag-ui/comprehensive", comprehensiveAgent!);
-            it.MapAGUI("/ag-ui/amap", amapAgent!);
-            //it.MapAGUIAgent("/ag-ui-agent/comprehensive", comprehensiveAgent!);
+            it.MapAGUI("/ag-ui/produts", productsAgent!);
         });
     }
 

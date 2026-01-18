@@ -3,13 +3,12 @@ import {
   toFiltersQuery,
   toSortingQuery,
 } from "@/lib/search-params-cache";
-import { productGetList } from "@/openapi";
-import { client } from "@/hey-api/client";
 import { type SearchParams } from "nuqs";
 import { searchParamsCache } from "@/lib/search-params-cache";
 import { FC, Suspense } from "react";
 import { DataTableSkeleton } from "@/components/data-table/data-table-skeleton";
 import { ProductGrid } from "@/components/mobile/products/product-grid";
+import type { ProductGetListData } from "@/openapi";
 type Props = {
   searchParams: Promise<SearchParams>;
 };
@@ -25,21 +24,14 @@ const Wrapper: FC<{ searchParams: Promise<SearchParams> }> = async ({
   searchParams,
 }) => {
   const search = await searchParamsCache().parse(searchParams);
-  const promise = productGetList({
-    client,
-    query: {
-      ...toPaginationQuery({ page: search.page, perPage: search.perPage }),
-      ...toSortingQuery(search.sort),
-      ...toFiltersQuery(["ExecutionTime"], search.filters),
-    },
-  }).then((res) => ({
-    data: res.data,
-    error: res.error,
-    pageCount: res.data?.totalCount
-      ? Math.ceil(res.data.totalCount / (search.perPage || 10))
-      : 0,
-  }));
-  return <ProductGrid promise={promise} />;
+
+  const query: ProductGetListData["query"] = {
+    ...toPaginationQuery({ page: search.page, perPage: search.perPage }),
+    ...toSortingQuery(search.sort),
+    ...toFiltersQuery(["ExecutionTime"], search.filters),
+  };
+
+  return <ProductGrid query={query} />;
 };
 
 export default AuditLogsPage;
