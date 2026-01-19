@@ -116,52 +116,48 @@ export function ProductCard({ product, className }: ProductCardProps) {
         )}
       </div>
 
-      <div className="p-2 sm:p-3">
-        {/* 品牌 */}
-        {product.brand && (
-          <p className="mb-0.5 truncate text-[10px] text-muted-foreground">
-            {product.brand}
-          </p>
+      <div className="space-y-2.5 p-2 sm:p-3">
+        {(product.brand || product.jdPrice) && (
+          <div className="flex items-center gap-2">
+            {product.brand && (
+              <span className="max-w-[60%] truncate rounded-full bg-muted px-2 py-0.5 text-[10px] text-muted-foreground">
+                {product.brand}
+              </span>
+            )}
+            {product.jdPrice && (
+              <span className="ml-auto text-[10px] text-muted-foreground">
+                京东价 ¥{product.jdPrice.toFixed(2)}
+              </span>
+            )}
+          </div>
         )}
 
-        <h3 className="mb-1.5 line-clamp-2 text-xs font-medium leading-tight text-foreground sm:mb-2 sm:text-sm sm:leading-snug">
+        <h3 className="line-clamp-2 text-[13px] font-semibold leading-snug text-foreground sm:text-sm">
           {product.name || "商品名称"}
         </h3>
 
-        <div className="flex flex-wrap items-baseline gap-1">
-          {/* 折扣价或原价 */}
-          <span className="text-sm font-bold text-destructive sm:text-base">
+        <div className="flex items-center gap-2">
+          <span className="text-base font-bold text-destructive">
             ¥
             {hasDiscount && discountPrice
               ? discountPrice.toFixed(2)
               : product.originalPrice?.toFixed(2) || "0.00"}
           </span>
-
-          {/* 原价（有折扣时显示删除线） */}
           {hasDiscount && product.originalPrice && (
-            <span className="text-[10px] text-muted-foreground line-through sm:text-xs">
+            <span className="text-[11px] text-muted-foreground line-through">
               ¥{product.originalPrice.toFixed(2)}
             </span>
           )}
-
-          {product.jdPrice && (
+          {product.salesCount !== undefined && product.salesCount > 0 && (
             <span className="ml-auto text-[10px] text-muted-foreground">
-              京东 ¥{product.jdPrice.toFixed(2)}
+              已售 {product.salesCount}
             </span>
           )}
         </div>
 
-        {/* 简短描述 */}
         {product.shortDescription && (
-          <p className="mt-1 line-clamp-1 text-[10px] text-muted-foreground sm:mt-1.5">
+          <p className="line-clamp-1 text-[11px] text-muted-foreground">
             {product.shortDescription}
-          </p>
-        )}
-
-        {/* 销量 */}
-        {product.salesCount !== undefined && product.salesCount > 0 && (
-          <p className="mt-1 text-[10px] text-muted-foreground sm:mt-1.5">
-            已售 {product.salesCount}
           </p>
         )}
       </div>

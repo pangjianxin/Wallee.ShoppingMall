@@ -77,8 +77,8 @@ export default function MobileBottomNav() {
       permissions: [],
     },
     {
-      name: "收藏",
-      href: "/ai/comprehensive",
+      name: "智购",
+      href: "/ai/products",
       icon: Star,
       permissions: [],
     },

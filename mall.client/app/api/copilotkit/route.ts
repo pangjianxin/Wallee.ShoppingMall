@@ -13,11 +13,8 @@ const serviceAdapter = new ExperimentalEmptyAdapter();
 //    AG-UI integration to setup the connection.
 const runtime = new CopilotRuntime({
   agents: {
-    amap: new HttpAgent({
-      url: `${process.env.NEXT_PUBLIC_API_URL}/ag-ui/amap`,
-    }),
-    comprehensive: new HttpAgent({
-      url: `${process.env.NEXT_PUBLIC_API_URL}/ag-ui/comprehensive`,
+    products: new HttpAgent({
+      url: `${process.env.NEXT_PUBLIC_API_URL}/ag-ui/products`,
     }),
   },
 });

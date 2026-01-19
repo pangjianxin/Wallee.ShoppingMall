@@ -4,7 +4,7 @@ import { FC } from "react";
 
 const ComprehensiveChat: FC = () => {
   return (
-    <CopilotKit runtimeUrl="/api/copilotkit" agent="comprehensive">
+    <CopilotKit runtimeUrl="/api/copilotkit" agent="products">
       <CopilotChat />
     </CopilotKit>
   );
