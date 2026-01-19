@@ -15,6 +15,33 @@ export enum AutoFiltererEnumsCombineType {
     OR = 1
 }
 
+export type MicrosoftAgentsAiHostingAguiAspNetCoreSharedAguiContextItem = {
+    description?: string | null;
+    value?: string | null;
+};
+
+export type MicrosoftAgentsAiHostingAguiAspNetCoreSharedAguiMessage = {
+    id?: string | null;
+    role?: string | null;
+    content?: string | null;
+};
+
+export type MicrosoftAgentsAiHostingAguiAspNetCoreSharedAguiTool = {
+    name?: string | null;
+    description?: string | null;
+    parameters?: unknown;
+};
+
+export type MicrosoftAgentsAiHostingAguiAspNetCoreSharedRunAgentInput = {
+    threadId?: string | null;
+    runId?: string | null;
+    state?: unknown;
+    messages?: Array<MicrosoftAgentsAiHostingAguiAspNetCoreSharedAguiMessage> | null;
+    tools?: Array<MicrosoftAgentsAiHostingAguiAspNetCoreSharedAguiTool> | null;
+    context?: Array<MicrosoftAgentsAiHostingAguiAspNetCoreSharedAguiContextItem> | null;
+    forwardedProps?: unknown;
+};
+
 export enum SystemNetHttpStatusCode {
     /**
      * Continue
@@ -1262,6 +1289,7 @@ export type WalleeMallProductsDtosCreateProductDto = {
     brand?: string | null;
     shortDescription?: string | null;
     originalPrice?: number;
+    jdPrice?: number | null;
     discountRate?: number;
     productCovers?: Array<string> | null;
     sortOrder?: number;
@@ -1280,10 +1308,10 @@ export type WalleeMallProductsDtosProductDto = {
     name?: string | null;
     brand?: string | null;
     shortDescription?: string | null;
-    originalPrice?: number;
+    originalPrice?: number | null;
     jdPrice?: number | null;
-    currency?: string | null;
     discountRate?: number;
+    currency?: string | null;
     isActive?: boolean;
     sortOrder?: number;
     salesCount?: number;
@@ -1324,6 +1352,7 @@ export type WalleeMallProductsDtosUpdateProductDto = {
     brand?: string | null;
     shortDescription?: string | null;
     originalPrice?: number;
+    jdPrice?: number | null;
     isActive?: boolean;
     discountRate?: number;
     sortOrder?: number;
@@ -1331,7 +1360,7 @@ export type WalleeMallProductsDtosUpdateProductDto = {
 };
 
 export type WalleeMallProductsDtosUpdateProductSkuDto = {
-    id?: string;
+    id?: string | null;
     skuCode?: string | null;
     originalPrice?: number;
     discountRate?: number;
@@ -1343,7 +1372,6 @@ export type WalleeMallProductsDtosUpdateProductSkuDto = {
 
 export type WalleeMallProductsDtosUpsertProductSkusDto = {
     items?: Array<WalleeMallProductsDtosUpdateProductSkuDto> | null;
-    validateSkuCodeUniqueness?: boolean;
 };
 
 export type WalleeMallTagsDtosCreateTagDto = {
@@ -3640,52 +3668,6 @@ export type ProductUpsertSkusResponses = {
 
 export type ProductUpsertSkusResponse = ProductUpsertSkusResponses[keyof ProductUpsertSkusResponses];
 
-export type ProductDeleteSkuData = {
-    body?: never;
-    path: {
-        id: string;
-        skuId: string;
-    };
-    query?: never;
-    url: '/api/mall/products/{id}/skus/{skuId}';
-};
-
-export type ProductDeleteSkuErrors = {
-    /**
-     * Bad Request
-     */
-    400: VoloAbpHttpRemoteServiceErrorResponse;
-    /**
-     * Unauthorized
-     */
-    401: VoloAbpHttpRemoteServiceErrorResponse;
-    /**
-     * Forbidden
-     */
-    403: VoloAbpHttpRemoteServiceErrorResponse;
-    /**
-     * Not Found
-     */
-    404: VoloAbpHttpRemoteServiceErrorResponse;
-    /**
-     * Internal Server Error
-     */
-    500: VoloAbpHttpRemoteServiceErrorResponse;
-    /**
-     * Not Implemented
-     */
-    501: VoloAbpHttpRemoteServiceErrorResponse;
-};
-
-export type ProductDeleteSkuError = ProductDeleteSkuErrors[keyof ProductDeleteSkuErrors];
-
-export type ProductDeleteSkuResponses = {
-    /**
-     * OK
-     */
-    200: unknown;
-};
-
 export type ProfileGetData = {
     body?: never;
     path?: never;
@@ -5519,3 +5501,17 @@ export type UserLookupGetCountResponses = {
 };
 
 export type UserLookupGetCountResponse = UserLookupGetCountResponses[keyof UserLookupGetCountResponses];
+
+export type PostAgUiProdutsData = {
+    body?: MicrosoftAgentsAiHostingAguiAspNetCoreSharedRunAgentInput;
+    path?: never;
+    query?: never;
+    url: '/ag-ui/produts';
+};
+
+export type PostAgUiProdutsResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};

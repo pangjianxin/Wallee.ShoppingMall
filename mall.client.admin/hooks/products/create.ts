@@ -14,6 +14,7 @@ export const useCreateProduct = () => {
     brand: z.string().min(1, { message: "品牌不能为空" }),
     shortDescription: z.string().min(1, { message: "简短描述不能为空" }),
     originalPrice: z.number().min(0, { message: "原价不能小于0" }),
+    jdPrice: z.number().min(0, { message: "京东参考价不能小于0" }),
     sortOrder: z.number().optional(),
     discountRate: z
       .number()
@@ -45,6 +46,7 @@ export const useCreateProduct = () => {
       shortDescription: "",
       discountRate: 1,
       originalPrice: 0,
+      jdPrice: 0,
       sortOrder: 0,
       productCovers: [],
     },

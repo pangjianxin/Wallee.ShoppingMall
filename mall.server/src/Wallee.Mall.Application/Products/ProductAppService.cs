@@ -25,7 +25,7 @@ namespace Wallee.Mall.Products
             }
 
             var entity = new Product(GuidGenerator.Create(), input.Name, input.OriginalPrice,
-                input.DiscountRate, input.SortOrder, input.ProductCovers, input.Brand, input.ShortDescription);
+                input.DiscountRate, input.SortOrder, input.ProductCovers, input.JdPrice, input.Brand, input.ShortDescription);
             await Repository.InsertAsync(entity);
             return await MapToGetOutputDtoAsync(entity);
         }
@@ -41,6 +41,7 @@ namespace Wallee.Mall.Products
                 input.SortOrder,
                 input.IsActive,
                 input.ProductCovers,
+                input.JdPrice,
                 input.Brand,
                 input.ShortDescription);
 

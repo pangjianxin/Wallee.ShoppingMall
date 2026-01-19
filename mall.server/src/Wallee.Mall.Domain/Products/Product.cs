@@ -54,6 +54,7 @@ namespace Wallee.Mall.Products
             decimal discountRate,
             int sortOrder,
             List<Guid> covers,
+            decimal? jdPrice,
             string? brand = null,
             string? shortDescription = null) : base(id)
         {
@@ -61,6 +62,7 @@ namespace Wallee.Mall.Products
             SetBrand(brand);
             SetShortDescription(shortDescription);
             SetOriginalPrice(originalPrice);
+            SetJdPrice(jdPrice);
             SetDiscountRate(discountRate);
             SetSortOrder(sortOrder);
             ProductCovers = covers.ConvertAll(it => new ProductCover { MallMediaId = it });
@@ -73,6 +75,7 @@ namespace Wallee.Mall.Products
             int sortOrder,
             bool isActive,
             List<Guid> productCovers,
+            decimal? jdPrice,
             string? brand = null,
             string? shortDescription = null)
         {
@@ -82,6 +85,7 @@ namespace Wallee.Mall.Products
             SetOriginalPrice(originalPrice);
             SetDiscountRate(discountRate);
             SetSortOrder(sortOrder);
+            SetJdPrice(jdPrice);
             SetActive(isActive);
             SetProductCovers(productCovers);
         }

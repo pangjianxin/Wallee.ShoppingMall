@@ -176,6 +176,34 @@ const Update: FC<Props> = ({ entity }) => {
 
               <FormField
                 control={form.control}
+                name="jdPrice"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>商品京东参考价</FormLabel>
+                    <FormControl>
+                      <InputGroup>
+                        <InputGroupAddon>
+                          <InputGroupText>¥</InputGroupText>
+                        </InputGroupAddon>
+                        <InputGroupInput
+                          type="number"
+                          value={field.value}
+                          onChange={(e) => {
+                            field.onChange(Number(e.target.value));
+                          }}
+                        />
+                        <InputGroupAddon align="inline-end">
+                          <InputGroupText>CNY</InputGroupText>
+                        </InputGroupAddon>
+                      </InputGroup>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
                 name="discountRate"
                 render={({ field }) => (
                   <FormItem>

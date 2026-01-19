@@ -23,6 +23,7 @@ export const useUpdateProduct = ({
     brand: z.string().min(1, { message: "品牌不能为空" }),
     shortDescription: z.string().min(1, { message: "简短描述不能为空" }),
     originalPrice: z.number().min(0, { message: "原价不能小于0" }),
+    jdPrice: z.number().min(0, { message: "京东参考价不能小于0" }),
     discountRate: z
       .number()
       .min(0.01, { message: "折扣率不能小于0" })
@@ -57,6 +58,7 @@ export const useUpdateProduct = ({
       originalPrice: entity.originalPrice || 0,
       sortOrder: entity.sortOrder || 0,
       isActive: entity.isActive ?? true,
+      jdPrice: entity.jdPrice ?? 0,
       productCovers: entity.productCovers || [],
       newCovers: [],
     },

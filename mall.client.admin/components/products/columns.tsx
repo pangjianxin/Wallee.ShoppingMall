@@ -75,7 +75,27 @@ export const createColumns = ({
         return (
           <div className="flex space-x-2">
             <span className="font-medium">
-              {price !== undefined ? `${currency}${price.toFixed(2)}` : "-"}
+              {price !== undefined ? `${price?.toFixed(2)}(${currency})` : "-"}
+            </span>
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "jdPrice",
+      meta: { label: "京东参考价" },
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} label="京东参考价" />
+      ),
+      cell: ({ row }) => {
+        const price = row.getValue("jdPrice") as number | undefined | null;
+        const currency = row.original.currency || "¥";
+        return (
+          <div className="flex space-x-2">
+            <span className="font-medium">
+              {price !== undefined && price !== null
+                ? `${price?.toFixed(2)}(${currency})`
+                : "-"}
             </span>
           </div>
         );
@@ -89,12 +109,11 @@ export const createColumns = ({
       ),
       cell: ({ row }) => {
         const price = row.getValue("discountRate") as number | null | undefined;
-        const currency = row.original.currency || "¥";
         return (
           <div className="flex space-x-2">
             <span className="font-medium text-red-600">
               {price !== null && price !== undefined
-                ? `${currency}${price.toFixed(2)}`
+                ? `${price.toFixed(2)}`
                 : "-"}
             </span>
           </div>
