@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
+using Wallee.Mall.Products.Dtos;
 using Wallee.Mall.Tags.Dtos;
 
 namespace Wallee.Mall.Tags
@@ -26,6 +28,13 @@ namespace Wallee.Mall.Tags
         }
 
         [HttpGet]
+        [Route("related/{productId}")]
+        public async Task<List<TagDto>> GetAllRelatedTagsAsync(Guid productId)
+        {
+            return await service.GetAllRelatedTagsAsync(productId);
+        }
+
+        [HttpGet]
         [Route("{id}")]
         public async Task<TagDto> GetAsync(Guid id)
         {
@@ -39,6 +48,12 @@ namespace Wallee.Mall.Tags
             return await service.GetListAsync(input);
         }
 
+        [HttpGet]
+        [Route("popular/{maxCount}")]
+        public async Task<List<PopularTagDto>> GetPopularTagsAsync(int maxCount)
+        {
+            return await service.GetPopularTagsAsync(maxCount);
+        }
 
         [HttpPut]
         [Route("{id}")]

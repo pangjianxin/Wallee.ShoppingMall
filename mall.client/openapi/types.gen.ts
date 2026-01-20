@@ -1289,9 +1289,21 @@ export type WalleeMallProductsDtosCreateProductDto = {
     brand?: string | null;
     shortDescription?: string | null;
     originalPrice?: number;
+    jdPrice?: number | null;
     discountRate?: number;
     productCovers?: Array<string> | null;
     sortOrder?: number;
+};
+
+export type WalleeMallProductsDtosCreateProductTagDto = {
+    tagName: string;
+    productId: string;
+};
+
+export type WalleeMallProductsDtosPopularTagDto = {
+    id?: string;
+    name?: string | null;
+    count?: number;
 };
 
 export type WalleeMallProductsDtosProductCoverDto = {
@@ -1314,7 +1326,6 @@ export type WalleeMallProductsDtosProductDto = {
     isActive?: boolean;
     sortOrder?: number;
     salesCount?: number;
-    productTags?: Array<WalleeMallProductsDtosProductTagDto> | null;
     skus?: Array<WalleeMallProductsDtosProductSkuDto> | null;
     productCovers?: Array<WalleeMallProductsDtosProductCoverDto> | null;
 };
@@ -1340,10 +1351,14 @@ export type WalleeMallProductsDtosProductSkuDto = {
     discountRate?: number;
 };
 
-export type WalleeMallProductsDtosProductTagDto = {
+export type WalleeMallProductsDtosRemoveProductTagDto = {
+    tagId: string;
+    productId: string;
+};
+
+export type WalleeMallProductsDtosSetProductTagDto = {
     productId?: string;
-    tagId?: string;
-    normalizedTagName?: string | null;
+    tags: Array<string>;
 };
 
 export type WalleeMallProductsDtosUpdateProductDto = {
@@ -1351,6 +1366,7 @@ export type WalleeMallProductsDtosUpdateProductDto = {
     brand?: string | null;
     shortDescription?: string | null;
     originalPrice?: number;
+    jdPrice?: number | null;
     isActive?: boolean;
     discountRate?: number;
     sortOrder?: number;
@@ -3666,6 +3682,135 @@ export type ProductUpsertSkusResponses = {
 
 export type ProductUpsertSkusResponse = ProductUpsertSkusResponses[keyof ProductUpsertSkusResponses];
 
+export type ProductTagAddTagToProductData = {
+    body?: WalleeMallProductsDtosCreateProductTagDto;
+    path?: never;
+    query?: never;
+    url: '/api/mall/product-tags/add-tag';
+};
+
+export type ProductTagAddTagToProductErrors = {
+    /**
+     * Bad Request
+     */
+    400: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Unauthorized
+     */
+    401: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Forbidden
+     */
+    403: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Not Found
+     */
+    404: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Internal Server Error
+     */
+    500: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Not Implemented
+     */
+    501: VoloAbpHttpRemoteServiceErrorResponse;
+};
+
+export type ProductTagAddTagToProductError = ProductTagAddTagToProductErrors[keyof ProductTagAddTagToProductErrors];
+
+export type ProductTagAddTagToProductResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type ProductTagRemoveTagFromProductData = {
+    body?: WalleeMallProductsDtosRemoveProductTagDto;
+    path?: never;
+    query?: never;
+    url: '/api/mall/product-tags/remove-tag';
+};
+
+export type ProductTagRemoveTagFromProductErrors = {
+    /**
+     * Bad Request
+     */
+    400: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Unauthorized
+     */
+    401: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Forbidden
+     */
+    403: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Not Found
+     */
+    404: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Internal Server Error
+     */
+    500: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Not Implemented
+     */
+    501: VoloAbpHttpRemoteServiceErrorResponse;
+};
+
+export type ProductTagRemoveTagFromProductError = ProductTagRemoveTagFromProductErrors[keyof ProductTagRemoveTagFromProductErrors];
+
+export type ProductTagRemoveTagFromProductResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type ProductTagSetProductTagsData = {
+    body?: WalleeMallProductsDtosSetProductTagDto;
+    path?: never;
+    query?: never;
+    url: '/api/mall/product-tags/set-tags';
+};
+
+export type ProductTagSetProductTagsErrors = {
+    /**
+     * Bad Request
+     */
+    400: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Unauthorized
+     */
+    401: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Forbidden
+     */
+    403: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Not Found
+     */
+    404: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Internal Server Error
+     */
+    500: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Not Implemented
+     */
+    501: VoloAbpHttpRemoteServiceErrorResponse;
+};
+
+export type ProductTagSetProductTagsError = ProductTagSetProductTagsErrors[keyof ProductTagSetProductTagsErrors];
+
+export type ProductTagSetProductTagsResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
 export type ProfileGetData = {
     body?: never;
     path?: never;
@@ -4329,6 +4474,100 @@ export type TagUpdateResponses = {
 };
 
 export type TagUpdateResponse = TagUpdateResponses[keyof TagUpdateResponses];
+
+export type TagGetAllRelatedTagsData = {
+    body?: never;
+    path: {
+        productId: string;
+    };
+    query?: never;
+    url: '/api/mall/tags/related/{productId}';
+};
+
+export type TagGetAllRelatedTagsErrors = {
+    /**
+     * Bad Request
+     */
+    400: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Unauthorized
+     */
+    401: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Forbidden
+     */
+    403: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Not Found
+     */
+    404: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Internal Server Error
+     */
+    500: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Not Implemented
+     */
+    501: VoloAbpHttpRemoteServiceErrorResponse;
+};
+
+export type TagGetAllRelatedTagsError = TagGetAllRelatedTagsErrors[keyof TagGetAllRelatedTagsErrors];
+
+export type TagGetAllRelatedTagsResponses = {
+    /**
+     * OK
+     */
+    200: Array<WalleeMallTagsDtosTagDto>;
+};
+
+export type TagGetAllRelatedTagsResponse = TagGetAllRelatedTagsResponses[keyof TagGetAllRelatedTagsResponses];
+
+export type TagGetPopularTagsData = {
+    body?: never;
+    path: {
+        maxCount: number;
+    };
+    query?: never;
+    url: '/api/mall/tags/popular/{maxCount}';
+};
+
+export type TagGetPopularTagsErrors = {
+    /**
+     * Bad Request
+     */
+    400: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Unauthorized
+     */
+    401: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Forbidden
+     */
+    403: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Not Found
+     */
+    404: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Internal Server Error
+     */
+    500: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Not Implemented
+     */
+    501: VoloAbpHttpRemoteServiceErrorResponse;
+};
+
+export type TagGetPopularTagsError = TagGetPopularTagsErrors[keyof TagGetPopularTagsErrors];
+
+export type TagGetPopularTagsResponses = {
+    /**
+     * OK
+     */
+    200: Array<WalleeMallProductsDtosPopularTagDto>;
+};
+
+export type TagGetPopularTagsResponse = TagGetPopularTagsResponses[keyof TagGetPopularTagsResponses];
 
 export type TenantDeleteData = {
     body?: never;
@@ -5500,28 +5739,14 @@ export type UserLookupGetCountResponses = {
 
 export type UserLookupGetCountResponse = UserLookupGetCountResponses[keyof UserLookupGetCountResponses];
 
-export type PostAgUiComprehensiveData = {
+export type PostAgUiProductsData = {
     body?: MicrosoftAgentsAiHostingAguiAspNetCoreSharedRunAgentInput;
     path?: never;
     query?: never;
-    url: '/ag-ui/comprehensive';
+    url: '/ag-ui/products';
 };
 
-export type PostAgUiComprehensiveResponses = {
-    /**
-     * OK
-     */
-    200: unknown;
-};
-
-export type PostAgUiAmapData = {
-    body?: MicrosoftAgentsAiHostingAguiAspNetCoreSharedRunAgentInput;
-    path?: never;
-    query?: never;
-    url: '/ag-ui/amap';
-};
-
-export type PostAgUiAmapResponses = {
+export type PostAgUiProductsResponses = {
     /**
      * OK
      */

@@ -15,7 +15,6 @@ public class EfCoreProductRepository(IDbContextProvider<MallDbContext> dbContext
 {
     public async Task<List<Product>> SearchAsync(
         string? keyword,
-        string? normalizedTag,
         string? attributeKey,
         string? attributeValue,
         CancellationToken cancellationToken = default)
@@ -26,12 +25,6 @@ public class EfCoreProductRepository(IDbContextProvider<MallDbContext> dbContext
         {
             var trimmed = keyword.Trim();
             predicate = predicate?.And(p => p.Name.Contains(trimmed) || (p.Brand != null && p.Brand.Contains(trimmed)));
-        }
-
-        if (!string.IsNullOrWhiteSpace(normalizedTag))
-        {
-            var tag = normalizedTag.Trim().ToLowerInvariant();
-            predicate = predicate?.And(p => p.ProductTags != null && p.ProductTags.Any(pt => pt.NormalizedTagName == tag));
         }
 
         return await GetListAsync(predicate!, includeDetails: true, cancellationToken: cancellationToken);

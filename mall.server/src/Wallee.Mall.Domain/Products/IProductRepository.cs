@@ -10,7 +10,6 @@ public interface IProductRepository : IRepository<Product, Guid>
 {
     Task<List<Product>> SearchAsync(
         string? keyword,
-        string? normalizedTag,
         string? attributeKey,
         string? attributeValue,
         CancellationToken cancellationToken = default);

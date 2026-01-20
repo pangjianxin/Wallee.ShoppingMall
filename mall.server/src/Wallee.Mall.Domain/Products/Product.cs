@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
-using Wallee.Mall.Utils;
 using Wallee.Mall.Products.Pricing;
+using Wallee.Mall.Utils;
 
 namespace Wallee.Mall.Products
 {
@@ -34,9 +34,6 @@ namespace Wallee.Mall.Products
         public decimal? JdPrice { get; private set; }
 
         public string Currency { get; private set; } = "CNY";
-
-        // 多对多标签
-        public ICollection<ProductTag>? ProductTags { get; private set; }
 
         // 一对多 SKU
         public ICollection<ProductSku>? Skus { get; private set; }
@@ -208,7 +205,7 @@ namespace Wallee.Mall.Products
                 existing.SetOriginalPrice(input.OriginalPrice);
                 existing.SetDiscountRate(input.DiscountRate);
                 existing.SetJdPrice(input.JdPrice);
-                existing.SetCurrency(input.Currency);
+                existing.SetCurrency(input.Currency ?? "CNY");
                 existing.SetStock(input.StockQuantity);
                 existing.SetAttributes(input.Attributes);
             }
@@ -234,10 +231,7 @@ namespace Wallee.Mall.Products
 
         public void ApplyPriceSnapshot(ProductPriceSnapshot snapshot)
         {
-            if (snapshot is null)
-            {
-                throw new ArgumentNullException(nameof(snapshot));
-            }
+            ArgumentNullException.ThrowIfNull(snapshot);
 
             SetOriginalPrice(snapshot.OriginalPrice);
             SetDiscountRate(snapshot.DiscountRate);

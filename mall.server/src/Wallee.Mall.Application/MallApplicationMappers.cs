@@ -63,4 +63,11 @@ public partial class ProductMappers : MapperBase<Product, ProductDto>
     public override partial void Map(Product source, ProductDto destination);
 }
 
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
+public partial class PopularTagMappers : MapperBase<PopularTag, PopularTagDto>
+{
+    public override partial PopularTagDto Map(PopularTag source);
+    public override partial void Map(PopularTag source, PopularTagDto destination);
+}
+
 

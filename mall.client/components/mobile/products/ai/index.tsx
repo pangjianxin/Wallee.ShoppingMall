@@ -1,13 +1,24 @@
+"use client";
 import { CopilotKit } from "@copilotkit/react-core";
 import CopilotChat from "@/components/mobile/ai/copilot-chat";
 import { FC } from "react";
+import { ProductSearchRenderer } from "@/components/mobile/products/ai/tool-renderers";
+import { useSession } from "@/lib/auth-client";
 
-const ComprehensiveChat: FC = () => {
+const ProductsChat: FC = () => {
+  const session = useSession();
   return (
-    <CopilotKit runtimeUrl="/api/copilotkit" agent="products">
+    <CopilotKit
+      runtimeUrl="/api/copilotkit"
+      agent="products"
+      headers={{
+        Authorization: `Bearer ${session?.data?.session.token}`,
+      }}
+      renderToolCalls={[ProductSearchRenderer]}
+    >
       <CopilotChat />
     </CopilotKit>
   );
 };
 
-export default ComprehensiveChat;
+export default ProductsChat;

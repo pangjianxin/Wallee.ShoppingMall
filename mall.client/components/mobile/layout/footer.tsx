@@ -27,7 +27,7 @@ const NoAccessFallback = ({ tIcon }: { tIcon?: React.ElementType }) => {
         <Icon
           className={cn(
             "h-6 w-6 transition-colors",
-            "text-destructive group-hover:text-primary"
+            "text-destructive group-hover:text-primary",
           )}
           strokeWidth={2}
         />
@@ -45,7 +45,7 @@ const NoAccessFallback = ({ tIcon }: { tIcon?: React.ElementType }) => {
       <span
         className={cn(
           "text-xs absolute bottom-1 transition-all",
-          "font-normal text-gray-600"
+          "font-normal text-gray-600",
         )}
       >
         禁用
@@ -65,7 +65,7 @@ export default function MobileBottomNav() {
     },
     {
       name: "分类",
-      href: "/ai",
+      href: "/products/category",
       icon: BookOpenText,
       permissions: [],
     },
@@ -78,7 +78,7 @@ export default function MobileBottomNav() {
     },
     {
       name: "智购",
-      href: "/ai/products",
+      href: "/products/ai",
       icon: Star,
       permissions: [],
     },
@@ -219,7 +219,9 @@ export default function MobileBottomNav() {
                 href={item.href}
                 className={cn(
                   "flex flex-col items-center justify-start pt-3 relative h-full group overflow-hidden transition-colors select-none",
-                  isActive ? "text-primary" : "text-gray-500 hover:text-primary"
+                  isActive
+                    ? "text-primary"
+                    : "text-gray-500 hover:text-primary",
                 )}
               >
                 <motion.div
@@ -234,7 +236,7 @@ export default function MobileBottomNav() {
                       "h-6 w-6 transition-colors",
                       isActive
                         ? "text-primary"
-                        : "text-gray-500 group-hover:text-primary"
+                        : "text-gray-500 group-hover:text-primary",
                     )}
                     strokeWidth={isActive ? 2.5 : 2}
                   />
@@ -254,7 +256,7 @@ export default function MobileBottomNav() {
                     "text-xs absolute bottom-1 transition-all",
                     isActive
                       ? "font-semibold text-primary"
-                      : "font-normal text-gray-600"
+                      : "font-normal text-gray-600",
                   )}
                 >
                   {item.name}

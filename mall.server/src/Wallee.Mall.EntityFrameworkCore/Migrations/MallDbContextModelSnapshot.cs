@@ -2179,14 +2179,19 @@ namespace Wallee.Mall.Migrations
                     b.Property<Guid>("TagId")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("NormalizedTagName")
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
                         .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)")
+                        .HasColumnName("ConcurrencyStamp");
+
+                    b.Property<string>("ExtraProperties")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("ExtraProperties");
 
                     b.HasKey("ProductId", "TagId");
-
-                    b.HasIndex("NormalizedTagName");
 
                     b.HasIndex("ProductId");
 
@@ -2471,15 +2476,6 @@ namespace Wallee.Mall.Migrations
                     b.Navigation("Attributes");
                 });
 
-            modelBuilder.Entity("Wallee.Mall.Products.ProductTag", b =>
-                {
-                    b.HasOne("Wallee.Mall.Products.Product", null)
-                        .WithMany("ProductTags")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Volo.Abp.AuditLogging.AuditLog", b =>
                 {
                     b.Navigation("Actions");
@@ -2522,8 +2518,6 @@ namespace Wallee.Mall.Migrations
 
             modelBuilder.Entity("Wallee.Mall.Products.Product", b =>
                 {
-                    b.Navigation("ProductTags");
-
                     b.Navigation("Skus");
                 });
 #pragma warning restore 612, 618

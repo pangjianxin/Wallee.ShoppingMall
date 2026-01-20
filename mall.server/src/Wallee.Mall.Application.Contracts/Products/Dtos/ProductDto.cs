@@ -23,8 +23,6 @@ namespace Wallee.Mall.Products.Dtos
         public int SortOrder { get; set; } = 0;
         // 销量统计（冗余字段，便于排序，定期从订单同步）
         public int SalesCount { get; set; } = 0;
-        // 多对多标签
-        public List<ProductTagDto>? ProductTags { get; set; }
         // 一对多 SKU
         public List<ProductSkuDto>? Skus { get; set; }
         public List<ProductCoverDto> ProductCovers { get; set; } = [];

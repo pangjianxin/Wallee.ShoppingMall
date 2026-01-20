@@ -103,8 +103,6 @@ public class MallDbContext(DbContextOptions<MallDbContext> options) :
 
             b.HasMany(p => p.Skus).WithOne().HasForeignKey(s => s.ProductId);
 
-            b.HasMany(p => p.ProductTags).WithOne().HasForeignKey(pt => pt.ProductId);
-
             b.OwnsMany(p => p.ProductCovers, pc =>
             {
                 pc.ToJson();
@@ -150,12 +148,9 @@ public class MallDbContext(DbContextOptions<MallDbContext> options) :
             b.ToTable(MallConsts.DbTablePrefix + "ProductTags", MallConsts.DbSchema);
             b.ConfigureByConvention();
             b.HasKey(pt => new { pt.ProductId, pt.TagId });
-
-            b.Property(pt => pt.NormalizedTagName).IsRequired().HasMaxLength(128);
-
             b.HasIndex(pt => pt.TagId);
             b.HasIndex(pt => pt.ProductId);
-            b.HasIndex(pt => pt.NormalizedTagName);
+
         });
 
         builder.Entity<MallMedia>(b =>

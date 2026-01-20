@@ -7,7 +7,7 @@ import { type SearchParams } from "nuqs";
 import { searchParamsCache } from "@/lib/search-params-cache";
 import { FC, Suspense } from "react";
 import { DataTableSkeleton } from "@/components/data-table/data-table-skeleton";
-import { ProductGrid } from "@/components/mobile/products/product-grid";
+import { ProductGrid } from "@/components/mobile/products/grid";
 import type { ProductGetListData } from "@/openapi";
 type Props = {
   searchParams: Promise<SearchParams>;

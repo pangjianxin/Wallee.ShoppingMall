@@ -14,7 +14,6 @@ namespace Wallee.Mall.Products
             }
 
             return queryable
-                 .Include(x => x.ProductTags)
                  .Include(x => x.Skus);
         }
     }

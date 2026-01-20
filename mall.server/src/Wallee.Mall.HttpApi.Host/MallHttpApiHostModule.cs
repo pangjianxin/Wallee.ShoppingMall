@@ -367,9 +367,8 @@ public class MallHttpApiHostModule : AbpModule
         app.UseAuditing();
         app.UseAbpSerilogEnrichers();
         app.UseConfiguredEndpoints(it =>
-        {
-            
-            it.MapAGUI("/ag-ui/produts", productsAgent!);
+        {      
+            it.MapAGUI("/ag-ui/products", productsAgent!);
         });
     }
 
