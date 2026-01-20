@@ -1,5 +1,4 @@
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
 
 namespace Wallee.Mall.Carousels;
 

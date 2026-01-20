@@ -30,22 +30,30 @@ const ProductTable: FC<Props> = ({ promise }) => {
     (v: WalleeMallProductsDtosProductDto) => {
       router.push(`/products/${v.id}/update`);
     },
-    [router]
+    [router],
   );
 
   const handleUpdateSkus = useCallback(
     (v: WalleeMallProductsDtosProductDto) => {
       router.push(`/products/${v.id}/update-skus`);
     },
-    [router]
+    [router],
+  );
+
+  const handleViewPosts = useCallback(
+    (v: WalleeMallProductsDtosProductDto) => {
+      router.push(`/products/${v.id}/posts`);
+    },
+    [router],
   );
 
   const columns = useMemo(() => {
     return createColumns({
       onUpdate: handleUpdate,
       onUpdateSkus: handleUpdateSkus,
+      onViewPosts: handleViewPosts,
     });
-  }, [handleUpdate, handleUpdateSkus]);
+  }, [handleUpdate, handleUpdateSkus, handleViewPosts]);
 
   const { table, shallow, debounceMs, throttleMs } =
     useDataTable<WalleeMallProductsDtosProductDto>({

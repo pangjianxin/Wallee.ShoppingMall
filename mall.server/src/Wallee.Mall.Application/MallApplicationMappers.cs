@@ -4,6 +4,8 @@ using Volo.Abp.BackgroundJobs;
 using Volo.Abp.Mapperly;
 using Wallee.Mall.AuditLogs.Dtos;
 using Wallee.Mall.BackgroundJobs.Dtos;
+using Wallee.Mall.Cms;
+using Wallee.Mall.Cms.Dtos;
 using Wallee.Mall.Medias;
 using Wallee.Mall.Medias.Dtos;
 using Wallee.Mall.Medias.Etos;
@@ -68,6 +70,13 @@ public partial class PopularTagMappers : MapperBase<PopularTag, PopularTagDto>
 {
     public override partial PopularTagDto Map(PopularTag source);
     public override partial void Map(PopularTag source, PopularTagDto destination);
+}
+
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
+public partial class ProductPostMappers : MapperBase<ProductPost, ProductPostDto>
+{
+    public override partial ProductPostDto Map(ProductPost source);
+    public override partial void Map(ProductPost source, ProductPostDto destination);
 }
 
 

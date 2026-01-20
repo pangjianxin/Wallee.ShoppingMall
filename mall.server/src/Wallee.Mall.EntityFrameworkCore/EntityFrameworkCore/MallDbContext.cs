@@ -16,6 +16,7 @@ using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.TenantManagement;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
 using Wallee.Mall.Carousels;
+using Wallee.Mall.Cms;
 using Wallee.Mall.Medias;
 using Wallee.Mall.Products;
 using Wallee.Mall.Tags;
@@ -67,7 +68,7 @@ public class MallDbContext(DbContextOptions<MallDbContext> options) :
     public DbSet<ProductSku> ProductSkus { get; set; }
     public DbSet<Carousel> Carousels { get; set; }
     public DbSet<MallMedia> MallMedias { get; set; }
-
+    public DbSet<ProductPost> ProductPosts { get; set; }
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
@@ -170,6 +171,13 @@ public class MallDbContext(DbContextOptions<MallDbContext> options) :
             b.Property(it => it.Title).IsRequired().HasMaxLength(256);
             b.Property(it => it.Description).IsRequired(false).HasMaxLength(2048);
             b.Property(it => it.Link).IsRequired().HasMaxLength(1024);
+        });
+
+        builder.Entity<ProductPost>(b =>
+        {
+            b.ToTable(MallConsts.DbTablePrefix + "ProductPosts", MallConsts.DbSchema);
+            b.ConfigureByConvention();
+            b.Property(it => it.Content).HasMaxLength(int.MaxValue).IsRequired();
         });
     }
 }

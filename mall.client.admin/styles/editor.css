@@ -1,0 +1,4 @@
+/* Removes padding in readonly editor */
+.bn-readonly-editor .bn-editor {
+  padding-inline: 0.75rem !important;
+}
