@@ -8,7 +8,7 @@ import {
   DialogClose,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { FC, useState } from "react";
+import { FC, useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
@@ -27,14 +27,24 @@ import {
 } from "@/components/ui/empty";
 import { FolderCodeIcon } from "lucide-react";
 import Editor from "@/components/shared/editor/editor";
-import Link from "next/link";
 
 const PostsView: FC<{
   posts: WalleeMallCmsDtosProductPostDto[];
   product: WalleeMallProductsDtosProductDto;
 }> = ({ posts, product }) => {
+  const router = useRouter();
   const [tab, setTab] = useState<string>(
     posts.length > 0 ? (posts[0].id as string) : "",
+  );
+  const handleRedirectToCreate = useCallback(() => {
+    router.push(`/products/${product.id}/posts/create`);
+  }, [product.id, router]);
+
+  const handleRedirectToUpdate = useCallback(
+    (postId: string) => {
+      router.push(`/products/${product.id}/posts/${postId}/update`);
+    },
+    [product.id, router],
   );
   if (posts.length === 0) {
     return (
@@ -50,12 +60,9 @@ const PostsView: FC<{
         </EmptyHeader>
         <EmptyContent>
           <div className="flex justify-center">
-            <Link
-              href={`/products/${product.id}/posts/create`}
-              className="font-medium"
-            >
+            <Button onClick={handleRedirectToCreate} className="mr-4">
               创建内容
-            </Link>
+            </Button>
           </div>
         </EmptyContent>
       </Empty>
@@ -81,12 +88,12 @@ const PostsView: FC<{
                 <Button size="sm" variant="destructive">
                   删除
                 </Button>
-                <Button size="sm" variant="default" asChild>
-                  <Link
-                    href={`/products/${product.id}/posts/${post.id}/update`}
-                  >
-                    编辑
-                  </Link>
+                <Button
+                  size="sm"
+                  variant="default"
+                  onClick={() => handleRedirectToUpdate(post.id as string)}
+                >
+                  编辑
                 </Button>
               </div>
             </div>
@@ -120,16 +127,13 @@ export const ProductPostTabs: FC<Props> = ({ product, posts }) => {
         }
       }}
     >
-      <DialogContent onInteractOutside={(e) => e.preventDefault()}>
+      <DialogContent onInteractOutside={(e) => e.preventDefault()} className="min-w-[800px]">
         <DialogHeader>
           <DialogTitle>商品内容</DialogTitle>
           <DialogDescription>以下是商品的详细内容</DialogDescription>
         </DialogHeader>
         <PostsView posts={posts} product={product} />
         <DialogFooter>
-          <Button>
-            <Link href={`/products/${product.id}/posts/create`}>创建内容</Link>
-          </Button>
           <DialogClose asChild>
             <Button variant={"destructive"}>关闭</Button>
           </DialogClose>

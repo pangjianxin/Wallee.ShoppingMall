@@ -73,7 +73,7 @@ export const CreateProductPost: FC<Props> = ({ product }) => {
             }
           }}
         >
-          <DialogContent onInteractOutside={(e) => e.preventDefault()}>
+          <DialogContent onInteractOutside={(e) => e.preventDefault()} className="min-w-[800px]">
             <DialogHeader>
               <DialogTitle>创建商品内容</DialogTitle>
               <DialogDescription>填写以下信息以创建商品内容</DialogDescription>

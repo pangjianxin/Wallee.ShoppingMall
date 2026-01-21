@@ -12,9 +12,14 @@ import { cn } from "@/lib/utils";
 type Props = {
   covers: WalleeMallProductsDtosProductCoverDto[];
   badge?: React.ReactNode;
+  imageUrlPrefix?: string;
 };
 
-export const ProductImageCarousel: FC<Props> = ({ covers, badge }) => {
+export const ProductImageCarousel: FC<Props> = ({
+  covers,
+  badge,
+  imageUrlPrefix,
+}) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const imageSizes = "(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw";
   const onSelect = useCallback((api: any) => {
@@ -46,7 +51,7 @@ export const ProductImageCarousel: FC<Props> = ({ covers, badge }) => {
             {covers.map((image, index) => (
               <CarouselItem key={index} className="relative aspect-square pl-0">
                 <Image
-                  src={`${process.env.NEXT_PUBLIC_MEDIA_PREVIEW_URL}/${image.mallMediaId}`}
+                  src={`${imageUrlPrefix}/${image.mallMediaId}`}
                   alt={`商品图片 ${index + 1}`}
                   className="object-cover"
                   fill

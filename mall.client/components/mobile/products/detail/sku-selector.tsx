@@ -116,12 +116,12 @@ export function SkuSelector({
   }
 
   return (
-    <div className="bg-card px-4 py-5">
-      <h3 className="mb-4 text-base font-medium text-foreground">规格选择</h3>
+    <div className="rounded-lg bg-card px-3 py-4">
+      <h3 className="mb-3 text-base font-semibold text-foreground">规格选择</h3>
 
       {attributeGroups.map((group) => (
-        <div key={group.name} className="mb-5 last:mb-0">
-          <p className="mb-3 text-sm text-muted-foreground">{group.name}</p>
+        <div key={group.name} className="mb-4 last:mb-0">
+          <p className="mb-2 text-sm text-muted-foreground">{group.name}</p>
           <div className="flex flex-wrap gap-2">
             {group.values.map((value) => {
               const isSelected = selectedAttributes[group.name] === value;

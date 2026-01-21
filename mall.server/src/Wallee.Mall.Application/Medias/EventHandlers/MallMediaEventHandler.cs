@@ -19,7 +19,9 @@ namespace Wallee.Mall.Medias.EventHandlers
         {
             await backgroundJobManager.EnqueueAsync(new MediaThumbnailsJobArgs
             {
-                MediaId = eventData.Entity.Id
+                MediaId = eventData.Entity.Id,
+                FileName = eventData.Entity.Name,
+                MimeType = eventData.Entity.MimeType
             });
         }
     }

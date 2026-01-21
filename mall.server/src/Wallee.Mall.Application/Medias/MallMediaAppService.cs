@@ -38,8 +38,14 @@ namespace Wallee.Mall.Medias
         public virtual async Task<RemoteStreamContent> PreviewAsync(Guid id)
         {
             var entity = await mediaRepository.GetAsync(id);
-            var stream = await mediaThumbnailContainer.GetAsync(id.ToString());
+            if (await mediaThumbnailContainer.ExistsAsync(entity.Id.ToString()))
+            {
+                var thumbnailStream = await mediaThumbnailContainer.GetAsync(id.ToString());
 
+                return new RemoteStreamContent(thumbnailStream, entity.Name, entity.MimeType);
+            }
+
+            var stream = await mediaContainer.GetAsync(id.ToString());
             return new RemoteStreamContent(stream, entity.Name, entity.MimeType);
         }
 

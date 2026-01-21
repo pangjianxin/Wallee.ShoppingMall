@@ -38,7 +38,7 @@ export async function signInWithCredentials({
 
     if (result.error) {
       return {
-        error: result.error.message || "invalid_grant",
+        error: result.error || "invalid_grant",
       };
     }
 

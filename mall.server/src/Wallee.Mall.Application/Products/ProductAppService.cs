@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AutoFilterer.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -125,6 +126,11 @@ namespace Wallee.Mall.Products
             await Repository.UpdateAsync(product, autoSave: true);
 
             return await MapToGetOutputDtoAsync(product);
+        }
+
+        protected override async Task<IQueryable<Product>> CreateFilteredQueryAsync(ProductGetListInput input)
+        {
+            return (await base.CreateFilteredQueryAsync(input)).ApplyFilter(input);
         }
     }
 }

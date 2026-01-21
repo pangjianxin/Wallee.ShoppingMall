@@ -45,5 +45,12 @@ namespace Wallee.Mall.Cms
         {
             return await service.UpdateAsync(id, input);
         }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task DeleteAsync(Guid id)
+        {
+            await service.DeleteAsync(id);
+        }
     }
 }

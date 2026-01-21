@@ -1,37 +1,41 @@
-import {
-  toPaginationQuery,
-  toFiltersQuery,
-  toSortingQuery,
-} from "@/lib/search-params-cache";
-import { type SearchParams } from "nuqs";
-import { searchParamsCache } from "@/lib/search-params-cache";
-import { FC, Suspense } from "react";
-import { DataTableSkeleton } from "@/components/data-table/data-table-skeleton";
+import { Suspense } from "react";
+import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { ProductGrid } from "@/components/mobile/products/grid";
-import type { ProductGetListData } from "@/openapi";
-type Props = {
-  searchParams: Promise<SearchParams>;
+import { ProductSearchSheet } from "@/components/mobile/products/search-sheet";
+import { parseQueryFromConfig } from "@/lib/query-builder/parser";
+import { productQueryConfig, type ProductQuery } from "@/lib/query-builder/config";
+import { productGetList } from "@/openapi";
+import { getQueryClient } from "@/lib/tanstack-query-provider";
+import { productGetListOptions } from "@/openapi/@tanstack/react-query.gen";
+
+type ProductsPageProps = {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
-const AuditLogsPage = async ({ searchParams }: Props) => {
+
+const ProductsPage = async ({ searchParams }: ProductsPageProps) => {
+  // 解析 URL 查询参数
+  const params = await searchParams;
+  const query = parseQueryFromConfig<ProductQuery>(params, productQueryConfig);
+
+  // 在服务端预取数据
+  const queryClient = getQueryClient();
+  await queryClient.prefetchQuery(
+    productGetListOptions(query ? { query } : undefined)
+  );
+
   return (
-    <Suspense fallback={<DataTableSkeleton columnCount={10} />}>
-      <Wrapper searchParams={searchParams} />
-    </Suspense>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-bold">商品列表</h1>
+          <ProductSearchSheet />
+        </div>
+        <Suspense fallback={<div>加载中...</div>}>
+          <ProductGrid />
+        </Suspense>
+      </div>
+    </HydrationBoundary>
   );
 };
 
-const Wrapper: FC<{ searchParams: Promise<SearchParams> }> = async ({
-  searchParams,
-}) => {
-  const search = await searchParamsCache().parse(searchParams);
-
-  const query: ProductGetListData["query"] = {
-    ...toPaginationQuery({ page: search.page, perPage: search.perPage }),
-    ...toSortingQuery(search.sort),
-    ...toFiltersQuery(["ExecutionTime"], search.filters),
-  };
-
-  return <ProductGrid query={query} />;
-};
-
-export default AuditLogsPage;
+export default ProductsPage;

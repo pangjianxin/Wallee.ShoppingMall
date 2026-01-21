@@ -1,8 +1,11 @@
+"use client";
 import { Badge } from "@/components/ui/badge";
 import type {
   WalleeMallProductsDtosProductDto,
   WalleeMallTagsDtosTagDto,
 } from "@/openapi";
+import { ProductName } from "@/components/mobile/products/detail/name";
+import { ProductShortDescription } from "./short-description";
 
 interface ProductInfoProps {
   product: WalleeMallProductsDtosProductDto;
@@ -11,7 +14,6 @@ interface ProductInfoProps {
 
 export function ProductInfo({ product, relativeTags }: ProductInfoProps) {
   const {
-    name,
     brand,
     shortDescription,
     originalPrice,
@@ -21,31 +23,104 @@ export function ProductInfo({ product, relativeTags }: ProductInfoProps) {
     salesCount,
   } = product;
 
+  const currencySymbolMap: Record<string, string> = {
+    CNY: "¥",
+    RMB: "¥",
+    USD: "$",
+    EUR: "€",
+    GBP: "£",
+    JPY: "¥",
+    KRW: "₩",
+    HKD: "HK$",
+    TWD: "NT$",
+    AUD: "A$",
+    CAD: "C$",
+    SGD: "S$",
+    CHF: "CHF",
+  };
+  const currencySymbol =
+    currencySymbolMap[String(currency).toUpperCase()] || currency;
+
+  const normalizedDiscountRate =
+    typeof discountRate === "number" && discountRate > 0
+      ? discountRate
+      : undefined;
   const hasDiscount =
-    discountRate && discountRate < 100 && originalPrice && jdPrice;
+    normalizedDiscountRate !== undefined &&
+    normalizedDiscountRate !== 1 &&
+    !!originalPrice;
+  const discountMultiplier =
+    normalizedDiscountRate === undefined
+      ? undefined
+      : normalizedDiscountRate > 1
+        ? normalizedDiscountRate / 100
+        : normalizedDiscountRate;
+  const discountPrice =
+    hasDiscount && discountMultiplier !== undefined
+      ? originalPrice! * discountMultiplier
+      : undefined;
+  const savings =
+    hasDiscount && discountPrice !== undefined
+      ? originalPrice! - discountPrice
+      : undefined;
+  const discountText =
+    normalizedDiscountRate !== undefined
+      ? normalizedDiscountRate > 1
+        ? `${normalizedDiscountRate}折`
+        : `${(normalizedDiscountRate * 10).toFixed(1).replace(/\.0$/, "")}折`
+      : "";
 
   return (
-    <div className="bg-card px-4 py-5">
+    <div className="rounded-lg bg-card px-3 py-4">
       {/* Price Section */}
-      <div className="mb-4">
+      <div className="mb-3 space-y-2">
         <div className="flex items-baseline gap-2">
-          <span className="text-sm text-sale">{currency}</span>
-          <span className="text-3xl font-bold text-sale">
-            {jdPrice?.toFixed(2) || originalPrice?.toFixed(2) || "0.00"}
+          <span className="text-xs text-muted-foreground">
+            {hasDiscount ? "折后价" : "售价"}
           </span>
-          {hasDiscount && (
-            <>
-              <span className="text-sm text-muted-foreground line-through">
-                {currency}
-                {originalPrice?.toFixed(2)}
+          <span className="text-sm text-sale">{currencySymbol}</span>
+          <span className="text-3xl font-bold text-sale">
+            {hasDiscount && discountPrice !== undefined
+              ? discountPrice.toFixed(2)
+              : originalPrice?.toFixed(2) || "--"}
+          </span>
+          {hasDiscount && discountText && (
+            <Badge
+              variant="secondary"
+              className="bg-sale/10 text-sale text-[10px]"
+            >
+              {discountText}
+            </Badge>
+          )}
+          {brand && <Badge variant={"outline"}>{brand}</Badge>}
+        </div>
+        <div className="flex flex-wrap items-center gap-3 text-xs">
+          {hasDiscount && originalPrice !== undefined && (
+            <div className="flex items-center gap-1 text-muted-foreground">
+              <span>原价</span>
+              <span className="line-through">
+                {currencySymbol}
+                {originalPrice.toFixed(2)}
               </span>
-              <Badge
-                variant="secondary"
-                className="bg-sale/10 text-sale text-xs"
-              >
-                {discountRate}折
-              </Badge>
-            </>
+            </div>
+          )}
+          {hasDiscount && savings !== undefined && savings > 0 && (
+            <Badge
+              variant="secondary"
+              className="bg-primary/10 text-primary text-[10px]"
+            >
+              省{currencySymbol}
+              {savings.toFixed(2)}
+            </Badge>
+          )}
+          {jdPrice && (
+            <div className="flex items-center gap-1 text-muted-foreground">
+              <span>京东价</span>
+              <span>
+                {currencySymbol}
+                {jdPrice?.toFixed(2)}
+              </span>
+            </div>
           )}
         </div>
         {salesCount !== undefined && salesCount > 0 && (
@@ -59,24 +134,11 @@ export function ProductInfo({ product, relativeTags }: ProductInfoProps) {
         )}
       </div>
 
-      {/* Product Name */}
-      <h1 className="mb-2 text-lg font-semibold leading-relaxed text-foreground text-balance">
-        {brand && (
-          <Badge
-            variant="outline"
-            className="mr-2 align-middle text-xs font-normal"
-          >
-            {brand}
-          </Badge>
-        )}
-        {name || "商品名称"}
-      </h1>
-
+      {/* Name */}
+      <ProductName name={product.name as string} />
       {/* Description */}
       {shortDescription && (
-        <p className="mb-4 text-sm leading-relaxed text-muted-foreground">
-          {shortDescription}
-        </p>
+        <ProductShortDescription shortDescription={shortDescription} />
       )}
 
       {/* Tags */}

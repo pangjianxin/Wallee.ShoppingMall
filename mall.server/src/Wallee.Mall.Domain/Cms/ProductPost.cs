@@ -9,9 +9,8 @@ namespace Wallee.Mall.Cms
         public ProductPostCategory Category { get; private set; } = category;
         public string Content { get; private set; } = content;
 
-        public void Update(ProductPostCategory category, string content)
+        public void Update(string content)
         {
-            Category = category;
             Content = content;
         }
     }

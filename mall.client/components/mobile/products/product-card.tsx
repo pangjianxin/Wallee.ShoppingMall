@@ -19,8 +19,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
       : null;
 
   return (
-    <Link
-      href={`/products/${product.id}`}
+    <div
       className={cn(
         "overflow-hidden rounded-lg border bg-card text-card-foreground shadow-sm",
         className,
@@ -35,6 +34,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
             </Badge>
           ) : undefined
         }
+        imageUrlPrefix={process.env.NEXT_PUBLIC_MEDIA_PREVIEW_URL}
       />
 
       <div className="space-y-2.5 p-2 sm:p-3">
@@ -53,9 +53,12 @@ export function ProductCard({ product, className }: ProductCardProps) {
           </div>
         )}
 
-        <h3 className="line-clamp-2 text-[13px] font-semibold leading-snug text-foreground sm:text-sm">
+        <Link
+          href={`/products/${product.id}`}
+          className="line-clamp-2 text-[13px] font-semibold leading-snug text-foreground sm:text-sm"
+        >
           {product.name || "商品名称"}
-        </h3>
+        </Link>
 
         <div className="flex items-center gap-2">
           <span className="text-base font-bold text-destructive">
@@ -82,6 +85,6 @@ export function ProductCard({ product, className }: ProductCardProps) {
           </p>
         )}
       </div>
-    </Link>
+    </div>
   );
 }

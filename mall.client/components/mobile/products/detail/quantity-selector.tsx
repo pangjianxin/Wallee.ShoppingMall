@@ -27,9 +27,9 @@ export function QuantitySelector({
   };
 
   return (
-    <div className="bg-card px-4 py-4">
+    <div className="rounded-lg bg-card px-3 py-4">
       <div className="flex items-center justify-between">
-        <span className="text-sm font-medium text-foreground">购买数量</span>
+        <span className="text-base font-semibold text-foreground">购买数量</span>
         <div className="flex items-center gap-3">
           <Button
             variant="outline"
