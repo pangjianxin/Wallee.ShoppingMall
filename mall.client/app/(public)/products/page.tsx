@@ -1,41 +1,64 @@
 import { Suspense } from "react";
-import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { ProductGrid } from "@/components/mobile/products/grid";
 import { ProductSearchSheet } from "@/components/mobile/products/search-sheet";
-import { parseQueryFromConfig } from "@/lib/query-builder/parser";
-import { productQueryConfig, type ProductQuery } from "@/lib/query-builder/config";
 import { productGetList } from "@/openapi";
-import { getQueryClient } from "@/lib/tanstack-query-provider";
-import { productGetListOptions } from "@/openapi/@tanstack/react-query.gen";
+import { client } from "@/hey-api/client";
+import { SearchParams } from "nuqs";
+import { NextPage } from "next";
+import { nullsToUndefined } from "@/lib/utils";
+import {
+  createSearchParamsCache,
+  parseAsInteger,
+  parseAsString,
+} from "nuqs/server";
 
-type ProductsPageProps = {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
+/**
+ * 商品页面查询参数缓存配置
+ * 使用 nuqs 的 searchParamsCache 模式
+ */
+export const searchParamsCache = createSearchParamsCache({
+  // 分页参数
+  SkipCount: parseAsInteger.withDefault(0),
+  MaxResultCount: parseAsInteger.withDefault(20),
+  // 排序参数
+  Sorting: parseAsString.withDefault("creationTime desc"),
+  // 商品名称过滤器
+  "Name.Contains": parseAsString,
+  "Name.StartsWith": parseAsString,
+  "Name.EndsWith": parseAsString,
+  "Name.Eq": parseAsString,
+});
+
+type Props = {
+  searchParams: Promise<SearchParams>;
 };
 
-const ProductsPage = async ({ searchParams }: ProductsPageProps) => {
-  // 解析 URL 查询参数
-  const params = await searchParams;
-  const query = parseQueryFromConfig<ProductQuery>(params, productQueryConfig);
+const Page: NextPage<Props> = async ({ searchParams }) => {
+  // 使用 searchParamsCache 解析和验证查询参数
 
-  // 在服务端预取数据
-  const queryClient = getQueryClient();
-  await queryClient.prefetchQuery(
-    productGetListOptions(query ? { query } : undefined)
-  );
+  const parsedParams = searchParamsCache.parse(await searchParams);
+
+  await productGetList({
+    client,
+    throwOnError: true,
+    query: {
+      ...nullsToUndefined(parsedParams),
+    },
+  });
 
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">商品列表</h1>
-          <ProductSearchSheet />
-        </div>
-        <Suspense fallback={<div>加载中...</div>}>
-          <ProductGrid />
-        </Suspense>
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold">商品列表</h1>
+        <ProductSearchSheet />
       </div>
-    </HydrationBoundary>
+      <Suspense fallback={<div>加载中...</div>}>
+        <ProductGrid />
+      </Suspense>
+    </div>
   );
 };
 
-export default ProductsPage;
+Page.displayName = "ProductsPage";
+
+export default Page;
