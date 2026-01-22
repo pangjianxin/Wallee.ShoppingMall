@@ -1270,7 +1270,7 @@ export type WalleeMallCarouselsDtosCarouselDto = {
     description?: string | null;
     coverImageMediaId?: string;
     priority?: number;
-    link?: string | null;
+    productId?: string | null;
     content?: string | null;
 };
 
@@ -1279,7 +1279,7 @@ export type WalleeMallCarouselsDtosCreateCarouselDto = {
     description?: string | null;
     coverImageMediaId?: string;
     priority?: number;
-    link?: string | null;
+    productId?: string | null;
     content?: string | null;
 };
 
@@ -1288,7 +1288,6 @@ export type WalleeMallCarouselsDtosUpdateCarouselDto = {
     description?: string | null;
     coverImageMediaId?: string;
     priority?: number;
-    link?: string | null;
     content?: string | null;
 };
 

@@ -14,6 +14,6 @@ public class CarouselDto : AuditedEntityDto<Guid>
 
     public long Priority { get; set; }
 
-    public string Link { get; set; } = default!;
+    public Guid? ProductId { get;  set; }
     public string Content { get; set; } = default!;
 }

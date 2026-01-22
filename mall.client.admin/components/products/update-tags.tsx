@@ -45,7 +45,7 @@ const Update: FC<Props> = ({ entity }) => {
       }}
     >
       <DialogContent
-        className="sm:max-w-lg sm:max-h-[80vh] overflow-y-auto"
+        className="sm:max-w-lg sm:min-h-[40vh] sm:max-h-[80vh] overflow-y-auto"
         onInteractOutside={(e) => e.preventDefault()}
       >
         <DialogHeader>

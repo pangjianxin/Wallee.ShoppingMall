@@ -175,7 +175,6 @@ public class MallDbContext(DbContextOptions<MallDbContext> options) :
 
             b.Property(it => it.Title).IsRequired().HasMaxLength(256);
             b.Property(it => it.Description).IsRequired(false).HasMaxLength(2048);
-            b.Property(it => it.Link).IsRequired().HasMaxLength(1024);
             b.Property(it => it.Content).IsRequired().HasMaxLength(int.MaxValue);
         });
 

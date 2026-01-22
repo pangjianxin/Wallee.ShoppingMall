@@ -36,10 +36,15 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
 import { Editor } from "@/components/shared/editor/dynamic-editor";
+import { WalleeMallProductsDtosProductDto } from "@/openapi";
 
-const Create: FC = () => {
+type Props = {
+  product?: WalleeMallProductsDtosProductDto;
+};
+
+const Create: FC<Props> = ({ product }) => {
   const [open, setOpen] = useState(false);
-  const { form, submit } = useCreateCarousel();
+  const { form, submit } = useCreateCarousel({ productId: product?.id });
   const router = useRouter();
 
   const handleSubmit = form.handleSubmit(async (data) => {
@@ -75,7 +80,7 @@ const Create: FC = () => {
           >
             <DialogHeader>
               <DialogTitle className="text-lg font-medium leading-normal">
-                添加轮播图
+                创建轮播图_{product?.name ?? ""}
               </DialogTitle>
               <DialogDescription>
                 轮播图信息填写完整后，点击提交按钮即可创建轮播图。
@@ -130,24 +135,6 @@ const Create: FC = () => {
                       />
                     </FormControl>
                     <FormDescription>数值越大，优先级越高</FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="link"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>外部链接</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        type="text"
-                        placeholder="请输入外部链接"
-                      />
-                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}

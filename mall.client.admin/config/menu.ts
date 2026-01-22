@@ -49,7 +49,7 @@ export const navMain: MenuItemWithPermissions[] = [
         permissions: [],
       },
       {
-        title: "轮播图",
+        title: "轮播管理",
         url: "/carousels",
         permissions: [],
       },

@@ -151,23 +151,6 @@ const Update: FC<Props> = ({ entity }) => {
 
               <FormField
                 control={form.control}
-                name="link"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>外部链接</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        type="text"
-                        placeholder="请输入外部链接"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
                 name="coverImageMediaId"
                 render={({ field }) => (
                   <FormItem>

@@ -7,7 +7,7 @@ import { useMedia } from "@/hooks/medias/use-media";
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_FILE_TYPES = ["image/jpeg", "image/png", "image/gif"];
 
-export const useCreateCarousel = () => {
+export const useCreateCarousel = ({ productId }: { productId?: string }) => {
   const { uploadMedia } = useMedia();
   const schema = z.object({
     title: z.string().min(1, { error: "标题不能为空" }),
@@ -27,7 +27,7 @@ export const useCreateCarousel = () => {
         message: "文件大小不能超过5MB",
       }),
     priority: z.number().optional(),
-    link: z.string().optional(),
+    productId: z.string().optional(),
     content: z.string().min(1, { error: "内容不能为空" }),
   });
 
@@ -40,7 +40,7 @@ export const useCreateCarousel = () => {
       description: "",
       coverImageMediaId: [],
       priority: 1,
-      link: "",
+      productId: productId || "",
       content: "",
     },
   });

@@ -1,4 +1,4 @@
-import CreateCarousel from "@/components/carousels/create";
+import { CreateProductPost } from "@/components/product-posts/create";
 import { NextPage } from "next";
 import { SearchParams } from "nuqs";
 import { productIdLoader } from "@/lib/loaders";
@@ -11,18 +11,18 @@ type Props = {
 const Page: NextPage<Props> = async ({ searchParams }) => {
   const { productId } = productIdLoader(await searchParams);
 
-  if (productId) {
-    const { data: product } = await productGet({
-      client: client,
-      path: { id: productId },
-      throwOnError: true,
-    });
-    return <CreateCarousel product={product} />;
+  if (!productId) {
+    throw new Error("product information missing");
   }
 
-  return <CreateCarousel />;
+  const { data: product } = await productGet({
+    client: client,
+    path: { id: productId as string },
+    throwOnError: true,
+  });
+  return <CreateProductPost product={product} />;
 };
 
-Page.displayName = "CarouselCreatePage";
+Page.displayName = "ProductPostCreatePage";
 
 export default Page;

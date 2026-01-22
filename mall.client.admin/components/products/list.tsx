@@ -40,16 +40,9 @@ const ProductTable: FC<Props> = ({ promise }) => {
     [router],
   );
 
-  const handleViewPosts = useCallback(
+  const handleView = useCallback(
     (v: WalleeMallProductsDtosProductDto) => {
-      router.push(`/products/${v.id}/posts`);
-    },
-    [router],
-  );
-
-  const handleUpdateTags = useCallback(
-    (v: WalleeMallProductsDtosProductDto) => {
-      router.push(`/products/${v.id}/tags`);
+      router.push(`/products/${v.id}`);
     },
     [router],
   );
@@ -58,10 +51,9 @@ const ProductTable: FC<Props> = ({ promise }) => {
     return createColumns({
       onUpdate: handleUpdate,
       onUpdateSkus: handleUpdateSkus,
-      onViewPosts: handleViewPosts,
-      onUpdateTags: handleUpdateTags,
+      onView: handleView,
     });
-  }, [handleUpdate, handleUpdateSkus, handleViewPosts, handleUpdateTags]);
+  }, [handleUpdate, handleUpdateSkus, handleView]);
 
   const { table, shallow, debounceMs, throttleMs } =
     useDataTable<WalleeMallProductsDtosProductDto>({

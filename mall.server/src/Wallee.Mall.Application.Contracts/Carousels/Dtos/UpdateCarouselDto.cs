@@ -12,8 +12,6 @@ namespace Wallee.Mall.Carousels.Dtos
 
         public long Priority { get; set; }
 
-        public string Link { get; set; } = default!;
-
         public string Content { get; set; } = default!;
     }
 }

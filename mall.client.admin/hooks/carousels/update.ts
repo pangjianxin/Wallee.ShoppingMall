@@ -18,7 +18,6 @@ export const useUpdateCarousel = ({
     description: z.string().optional(),
     coverImageMediaId: z.string().optional(),
     priority: z.number().optional(),
-    link: z.string().optional(),
     content: z.string().min(1, { error: "内容不能为空" }),
     newCoverImageMediaId: z
       .array(z.custom<File>())
@@ -45,7 +44,6 @@ export const useUpdateCarousel = ({
       description: entity.description as string,
       coverImageMediaId: entity.coverImageMediaId,
       priority: entity.priority,
-      link: entity.link as string,
       content: entity.content as string,
       newCoverImageMediaId: [],
     },

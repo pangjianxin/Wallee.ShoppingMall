@@ -9,13 +9,11 @@ import { Text } from "lucide-react";
 export const createColumns = ({
   onUpdate,
   onUpdateSkus,
-  onViewPosts,
-  onUpdateTags,
+  onView,
 }: {
   onUpdate: (product: WalleeMallProductsDtosProductDto) => void;
   onUpdateSkus: (product: WalleeMallProductsDtosProductDto) => void;
-  onUpdateTags?: (product: WalleeMallProductsDtosProductDto) => void;
-  onViewPosts?: (product: WalleeMallProductsDtosProductDto) => void;
+  onView: (product: WalleeMallProductsDtosProductDto) => void;
 }): ColumnDef<WalleeMallProductsDtosProductDto>[] => {
   return [
     {
@@ -197,18 +195,10 @@ export const createColumns = ({
             <PermissionButton
               size={"sm"}
               variant="outline"
-              onClick={() => onUpdateTags?.(row.original)}
+              onClick={() => onView?.(row.original)}
               permission="Mall.Product.Update"
             >
-              管理标签
-            </PermissionButton>
-            <PermissionButton
-              size={"sm"}
-              variant="outline"
-              onClick={() => onViewPosts?.(row.original)}
-              permission="Mall.Product.Update"
-            >
-              管理内容
+              查看
             </PermissionButton>
           </div>
         </>

@@ -25,7 +25,7 @@ public class CarouselAppService : CrudAppService<Carousel, CarouselDto, Guid, Ca
 
     public override async Task<CarouselDto> CreateAsync(CreateCarouselDto input)
     {
-        var entity = new Carousel(GuidGenerator.Create(), input.Title, input.Description, input.Content, input.CoverImageMediaId, input.Priority, input.Link);
+        var entity = new Carousel(GuidGenerator.Create(), input.Title, input.Description, input.Content, input.CoverImageMediaId, input.Priority, input.ProductId);
         await Repository.InsertAsync(entity);
         return await MapToGetOutputDtoAsync(entity);
     }
@@ -39,7 +39,7 @@ public class CarouselAppService : CrudAppService<Carousel, CarouselDto, Guid, Ca
             await _mallMediaAppService.DeleteAsync(entity.CoverImageMediaId);
         }
 
-        entity.Update(input.Title, input.Description, input.Content, input.CoverImageMediaId, input.Priority, input.Link);
+        entity.Update(input.Title, input.Description, input.Content, input.CoverImageMediaId, input.Priority);
 
         await Repository.UpdateAsync(entity);
 

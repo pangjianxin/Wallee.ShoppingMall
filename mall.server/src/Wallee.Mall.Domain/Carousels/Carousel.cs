@@ -10,7 +10,7 @@ namespace Wallee.Mall.Carousels
         public Guid CoverImageMediaId { get; private set; }
         public long Priority { get; private set; }
         public string Content { get; private set; } = default!;
-        public string Link { get; private set; } = default!;
+        public Guid? ProductId { get; private set; }
 
         protected Carousel()
         {
@@ -23,7 +23,7 @@ namespace Wallee.Mall.Carousels
             string content,
             Guid coverImageMediaId,
             long priority,
-            string link
+            Guid? productId
         ) : base(id)
         {
             Title = title;
@@ -31,7 +31,7 @@ namespace Wallee.Mall.Carousels
             Content = content;
             CoverImageMediaId = coverImageMediaId;
             Priority = priority;
-            Link = link;
+            ProductId = productId;
         }
 
         public void Update(
@@ -39,15 +39,13 @@ namespace Wallee.Mall.Carousels
             string? description,
             string content,
             Guid coverImageMediaId,
-            long priority,
-            string link)
+            long priority)
         {
             Title = title;
             Description = description;
             Content = content;
             CoverImageMediaId = coverImageMediaId;
             Priority = priority;
-            Link = link;
         }
     }
 }
