@@ -3,7 +3,7 @@ import {
   Home,
   Plus,
   User,
-  BookOpenText,
+  ShoppingCart,
   ShoppingBag,
   Star,
 } from "lucide-react";
@@ -64,9 +64,9 @@ export default function MobileBottomNav() {
       permissions: [],
     },
     {
-      name: "分类",
-      href: "/products/category",
-      icon: BookOpenText,
+      name: "智购",
+      href: "/products/ai",
+      icon: Star,
       permissions: [],
     },
     {
@@ -76,17 +76,18 @@ export default function MobileBottomNav() {
       isMiddle: true,
       permissions: [],
     },
+
     {
-      name: "智购",
-      href: "/products/ai",
-      icon: Star,
+      name: "购物车",
+      href: "/products/carts",
+      icon: ShoppingCart,
       permissions: [],
     },
     {
       name: "我的",
-      href: "/settings",
+      href: "/account/profile",
       icon: User,
-      permissions: ["SettingManagement.Emailing"],
+      permissions: [],
     },
   ];
 

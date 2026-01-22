@@ -16,6 +16,7 @@ using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.TenantManagement;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
 using Wallee.Mall.Carousels;
+using Wallee.Mall.Carts;
 using Wallee.Mall.Cms;
 using Wallee.Mall.Medias;
 using Wallee.Mall.Products;
@@ -69,6 +70,10 @@ public class MallDbContext(DbContextOptions<MallDbContext> options) :
     public DbSet<Carousel> Carousels { get; set; }
     public DbSet<MallMedia> MallMedias { get; set; }
     public DbSet<ProductPost> ProductPosts { get; set; }
+
+    public DbSet<Cart> Carts { get; set; }
+    public DbSet<CartItem> CartItems { get; set; }
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
@@ -171,6 +176,7 @@ public class MallDbContext(DbContextOptions<MallDbContext> options) :
             b.Property(it => it.Title).IsRequired().HasMaxLength(256);
             b.Property(it => it.Description).IsRequired(false).HasMaxLength(2048);
             b.Property(it => it.Link).IsRequired().HasMaxLength(1024);
+            b.Property(it => it.Content).IsRequired().HasMaxLength(int.MaxValue);
         });
 
         builder.Entity<ProductPost>(b =>
@@ -178,6 +184,27 @@ public class MallDbContext(DbContextOptions<MallDbContext> options) :
             b.ToTable(MallConsts.DbTablePrefix + "ProductPosts", MallConsts.DbSchema);
             b.ConfigureByConvention();
             b.Property(it => it.Content).HasMaxLength(int.MaxValue).IsRequired();
+        });
+
+        builder.Entity<Cart>(b =>
+        {
+            b.ToTable(MallConsts.DbTablePrefix + "Carts", MallConsts.DbSchema);
+            b.ConfigureByConvention();
+
+            b.HasMany(x => x.Items)
+                .WithOne()
+                .HasForeignKey(x => x.CartId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        builder.Entity<CartItem>(b =>
+        {
+            b.ToTable(MallConsts.DbTablePrefix + "CartItems", MallConsts.DbSchema);
+            b.ConfigureByConvention();
+
+            b.Property(x => x.Quantity).IsRequired();
+            b.HasIndex(x => x.CartId);
+            b.HasIndex(x => new { x.CartId, x.SkuId }).IsUnique();
         });
     }
 }

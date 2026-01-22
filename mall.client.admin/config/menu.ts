@@ -48,6 +48,11 @@ export const navMain: MenuItemWithPermissions[] = [
         url: "/tags",
         permissions: [],
       },
+      {
+        title: "轮播图",
+        url: "/carousels",
+        permissions: [],
+      },
     ],
   },
   {

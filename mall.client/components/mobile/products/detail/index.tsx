@@ -11,16 +11,19 @@ import type {
   WalleeMallProductsDtosProductDto,
   WalleeMallProductsDtosProductSkuDto,
   WalleeMallCmsDtosProductPostDto,
+  WalleeMallTagsDtosTagDto,
 } from "@/openapi";
 import { Badge } from "@/components/ui/badge";
 import { ProductPostTabs } from "@/components/mobile/products/detail/posts";
 import { ExpandableContainer } from "@/components/mobile/cms/expandable-container";
+import { toast } from "sonner";
 
 type Props = {
   product?: WalleeMallProductsDtosProductDto;
   posts?: WalleeMallCmsDtosProductPostDto[];
+  relatedTags?: WalleeMallTagsDtosTagDto[];
 };
-export default function ProductDetail({ product, posts }: Props) {
+export default function ProductDetail({ product, posts, relatedTags }: Props) {
   const [selectedSku, setSelectedSku] =
     useState<WalleeMallProductsDtosProductSkuDto | null>(null);
   const [quantity, setQuantity] = useState(1);
@@ -31,19 +34,19 @@ export default function ProductDetail({ product, posts }: Props) {
 
   const handleAddToCart = () => {
     if (!selectedSku) {
-      alert("请先选择商品规格");
+      toast.error("请先选择商品规格");
       return;
     }
     setCartCount((prev) => prev + quantity);
-    alert(`已将 ${quantity} 件商品加入购物车`);
+    toast.success(`已将 ${quantity} 件商品加入购物车`);
   };
 
   const handleBuyNow = () => {
     if (!selectedSku) {
-      alert("请先选择商品规格");
+      toast.error("请先选择商品规格");
       return;
     }
-    alert(`立即购买 ${quantity} 件 ${selectedSku.skuCode}`);
+    toast.success(`立即购买 ${quantity} 件 ${selectedSku.skuCode}`);
   };
 
   const handleToggleFavorite = () => {
@@ -51,7 +54,7 @@ export default function ProductDetail({ product, posts }: Props) {
   };
 
   const handleContact = () => {
-    alert("正在连接客服...");
+    toast("正在连接客服...");
   };
 
   return (
@@ -65,7 +68,7 @@ export default function ProductDetail({ product, posts }: Props) {
       {/* Product Info */}
       <ProductInfo product={product!} relativeTags={[{ name: "促销" }]} />
       {/* Services */}
-      <ProductServices />
+      <ProductServices tags={relatedTags || []} />
       {/* Product Posts */}
       <ExpandableContainer>
         <ProductPostTabs posts={posts || []} />

@@ -1,6 +1,7 @@
-import { Search, ShoppingBag, Menu } from "lucide-react";
+import { Search, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FC } from "react";
+import UserMenu from "@/components/shared/user-menu";
 
 export const MobileHeader: FC = () => {
   return (
@@ -18,15 +19,9 @@ export const MobileHeader: FC = () => {
           <Button variant="ghost" size="icon">
             <Search className="h-5 w-5" />
           </Button>
-          <Button variant="ghost" size="icon" className="relative">
-            <ShoppingBag className="h-5 w-5" />
-            <span className="absolute right-1.5 top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-medium text-primary-foreground">
-              2
-            </span>
-          </Button>
+          <UserMenu size="sm" />
         </div>
       </div>
     </header>
   );
 };
-

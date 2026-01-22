@@ -1,12 +1,13 @@
 import { NextPage } from "next";
 import { productGet } from "@/openapi";
 import { client } from "@/hey-api/client";
-import { CreateProductPost } from "@/components/products/create-post";
+import { CreateProductPost } from "@/components/product-posts/create";
 type Props = {
   params: Promise<{ id: string }>;
 };
 const Page: NextPage<Props> = async ({ params }) => {
   const { id } = await params;
+
   const { data: product } = await productGet({
     throwOnError: true,
     client,

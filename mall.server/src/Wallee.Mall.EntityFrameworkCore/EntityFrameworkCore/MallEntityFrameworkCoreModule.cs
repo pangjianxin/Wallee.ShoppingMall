@@ -14,10 +14,11 @@ using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.BlobStoring.Database.EntityFrameworkCore;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
 using Volo.Abp.Studio;
-using Wallee.Mall.Medias;
-using Wallee.Mall.Products;
+using Wallee.Mall.Carts;
 using Wallee.Mall.Carousels;
 using Wallee.Mall.Cms;
+using Wallee.Mall.Medias;
+using Wallee.Mall.Products;
 
 namespace Wallee.Mall.EntityFrameworkCore;
 
@@ -56,6 +57,7 @@ public class MallEntityFrameworkCoreModule : AbpModule
             options.AddRepository<Product, EfCoreProductRepository>();
             options.AddRepository<Carousel, EfCoreCarouselRepository>();
             options.AddRepository<ProductPost, EfCoreProductPostRepository>();
+            options.AddRepository<Cart, EfCoreCartRepository>();
         });
 
         if (AbpStudioAnalyzeHelper.IsInAnalyzeMode)

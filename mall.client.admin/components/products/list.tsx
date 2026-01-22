@@ -47,13 +47,21 @@ const ProductTable: FC<Props> = ({ promise }) => {
     [router],
   );
 
+  const handleUpdateTags = useCallback(
+    (v: WalleeMallProductsDtosProductDto) => {
+      router.push(`/products/${v.id}/tags`);
+    },
+    [router],
+  );
+
   const columns = useMemo(() => {
     return createColumns({
       onUpdate: handleUpdate,
       onUpdateSkus: handleUpdateSkus,
       onViewPosts: handleViewPosts,
+      onUpdateTags: handleUpdateTags,
     });
-  }, [handleUpdate, handleUpdateSkus, handleViewPosts]);
+  }, [handleUpdate, handleUpdateSkus, handleViewPosts, handleUpdateTags]);
 
   const { table, shallow, debounceMs, throttleMs } =
     useDataTable<WalleeMallProductsDtosProductDto>({

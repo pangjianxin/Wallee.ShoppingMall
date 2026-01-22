@@ -1,6 +1,10 @@
 import ProductDetail from "@/components/mobile/products/detail";
 import { client } from "@/hey-api/client";
-import { productGet, productPostGetListByProduct } from "@/openapi";
+import {
+  productGet,
+  productPostGetListByProduct,
+  tagGetAllRelatedTags,
+} from "@/openapi";
 import { FC } from "react";
 
 type Props = {
@@ -9,6 +13,14 @@ type Props = {
 
 const Page: FC<Props> = async ({ params }) => {
   const { id } = await params;
+
+  const { data: tags } = await tagGetAllRelatedTags({
+    throwOnError: true,
+    client,
+    path: {
+      productId: id,
+    },
+  });
 
   const { data: product } = await productGet({
     client,
@@ -26,7 +38,7 @@ const Page: FC<Props> = async ({ params }) => {
     },
   });
 
-  return <ProductDetail product={product} posts={posts} />;
+  return <ProductDetail product={product} posts={posts} relatedTags={tags} />;
 };
 
 Page.displayName = "ProductDetailPage";

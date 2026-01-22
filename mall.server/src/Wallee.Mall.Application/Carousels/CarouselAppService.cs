@@ -9,7 +9,7 @@ using Wallee.Mall.Medias;
 namespace Wallee.Mall.Carousels;
 
 
-public class CarouselAppService : CrudAppService<Carousel, CarouselDto, Guid, CarouselGetListInput, CreateUpdateCarouselDto, CreateUpdateCarouselDto>,
+public class CarouselAppService : CrudAppService<Carousel, CarouselDto, Guid, CarouselGetListInput, CreateCarouselDto, UpdateCarouselDto>,
     ICarouselAppService
 {
     private readonly IMallMediaAppService _mallMediaAppService;
@@ -23,14 +23,14 @@ public class CarouselAppService : CrudAppService<Carousel, CarouselDto, Guid, Ca
         _repository = repository;
     }
 
-    public override async Task<CarouselDto> CreateAsync(CreateUpdateCarouselDto input)
+    public override async Task<CarouselDto> CreateAsync(CreateCarouselDto input)
     {
-        var entity = new Carousel(GuidGenerator.Create(), input.Title, input.Description, input.CoverImageMediaId, input.Priority, input.Link);
+        var entity = new Carousel(GuidGenerator.Create(), input.Title, input.Description, input.Content, input.CoverImageMediaId, input.Priority, input.Link);
         await Repository.InsertAsync(entity);
         return await MapToGetOutputDtoAsync(entity);
     }
 
-    public override async Task<CarouselDto> UpdateAsync(Guid id, CreateUpdateCarouselDto input)
+    public override async Task<CarouselDto> UpdateAsync(Guid id, UpdateCarouselDto input)
     {
         var entity = await Repository.GetAsync(id);
 
@@ -39,7 +39,7 @@ public class CarouselAppService : CrudAppService<Carousel, CarouselDto, Guid, Ca
             await _mallMediaAppService.DeleteAsync(entity.CoverImageMediaId);
         }
 
-        entity.Update(input.Title, input.Description, input.CoverImageMediaId, input.Priority, input.Link);
+        entity.Update(input.Title, input.Description, input.Content, input.CoverImageMediaId, input.Priority, input.Link);
 
         await Repository.UpdateAsync(entity);
 

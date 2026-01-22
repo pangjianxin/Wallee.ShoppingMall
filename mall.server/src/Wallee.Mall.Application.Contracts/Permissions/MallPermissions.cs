@@ -32,4 +32,11 @@ public static class MallPermissions
         public const string Create = Default + ".Create";
         public const string Delete = Default + ".Delete";
     }
+
+    public class Cart
+    {
+        public const string Default = GroupName + ".Cart";
+        public const string Read = Default + ".Read";
+        public const string Manage = Default + ".Manage";
+    }
 }

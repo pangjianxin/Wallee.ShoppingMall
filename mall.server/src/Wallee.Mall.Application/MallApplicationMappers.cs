@@ -4,6 +4,8 @@ using Volo.Abp.BackgroundJobs;
 using Volo.Abp.Mapperly;
 using Wallee.Mall.AuditLogs.Dtos;
 using Wallee.Mall.BackgroundJobs.Dtos;
+using Wallee.Mall.Carousels;
+using Wallee.Mall.Carousels.Dtos;
 using Wallee.Mall.Cms;
 using Wallee.Mall.Cms.Dtos;
 using Wallee.Mall.Medias;
@@ -77,6 +79,13 @@ public partial class ProductPostMappers : MapperBase<ProductPost, ProductPostDto
 {
     public override partial ProductPostDto Map(ProductPost source);
     public override partial void Map(ProductPost source, ProductPostDto destination);
+}
+
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
+public partial class CarouselMappers : MapperBase<Carousel, CarouselDto>
+{
+    public override partial CarouselDto Map(Carousel source);
+    public override partial void Map(Carousel source, CarouselDto destination);
 }
 
 

@@ -11,7 +11,7 @@ namespace Wallee.Mall.Carousels
     {
         [HttpPost]
         [Route("")]
-        public async Task<CarouselDto> CreateAsync(CreateUpdateCarouselDto input)
+        public async Task<CarouselDto> CreateAsync(CreateCarouselDto input)
         {
             return await service.CreateAsync(input);
         }
@@ -39,7 +39,7 @@ namespace Wallee.Mall.Carousels
 
         [HttpPut]
         [Route("{id}")]
-        public async Task<CarouselDto> UpdateAsync(Guid id, CreateUpdateCarouselDto input)
+        public async Task<CarouselDto> UpdateAsync(Guid id, UpdateCarouselDto input)
         {
             return await service.UpdateAsync(id, input);
         }

@@ -74,8 +74,10 @@ export const createClient = (config: Config = {}): Client => {
     return { opts, url };
   };
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-expect-error
   const request: Client['request'] = async (options) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
     const { opts, url } = await beforeRequest(options);
 

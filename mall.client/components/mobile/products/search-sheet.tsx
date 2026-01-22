@@ -1,81 +1,63 @@
 "use client";
 
-import { SearchSheet } from "@/components/mobile/query-builder/search-sheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { productQueryConfig } from "@/lib/query-builder/config";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { ProductGetListData } from "@/openapi";
-import { Search, SlidersHorizontal, X } from "lucide-react";
-import { parseAsString, useQueryStates } from "nuqs";
+import { Search, X } from "lucide-react";
+import { useQueryStates } from "nuqs";
 import { useState } from "react";
+import { ProductsSearchParams } from "@/lib/nuqs";
+import {
+  Select,
+  SelectContent,
+  SelectTrigger,
+  SelectItem,
+  SelectValue,
+} from "@/components/ui/select";
+
 type Props = {
   trigger?: React.ReactNode;
 };
 
-/**
- * 商品搜索组件（基于配置的通用查询组件）
- */
-export function ProductSearchSheet({ trigger }: Props) {
-  return (
-    <SearchSheet
-      config={productQueryConfig}
-      trigger={trigger}
-      title="搜索商品"
-    />
-  );
-}
-
 // 保留原有实现作为参考
-export function ProductSearchSheetOld({ trigger }: Props) {
+export function ProductSearchSheet({ trigger }: Props) {
   const [open, setOpen] = useState(false);
 
   // 使用 nuqs 管理查询参数
-  const [query, setQuery] = useQueryStates(
-    {
-      "Name.Contains": parseAsString,
-      "Name.StartsWith": parseAsString,
-      "Name.EndsWith": parseAsString,
-      Sorting: parseAsString,
-    },
-    {
-      history: "push",
-    },
-  );
+  const [query, setQuery] = useQueryStates(ProductsSearchParams, {
+    history: "push",
+    shallow: false,
+  });
 
   // 本地状态用于表单输入
   const [localFilters, setLocalFilters] = useState({
-    contains: query["Name.Contains"] ?? "",
-    startsWith: query["Name.StartsWith"] ?? "",
-    endsWith: query["Name.EndsWith"] ?? "",
-    sorting: query.Sorting ?? "",
+    contains: query["Name.Contains"] ?? undefined,
+    sorting: query.Sorting ?? undefined,
   });
 
   // 应用筛选
   const handleApply = () => {
     const newQuery: ProductGetListData["query"] = {};
-
     if (localFilters.contains) {
       newQuery["Name.Contains"] = localFilters.contains;
-    }
-    if (localFilters.startsWith) {
-      newQuery["Name.StartsWith"] = localFilters.startsWith;
-    }
-    if (localFilters.endsWith) {
-      newQuery["Name.EndsWith"] = localFilters.endsWith;
     }
     if (localFilters.sorting) {
       newQuery.Sorting = localFilters.sorting;
     }
-
     setQuery({
-      "Name.Contains": newQuery["Name.Contains"] ?? null,
-      "Name.StartsWith": newQuery["Name.StartsWith"] ?? null,
-      "Name.EndsWith": newQuery["Name.EndsWith"] ?? null,
+      ...newQuery,
       Sorting: newQuery.Sorting ?? null,
     });
-
     setOpen(false);
   };
 
@@ -83,15 +65,10 @@ export function ProductSearchSheetOld({ trigger }: Props) {
   const handleReset = () => {
     setLocalFilters({
       contains: "",
-      startsWith: "",
-      endsWith: "",
       sorting: "",
     });
-
     setQuery({
       "Name.Contains": null,
-      "Name.StartsWith": null,
-      "Name.EndsWith": null,
       Sorting: null,
     });
   };
@@ -101,8 +78,6 @@ export function ProductSearchSheetOld({ trigger }: Props) {
     if (open) {
       setLocalFilters({
         contains: query["Name.Contains"] ?? "",
-        startsWith: query["Name.StartsWith"] ?? "",
-        endsWith: query["Name.EndsWith"] ?? "",
         sorting: query.Sorting ?? "",
       });
     }
@@ -111,19 +86,39 @@ export function ProductSearchSheetOld({ trigger }: Props) {
 
   return (
     <Sheet open={open} onOpenChange={handleOpenChange}>
-      <SheetTrigger asChild>
-        {trigger ?? (
-          <Button variant="outline" size="icon">
-            <Search className="h-4 w-4" />
-          </Button>
-        )}
-      </SheetTrigger>
+      <div className="flex items-center gap-2">
+        <SheetTrigger asChild>
+          {trigger ?? (
+            <Button variant="outline" size="icon" aria-label="打开搜索">
+              <Search className="h-4 w-4" />
+            </Button>
+          )}
+        </SheetTrigger>
+        {query["Name.Contains"] ? (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setQuery({
+                "Name.Contains": null,
+                Sorting: query.Sorting ?? null,
+              });
+              setLocalFilters({ ...localFilters, contains: "" });
+            }}
+            className="inline-flex items-center justify-center rounded-md border border-input bg-transparent p-2 text-muted-foreground hover:text-foreground"
+            aria-label="清除检索"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        ) : null}
+      </div>
       <SheetContent side="bottom" className="max-h-[90vh] overflow-y-auto">
         <SheetHeader>
           <SheetTitle>搜索和筛选</SheetTitle>
+          <SheetDescription>设置商品搜索关键词和排序方式</SheetDescription>
         </SheetHeader>
 
-        <div className="space-y-4 py-4">
+        <div className="space-y-4 px-4 py-4">
           {/* 包含搜索 */}
           <div className="space-y-2">
             <Label htmlFor="contains">包含关键词</Label>
@@ -141,9 +136,13 @@ export function ProductSearchSheetOld({ trigger }: Props) {
               {localFilters.contains && (
                 <button
                   type="button"
-                  onClick={() =>
-                    setLocalFilters({ ...localFilters, contains: "" })
-                  }
+                  onClick={() => {
+                    setLocalFilters({ ...localFilters, contains: "" });
+                    setQuery({
+                      "Name.Contains": null,
+                      Sorting: query.Sorting ?? null,
+                    });
+                  }}
                   className="absolute right-3 top-1/2 -translate-y-1/2"
                 >
                   <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
@@ -151,89 +150,33 @@ export function ProductSearchSheetOld({ trigger }: Props) {
               )}
             </div>
           </div>
-
-          {/* 开头搜索 */}
-          <div className="space-y-2">
-            <Label htmlFor="startsWith">以...开头</Label>
-            <div className="relative">
-              <Input
-                id="startsWith"
-                placeholder="以...开头"
-                value={localFilters.startsWith}
-                onChange={(e) =>
-                  setLocalFilters({
-                    ...localFilters,
-                    startsWith: e.target.value,
-                  })
-                }
-                className="pr-9"
-              />
-              {localFilters.startsWith && (
-                <button
-                  type="button"
-                  onClick={() =>
-                    setLocalFilters({ ...localFilters, startsWith: "" })
-                  }
-                  className="absolute right-3 top-1/2 -translate-y-1/2"
-                >
-                  <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
-                </button>
-              )}
-            </div>
-          </div>
-
-          {/* 结尾搜索 */}
-          <div className="space-y-2">
-            <Label htmlFor="endsWith">以...结尾</Label>
-            <div className="relative">
-              <Input
-                id="endsWith"
-                placeholder="以...结尾"
-                value={localFilters.endsWith}
-                onChange={(e) =>
-                  setLocalFilters({ ...localFilters, endsWith: e.target.value })
-                }
-                className="pr-9"
-              />
-              {localFilters.endsWith && (
-                <button
-                  type="button"
-                  onClick={() =>
-                    setLocalFilters({ ...localFilters, endsWith: "" })
-                  }
-                  className="absolute right-3 top-1/2 -translate-y-1/2"
-                >
-                  <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
-                </button>
-              )}
-            </div>
-          </div>
-
           {/* 排序 */}
           <div className="space-y-2">
             <Label htmlFor="sorting">排序</Label>
             <div className="relative">
-              <SlidersHorizontal className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                id="sorting"
-                placeholder="例如: Name ASC, CreationTime DESC"
+              <Select
                 value={localFilters.sorting}
-                onChange={(e) =>
-                  setLocalFilters({ ...localFilters, sorting: e.target.value })
+                onValueChange={(val) =>
+                  setLocalFilters({ ...localFilters, sorting: val })
                 }
-                className="pl-9 pr-9"
-              />
-              {localFilters.sorting && (
-                <button
-                  type="button"
-                  onClick={() =>
-                    setLocalFilters({ ...localFilters, sorting: "" })
-                  }
-                  className="absolute right-3 top-1/2 -translate-y-1/2"
-                >
-                  <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
-                </button>
-              )}
+              >
+                <SelectTrigger id="sorting" className="w-full">
+                  <SelectValue placeholder="选择排序方式" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="creationTime desc">
+                    不指定（默认）
+                  </SelectItem>
+                  <SelectItem value="name asc">名称:A → Z</SelectItem>
+                  <SelectItem value="name desc">名称:Z → A</SelectItem>
+                  <SelectItem value="originalPrice asc">
+                    价格：从低到高
+                  </SelectItem>
+                  <SelectItem value="originalPrice desc">
+                    价格：从高到低
+                  </SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
         </div>

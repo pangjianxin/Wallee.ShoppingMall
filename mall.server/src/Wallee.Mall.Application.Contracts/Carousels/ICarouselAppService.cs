@@ -10,8 +10,8 @@ public interface ICarouselAppService :
         CarouselDto, 
         Guid, 
         CarouselGetListInput,
-        CreateUpdateCarouselDto,
-        CreateUpdateCarouselDto>
+        CreateCarouselDto,
+        UpdateCarouselDto>
 {
 
 }

@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 import { productPostGetListByProduct, productGet } from "@/openapi";
 import { client } from "@/hey-api/client";
-import { ProductPostTabs } from "@/components/products/post-tabs";
+import { ProductPostTabs } from "@/components/products/posts";
 type Props = {
   params: Promise<{ id: string }>;
 };

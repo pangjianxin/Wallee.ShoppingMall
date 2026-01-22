@@ -1,5 +1,5 @@
 "use client";
-import { signOut, useSession } from "next-auth/react";
+import { signOut, useSession } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import {
@@ -21,16 +21,18 @@ type Props = {
 };
 const UserMenu: FC<Props> = ({ className, size = "sm" }) => {
   const session = useSession();
+  console.log(session.data);
+  const isAuthenticated = !!session.data?.user;
   const router = useRouter();
   const handleSignin = () => {
     router.push(`/account/login`);
   };
   //redirectTo: "/"
   const handleSignOut = async () => {
-    await signOut({ redirect: false });
+    await signOut();
   };
 
-  if (session.status === "authenticated") {
+  if (isAuthenticated) {
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -47,7 +49,7 @@ const UserMenu: FC<Props> = ({ className, size = "sm" }) => {
           <DropdownMenuGroup>
             <DropdownMenuItem
               onClick={() => {
-                router.push(`/identity/profile`);
+                router.push(`/account/profile`);
               }}
             >
               账户设置

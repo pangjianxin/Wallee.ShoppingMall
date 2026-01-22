@@ -26,6 +26,10 @@ public class MallPermissionDefinitionProvider : PermissionDefinitionProvider
         productPermission.AddChild(MallPermissions.Product.Create, L("Permission:Create"));
         productPermission.AddChild(MallPermissions.Product.Update, L("Permission:Update"));
         productPermission.AddChild(MallPermissions.Product.Delete, L("Permission:Delete"));
+
+        var cartPermission = myGroup.AddPermission(MallPermissions.Cart.Default, L("Permission:Cart"));
+        cartPermission.AddChild(MallPermissions.Cart.Read, L("Permission:Read"));
+        cartPermission.AddChild(MallPermissions.Cart.Manage, L("Permission:Manage"));
     }
 
     private static LocalizableString L(string name)
