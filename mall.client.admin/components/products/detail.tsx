@@ -1,22 +1,21 @@
 "use client";
 import { use } from "react";
 import { WalleeMallProductsDtosProductDto } from "@/openapi";
-import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ProductImageCarousel } from "@/components/products/image-carousel";
-
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 type Props = {
   entity: Promise<WalleeMallProductsDtosProductDto>;
 };
 
 const FC: React.FC<Props> = ({ entity }) => {
   const product = use(entity);
-
   const currency = product.currency || "¥";
 
   return (
-    <div className="sm:w-[400px] mx-auto py-6">
-      <div className="flex flex-col gap-6">
+    <div className="container mx-auto py-6">
+      <div className="grid gap-4 sm:grid-cols-[1fr_3fr]">
         {/* 商品图片 */}
         <ProductImageCarousel
           covers={product?.productCovers || []}
@@ -25,7 +24,7 @@ const FC: React.FC<Props> = ({ entity }) => {
         />
 
         {/* 商品信息 */}
-        <div className="flex flex-1 flex-col gap-4">
+        <div className="flex flex-1 flex-col gap-4 h-full">
           <div className="flex items-start justify-between gap-4">
             <div>
               <h1 className="text-2xl font-bold text-foreground">
@@ -75,7 +74,15 @@ const FC: React.FC<Props> = ({ entity }) => {
             )}
           </div>
 
-          <div className="mt-auto flex flex-wrap gap-2 border-t pt-4"></div>
+          <div className="flex-1"></div>
+          <div className="flex justify-end gap-2">
+            <Button>
+              <Link href={`/product-posts/create?productId=${product.id}`}>
+                新增内容
+              </Link>
+            </Button>{" "}
+            <Button>新增轮播</Button>
+          </div>
         </div>
       </div>
     </div>
