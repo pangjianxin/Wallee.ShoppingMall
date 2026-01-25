@@ -31,7 +31,6 @@ export const useUpdateProductSkus = ({
         })
       )
       .min(1, { message: "请至少添加一个 SKU" }),
-    validateSkuCodeUniqueness: z.boolean(),
   });
 
   type FormValue = z.infer<typeof schema>;
@@ -54,7 +53,6 @@ export const useUpdateProductSkus = ({
               value: (a as any).value ?? String((a as any).val ?? ""),
             })) ?? [],
         })) ?? [],
-      validateSkuCodeUniqueness: true,
     },
   });
 
@@ -63,7 +61,6 @@ export const useUpdateProductSkus = ({
       throwOnError: true,
       path: { id: entity.id as string },
       body: {
-        validateSkuCodeUniqueness: data.validateSkuCodeUniqueness,
         items: data.items,
       },
     });

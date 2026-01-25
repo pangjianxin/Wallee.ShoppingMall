@@ -52,7 +52,7 @@ const UpdateUser: FC<Props> = ({ user, userAssignableRoles, userRoles }) => {
     user!,
     userRoles?.items
       ?.map((it) => it.name)
-      .filter((name): name is string => !!name) ?? []
+      .filter((name): name is string => !!name) ?? [],
   );
 
   const handleClose = () => {
@@ -67,7 +67,7 @@ const UpdateUser: FC<Props> = ({ user, userAssignableRoles, userRoles }) => {
         description: "用户更新成功",
       });
       await queryClient.invalidateQueries({
-        queryKey: userGetQueryKey({ path: { id: user?.id! } }),
+        queryKey: userGetQueryKey({ path: { id: user?.id as string } }),
       });
       handleClose();
     } catch (e: any) {
@@ -214,26 +214,6 @@ const UpdateUser: FC<Props> = ({ user, userAssignableRoles, userRoles }) => {
                   />
                   <FormField
                     control={form.control}
-                    name="extraProperties.WorkStartDate"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>工作开始日期</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="date"
-                            placeholder="请输入工作开始日期"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormDescription>
-                          工作开始日期为员工的入职日期
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
                     name="isActive"
                     render={({ field }) => (
                       <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md p-4">
@@ -307,7 +287,7 @@ const UpdateUser: FC<Props> = ({ user, userAssignableRoles, userRoles }) => {
                                         ? [...field.value!, role.name]
                                         : field.value?.filter(
                                             (value: string) =>
-                                              value !== role.name
+                                              value !== role.name,
                                           );
 
                                       field.onChange(updatedRoles);

@@ -2022,13 +2022,10 @@ namespace Wallee.Mall.Migrations
                     b.ToTable("AppCartItems", (string)null);
                 });
 
-            modelBuilder.Entity("Wallee.Mall.Cms.ProductPost", b =>
+            modelBuilder.Entity("Wallee.Mall.Cms.Post", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
-
-                    b.Property<int>("Category")
-                        .HasColumnType("integer");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -2063,12 +2060,12 @@ namespace Wallee.Mall.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("LastModifierId");
 
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("Title")
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.ToTable("AppProductPosts", (string)null);
+                    b.ToTable("AppPosts", (string)null);
                 });
 
             modelBuilder.Entity("Wallee.Mall.Medias.MallMedia", b =>
@@ -2556,6 +2553,29 @@ namespace Wallee.Mall.Migrations
                         .HasForeignKey("CartId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Wallee.Mall.Cms.Post", b =>
+                {
+                    b.OwnsOne("Wallee.Mall.Cms.ProductInfo", "ProductInfo", b1 =>
+                        {
+                            b1.Property<Guid>("PostId");
+
+                            b1.Property<int>("Category");
+
+                            b1.Property<Guid>("ProductId");
+
+                            b1.HasKey("PostId");
+
+                            b1.ToTable("AppPosts");
+
+                            b1.ToJson("ProductInfo");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PostId");
+                        });
+
+                    b.Navigation("ProductInfo");
                 });
 
             modelBuilder.Entity("Wallee.Mall.Products.Product", b =>

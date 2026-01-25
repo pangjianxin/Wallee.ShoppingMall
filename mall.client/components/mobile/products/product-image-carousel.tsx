@@ -18,7 +18,7 @@ type Props = {
 export const ProductImageCarousel: FC<Props> = ({
   covers,
   badge,
-  imageUrlPrefix,
+  imageUrlPrefix = process.env.NEXT_PUBLIC_MEDIA_DOWNLOAD_URL,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const imageSizes = "(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw";

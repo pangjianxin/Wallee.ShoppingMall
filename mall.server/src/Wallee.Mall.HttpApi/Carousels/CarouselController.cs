@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 using Wallee.Mall.Carousels.Dtos;
@@ -31,10 +32,17 @@ namespace Wallee.Mall.Carousels
         }
 
         [HttpGet]
-        [Route("")]
+        [Route("list")]
         public async Task<PagedResultDto<CarouselDto>> GetListAsync(CarouselGetListInput input)
         {
             return await service.GetListAsync(input);
+        }
+
+        [HttpGet]
+        [Route("list/{productId}")]
+        public async Task<List<CarouselDto>> GetListByProductAsync(Guid productId)
+        {
+            return await service.GetListByProductAsync(productId);
         }
 
         [HttpPut]

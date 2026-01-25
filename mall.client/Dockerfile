@@ -3,7 +3,7 @@
 
 #FROM node:20-alpine AS base
 
-ARG PNPM_VERSION=10.23.0
+ARG PNPM_VERSION=10.28.1
 ARG NPM_MIRROR=https://registry.npmmirror.com
 
 FROM node:24-alpine3.20 AS base
@@ -58,7 +58,6 @@ COPY --from=builder /app/public ./public
 # 利用 Next.js output traces 减小镜像体积
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-COPY --from=builder --chown=nextjs:nodejs /app/.env.local ./.env.local
 COPY --from=builder --chown=nextjs:nodejs /app/.env.production ./.env.production
 USER nextjs
 

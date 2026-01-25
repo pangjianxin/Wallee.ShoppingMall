@@ -195,26 +195,6 @@ const CreateUser: FC = () => {
                   />
                   <FormField
                     control={form.control}
-                    name="extraProperties.WorkStartDate"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>工作开始日期</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="date"
-                            placeholder="请输入工作开始日期"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormDescription>
-                          工作开始日期为员工的入职日期
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
                     name="isActive"
                     render={({ field }) => (
                       <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md p-4">

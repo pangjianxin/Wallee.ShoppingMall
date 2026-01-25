@@ -1,0 +1,45 @@
+namespace: wallee
+app: mall-client
+
+nameOverride: ""
+fullnameOverride: ""
+
+image:
+  repository: registry.cn-hangzhou.aliyuncs.com/jianxin-zx/mall
+  tag: latest
+  pullPolicy: Always
+
+# 引用共享的镜像拉取密钥
+imagePullSecrets:
+  - name: aliyun-registry-secret
+
+service:
+  type: ClusterIP
+  name: http
+  port: 80
+
+deploy:
+  replicaCount: 1
+  containerPort: 3000
+  resources:
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+    requests:
+      memory: "256Mi"
+      cpu: "250m"
+
+ingress:
+  enabled: true
+  apiVersion: traefik.io/v1alpha1
+  host: mall.creotech.cn
+  tlsSecretName: wildcard-cert
+  # 引用已存在的重定向 Middleware
+  redirectMiddleware:
+    enabled: true
+    name: redirect-to-https
+    namespace: wallee
+
+# ConfigMap 配置项（环境变量）
+config:
+  PORT: "3000"

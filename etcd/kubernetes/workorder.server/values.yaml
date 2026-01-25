@@ -1,0 +1,40 @@
+namespace: wallee
+app: mall-service
+image:
+  repository: registry.cn-hangzhou.aliyuncs.com/jianxin-zx/mall-service
+  tag: "latest"
+  pullPolicy: Always
+
+# 引用共享的镜像拉取密钥
+imagePullSecrets:
+  - name: aliyun-registry-secret
+
+service:
+  type: ClusterIP
+  name: http
+  port: 80
+deploy:
+  replicaCount: 1
+  containerPort: 8080
+  resources:
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+    requests:
+      memory: "256Mi"
+      cpu: "250m"
+ingress:
+  enabled: false
+
+# ConfigMap 配置项（环境变量）
+config:
+  ASPNETCORE_FORWARDEDHEADERS_ENABLED: true
+  ASPNETCORE_ENVIRONMENT: Production
+  ASPNETCORE_HTTP_PORTS: 8080
+  AuthServer__Authority: "http://mall-service.wallee.svc.cluster.local"
+  AuthServer__Issuers: "http://mall-service.wallee.svc.cluster.local"
+  AuthServer__RequireHttpsMetadata: false
+  AuthServer__SwaggerClientId: SwaggerClient
+secret:
+  ConnectionStrings__Default: "Host=postgresql-0.postgresql.cre.svc.cluster.local;Port=5432;Username=postgres;Password=1q2w3E**;Database=mall;"
+  ConnectionStrings__minio: "Endpoint=minio-0.minio.cre.svc.cluster.local:9000;AccessKey=wallee;SecretKey=1q2w3E**"

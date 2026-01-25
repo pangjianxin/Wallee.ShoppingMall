@@ -2,11 +2,10 @@
 import { DataTable } from "@/components/data-table/data-table";
 import { use, type FC } from "react";
 import { Card } from "@/components/ui/card";
-import { useRouter } from "next/navigation";
 import { createColumns } from "@/components/medias/columns";
 import {
-  VoloAbpApplicationDtosPagedResultDtoOfHrToolsMediaDto,
-  WalleeHrToolsMediasDtosHrToolsMediaDto,
+  VoloAbpApplicationDtosPagedResultDtoOfMallMediaDto,
+  WalleeMallMediasDtosMallMediaDto,
 } from "@/openapi";
 import { download } from "@/hooks/medias/use-download";
 import { useDataTable } from "@/hooks/use-data-table";
@@ -16,25 +15,22 @@ import { DataTableFilterList } from "@/components/data-table/data-table-filter-l
 
 type Props = {
   promise: Promise<{
-    data?: VoloAbpApplicationDtosPagedResultDtoOfHrToolsMediaDto;
+    data?: VoloAbpApplicationDtosPagedResultDtoOfMallMediaDto;
     error: unknown;
     pageCount: number;
   }>;
 };
 
 const List: FC<Props> = ({ promise }) => {
-  const router = useRouter();
-  const { data, error, pageCount } = use(promise);
-  const handleDownload = async (
-    row: WalleeHrToolsMediasDtosHrToolsMediaDto
-  ) => {
+  const { data, pageCount } = use(promise);
+  const handleDownload = async (row: WalleeMallMediasDtosMallMediaDto) => {
     await download({ id: row.id as string });
   };
 
   const columns = createColumns({ onDownload: handleDownload });
 
   const { table, shallow, debounceMs, throttleMs } =
-    useDataTable<WalleeHrToolsMediasDtosHrToolsMediaDto>({
+    useDataTable<WalleeMallMediasDtosMallMediaDto>({
       data: data?.items || [],
       pageCount: pageCount,
       columns: columns,

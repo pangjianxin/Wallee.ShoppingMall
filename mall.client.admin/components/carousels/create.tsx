@@ -1,3 +1,4 @@
+"use client";
 import {
   Dialog,
   DialogContent,
@@ -9,7 +10,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { FC, useState } from "react";
+import { FC } from "react";
 import { useCreateCarousel } from "@/hooks/carousels/create";
 import {
   Form,
@@ -37,13 +38,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
 import { Editor } from "@/components/shared/editor/dynamic-editor";
 import { WalleeMallProductsDtosProductDto } from "@/openapi";
+import { ProductCard } from "@/components/products/card";
+import { ExpandableContainer } from "@/components/shared/expandable-container";
 
 type Props = {
   product?: WalleeMallProductsDtosProductDto;
 };
 
 const Create: FC<Props> = ({ product }) => {
-  const [open, setOpen] = useState(false);
   const { form, submit } = useCreateCarousel({ productId: product?.id });
   const router = useRouter();
 
@@ -55,18 +57,14 @@ const Create: FC<Props> = ({ product }) => {
       {
         successMessage: "操作成功",
         onSuccess: async () => {
-          setOpen(false);
-          form.reset();
           router.refresh();
         },
       },
     );
   });
 
-  console.log(form.formState.errors);
-
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog>
       <DialogTrigger asChild>
         <Button size={"sm"} variant="outline">
           添加轮播图
@@ -87,6 +85,17 @@ const Create: FC<Props> = ({ product }) => {
               </DialogDescription>
             </DialogHeader>
             <div className="flex flex-col gap-4 mt-4">
+              {product && (
+                <ExpandableContainer
+                  allowCollapse={true}
+                  collapsedMaxHeight={200}
+                >
+                  <div className="flex flex-col gap-2">
+                    <h2 className="font-medium">关联商品信息</h2>
+                    <ProductCard product={product} />
+                  </div>
+                </ExpandableContainer>
+              )}
               <FormField
                 control={form.control}
                 name="title"
@@ -145,7 +154,7 @@ const Create: FC<Props> = ({ product }) => {
                 name="coverImageMediaId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>商品封面(最多十张)</FormLabel>
+                    <FormLabel>轮播图封面</FormLabel>
                     <FormControl>
                       <FileUpload
                         value={field.value}

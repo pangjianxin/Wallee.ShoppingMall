@@ -79,7 +79,7 @@ export default function MobileBottomNav() {
 
     {
       name: "购物车",
-      href: "/products/carts",
+      href: "/carts",
       icon: ShoppingCart,
       permissions: [],
     },

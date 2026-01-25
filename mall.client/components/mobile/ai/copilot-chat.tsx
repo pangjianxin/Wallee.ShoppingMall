@@ -15,10 +15,10 @@ export default function ComprehensiveChat() {
   const toolsMenu = useMemo<(ToolsMenuItem | "-")[]>(
     () => [
       {
-        label: "Open CopilotKit Docs",
+        label: "友情链接",
         action: () => {
           window.open(
-            "https://docs.copilotkit.ai",
+            "https://jd.com",
             "_blank",
             "noopener,noreferrer"
           );
@@ -50,7 +50,7 @@ export default function ComprehensiveChat() {
       className="mt-2"
       labels={{
         chatDisclaimerText: "AI可能会生成不准确的信息,请谨慎使用。",
-        chatInputPlaceholder: "请输入您的问题...",
+        chatInputPlaceholder: "我是您的智能导购,请输入您的问题...",
       }}
       inputProps={{
         toolsMenu: toolsMenu,

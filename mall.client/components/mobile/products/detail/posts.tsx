@@ -1,24 +1,21 @@
 "use client";
 import { FC, useState } from "react";
-import {
-  WalleeMallCmsDtosProductPostDto,
-  WalleeMallCmsProductPostCategory,
-} from "@/openapi";
+import { WalleeMallCmsDtosPostDto, WalleeMallCmsPostCategory } from "@/openapi";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Editor from "@/components/shared/editor/editor";
+import { Editor } from "@/components/shared/editor/dynamic-editor";
 import { cn } from "@/lib/utils";
 
 type Props = {
-  posts: WalleeMallCmsDtosProductPostDto[];
+  posts: WalleeMallCmsDtosPostDto[];
 };
 
 // 单个 Post 的内容组件
 const PostContent: FC<{
-  post: WalleeMallCmsDtosProductPostDto;
+  post: WalleeMallCmsDtosPostDto;
   showTitle?: boolean;
 }> = ({ post, showTitle = true }) => {
   const categoryName =
-    WalleeMallCmsProductPostCategory[post.category as number];
+    WalleeMallCmsPostCategory[post.productInfo?.category as number];
 
   return (
     <div>
@@ -27,10 +24,7 @@ const PostContent: FC<{
           {categoryName}
         </div>
       )}
-      <Editor
-        value={post.content || ""}
-        className="rounded-lg bg-muted/20"
-      />
+      <Editor value={post.content || ""} className="rounded-lg bg-muted/20" />
     </div>
   );
 };
@@ -66,7 +60,7 @@ export const ProductPostTabs: FC<Props> = ({ posts }) => {
         >
           {posts.map((post) => {
             const categoryName =
-              WalleeMallCmsProductPostCategory[post.category as number];
+              WalleeMallCmsPostCategory[post.productInfo?.category as number];
             return (
               <TabsTrigger
                 key={post.id}

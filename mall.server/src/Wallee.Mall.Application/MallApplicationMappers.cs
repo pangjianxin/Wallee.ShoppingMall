@@ -75,10 +75,10 @@ public partial class PopularTagMappers : MapperBase<PopularTag, PopularTagDto>
 }
 
 [Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
-public partial class ProductPostMappers : MapperBase<ProductPost, ProductPostDto>
+public partial class PostMappers : MapperBase<Post, PostDto>
 {
-    public override partial ProductPostDto Map(ProductPost source);
-    public override partial void Map(ProductPost source, ProductPostDto destination);
+    public override partial PostDto Map(Post source);
+    public override partial void Map(Post source, PostDto destination);
 }
 
 [Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]

@@ -3,8 +3,8 @@
 import { type DefaultError, queryOptions, type UseMutationOptions } from '@tanstack/react-query';
 
 import { client } from '../client.gen';
-import { abpApiDefinitionGet, abpApplicationConfigurationGet, abpApplicationLocalizationGet, abpTenantFindTenantById, abpTenantFindTenantByName, accountRegister, accountResetPassword, accountSendPasswordResetCode, accountVerifyPasswordResetToken, auditLogGet, auditLogGetList, backgroundJobDelete, backgroundJobGet, backgroundJobGetList, backgroundJobGetWaitingJobs, backgroundJobPending, captchaGenerate, carouselCreate, carouselDelete, carouselGet, carouselGetList, carouselUpdate, cartAddItem, cartClear, cartGet, cartRemoveItem, cartSelectAll, cartSetItemSelected, cartUpdateQuantity, dynamicClaimsRefresh, emailSettingsGet, emailSettingsSendTestEmail, emailSettingsUpdate, featuresDelete, featuresGet, featuresUpdate, loginCheckPassword, loginLogin, loginLogout, mallMediaCreate, mallMediaDelete, mallMediaDownload, mallMediaGet, mallMediaGetList, mallMediaPreview, type Options, permissionsGet, permissionsGetByGroup, permissionsUpdate, postAgUiProducts, productCreate, productDelete, productGet, productGetList, productGetSkus, productPostCreate, productPostDelete, productPostGet, productPostGetList, productPostGetListByProduct, productPostUpdate, productTagAddTagToProduct, productTagRemoveTagFromProduct, productTagSetProductTags, productUpdate, productUpsertSkus, profileChangePassword, profileGet, profileUpdate, roleCreate, roleDelete, roleGet, roleGetAllList, roleGetList, roleUpdate, tagCreate, tagDelete, tagGet, tagGetAllRelatedTags, tagGetList, tagGetPopularTags, tagUpdate, tenantCreate, tenantDelete, tenantDeleteDefaultConnectionString, tenantGet, tenantGetDefaultConnectionString, tenantGetList, tenantUpdate, tenantUpdateDefaultConnectionString, timeZoneSettingsGet, timeZoneSettingsGetTimezones, timeZoneSettingsUpdate, userCreate, userDelete, userFindByEmail, userFindByUsername, userGet, userGetAssignableRoles, userGetList, userGetRoles, userLookupFindById, userLookupFindByUserName, userLookupGetCount, userLookupSearch, userUpdate, userUpdateRoles } from '../sdk.gen';
-import type { AbpApiDefinitionGetData, AbpApiDefinitionGetError, AbpApiDefinitionGetResponse, AbpApplicationConfigurationGetData, AbpApplicationConfigurationGetError, AbpApplicationConfigurationGetResponse, AbpApplicationLocalizationGetData, AbpApplicationLocalizationGetError, AbpApplicationLocalizationGetResponse, AbpTenantFindTenantByIdData, AbpTenantFindTenantByIdError, AbpTenantFindTenantByIdResponse, AbpTenantFindTenantByNameData, AbpTenantFindTenantByNameError, AbpTenantFindTenantByNameResponse, AccountRegisterData, AccountRegisterError, AccountRegisterResponse, AccountResetPasswordData, AccountResetPasswordError, AccountSendPasswordResetCodeData, AccountSendPasswordResetCodeError, AccountVerifyPasswordResetTokenData, AccountVerifyPasswordResetTokenError, AccountVerifyPasswordResetTokenResponse, AuditLogGetData, AuditLogGetError, AuditLogGetListData, AuditLogGetListError, AuditLogGetListResponse, AuditLogGetResponse, BackgroundJobDeleteData, BackgroundJobDeleteError, BackgroundJobGetData, BackgroundJobGetError, BackgroundJobGetListData, BackgroundJobGetListError, BackgroundJobGetListResponse, BackgroundJobGetResponse, BackgroundJobGetWaitingJobsData, BackgroundJobGetWaitingJobsError, BackgroundJobGetWaitingJobsResponse, BackgroundJobPendingData, BackgroundJobPendingError, BackgroundJobPendingResponse, CaptchaGenerateData, CaptchaGenerateResponse, CarouselCreateData, CarouselCreateError, CarouselCreateResponse, CarouselDeleteData, CarouselDeleteError, CarouselGetData, CarouselGetError, CarouselGetListData, CarouselGetListError, CarouselGetListResponse, CarouselGetResponse, CarouselUpdateData, CarouselUpdateError, CarouselUpdateResponse, CartAddItemData, CartAddItemError, CartAddItemResponse, CartClearData, CartClearError, CartGetData, CartGetError, CartGetResponse, CartRemoveItemData, CartRemoveItemError, CartRemoveItemResponse, CartSelectAllData, CartSelectAllError, CartSelectAllResponse, CartSetItemSelectedData, CartSetItemSelectedError, CartSetItemSelectedResponse, CartUpdateQuantityData, CartUpdateQuantityError, CartUpdateQuantityResponse, DynamicClaimsRefreshData, DynamicClaimsRefreshError, EmailSettingsGetData, EmailSettingsGetError, EmailSettingsGetResponse, EmailSettingsSendTestEmailData, EmailSettingsSendTestEmailError, EmailSettingsUpdateData, EmailSettingsUpdateError, FeaturesDeleteData, FeaturesDeleteError, FeaturesGetData, FeaturesGetError, FeaturesGetResponse, FeaturesUpdateData, FeaturesUpdateError, LoginCheckPasswordData, LoginCheckPasswordError, LoginCheckPasswordResponse, LoginLoginData, LoginLoginError, LoginLoginResponse, LoginLogoutData, LoginLogoutError, MallMediaCreateData, MallMediaCreateError, MallMediaCreateResponse, MallMediaDeleteData, MallMediaDeleteError, MallMediaDownloadData, MallMediaDownloadError, MallMediaDownloadResponse, MallMediaGetData, MallMediaGetError, MallMediaGetListData, MallMediaGetListError, MallMediaGetListResponse, MallMediaGetResponse, MallMediaPreviewData, MallMediaPreviewError, MallMediaPreviewResponse, PermissionsGetByGroupData, PermissionsGetByGroupError, PermissionsGetByGroupResponse, PermissionsGetData, PermissionsGetError, PermissionsGetResponse, PermissionsUpdateData, PermissionsUpdateError, PostAgUiProductsData, ProductCreateData, ProductCreateError, ProductCreateResponse, ProductDeleteData, ProductDeleteError, ProductGetData, ProductGetError, ProductGetListData, ProductGetListError, ProductGetListResponse, ProductGetResponse, ProductGetSkusData, ProductGetSkusError, ProductGetSkusResponse, ProductPostCreateData, ProductPostCreateError, ProductPostCreateResponse, ProductPostDeleteData, ProductPostDeleteError, ProductPostGetData, ProductPostGetError, ProductPostGetListByProductData, ProductPostGetListByProductError, ProductPostGetListByProductResponse, ProductPostGetListData, ProductPostGetListError, ProductPostGetListResponse, ProductPostGetResponse, ProductPostUpdateData, ProductPostUpdateError, ProductPostUpdateResponse, ProductTagAddTagToProductData, ProductTagAddTagToProductError, ProductTagRemoveTagFromProductData, ProductTagRemoveTagFromProductError, ProductTagSetProductTagsData, ProductTagSetProductTagsError, ProductUpdateData, ProductUpdateError, ProductUpdateResponse, ProductUpsertSkusData, ProductUpsertSkusError, ProductUpsertSkusResponse, ProfileChangePasswordData, ProfileChangePasswordError, ProfileGetData, ProfileGetError, ProfileGetResponse, ProfileUpdateData, ProfileUpdateError, ProfileUpdateResponse, RoleCreateData, RoleCreateError, RoleCreateResponse, RoleDeleteData, RoleDeleteError, RoleGetAllListData, RoleGetAllListError, RoleGetAllListResponse, RoleGetData, RoleGetError, RoleGetListData, RoleGetListError, RoleGetListResponse, RoleGetResponse, RoleUpdateData, RoleUpdateError, RoleUpdateResponse, TagCreateData, TagCreateError, TagCreateResponse, TagDeleteData, TagDeleteError, TagGetAllRelatedTagsData, TagGetAllRelatedTagsError, TagGetAllRelatedTagsResponse, TagGetData, TagGetError, TagGetListData, TagGetListError, TagGetListResponse, TagGetPopularTagsData, TagGetPopularTagsError, TagGetPopularTagsResponse, TagGetResponse, TagUpdateData, TagUpdateError, TagUpdateResponse, TenantCreateData, TenantCreateError, TenantCreateResponse, TenantDeleteData, TenantDeleteDefaultConnectionStringData, TenantDeleteDefaultConnectionStringError, TenantDeleteError, TenantGetData, TenantGetDefaultConnectionStringData, TenantGetDefaultConnectionStringError, TenantGetDefaultConnectionStringResponse, TenantGetError, TenantGetListData, TenantGetListError, TenantGetListResponse, TenantGetResponse, TenantUpdateData, TenantUpdateDefaultConnectionStringData, TenantUpdateDefaultConnectionStringError, TenantUpdateError, TenantUpdateResponse, TimeZoneSettingsGetData, TimeZoneSettingsGetError, TimeZoneSettingsGetResponse, TimeZoneSettingsGetTimezonesData, TimeZoneSettingsGetTimezonesError, TimeZoneSettingsGetTimezonesResponse, TimeZoneSettingsUpdateData, TimeZoneSettingsUpdateError, UserCreateData, UserCreateError, UserCreateResponse, UserDeleteData, UserDeleteError, UserFindByEmailData, UserFindByEmailError, UserFindByEmailResponse, UserFindByUsernameData, UserFindByUsernameError, UserFindByUsernameResponse, UserGetAssignableRolesData, UserGetAssignableRolesError, UserGetAssignableRolesResponse, UserGetData, UserGetError, UserGetListData, UserGetListError, UserGetListResponse, UserGetResponse, UserGetRolesData, UserGetRolesError, UserGetRolesResponse, UserLookupFindByIdData, UserLookupFindByIdError, UserLookupFindByIdResponse, UserLookupFindByUserNameData, UserLookupFindByUserNameError, UserLookupFindByUserNameResponse, UserLookupGetCountData, UserLookupGetCountError, UserLookupGetCountResponse, UserLookupSearchData, UserLookupSearchError, UserLookupSearchResponse, UserUpdateData, UserUpdateError, UserUpdateResponse, UserUpdateRolesData, UserUpdateRolesError } from '../types.gen';
+import { abpApiDefinitionGet, abpApplicationConfigurationGet, abpApplicationLocalizationGet, abpTenantFindTenantById, abpTenantFindTenantByName, accountRegister, accountResetPassword, accountSendPasswordResetCode, accountVerifyPasswordResetToken, auditLogGet, auditLogGetList, backgroundJobDelete, backgroundJobGet, backgroundJobGetList, backgroundJobGetWaitingJobs, backgroundJobPending, captchaGenerate, carouselCreate, carouselDelete, carouselGet, carouselGetList, carouselGetListByProduct, carouselUpdate, cartAddItem, cartClear, cartGet, cartRemoveItem, cartSelectAll, cartSetItemSelected, cartUpdateQuantity, dynamicClaimsRefresh, emailSettingsGet, emailSettingsSendTestEmail, emailSettingsUpdate, featuresDelete, featuresGet, featuresUpdate, loginCheckPassword, loginLogin, loginLogout, mallMediaCreate, mallMediaDelete, mallMediaDownload, mallMediaGet, mallMediaGetList, mallMediaPreview, type Options, permissionsGet, permissionsGetByGroup, permissionsUpdate, postAgUiProducts, postCreate, postDelete, postGet, postGetList, postGetListByProduct, postUpdate, productCreate, productDelete, productGet, productGetList, productGetSkus, productTagAddTagToProduct, productTagRemoveTagFromProduct, productTagSetProductTags, productUpdate, productUpsertSkus, profileChangePassword, profileGet, profileUpdate, roleCreate, roleDelete, roleGet, roleGetAllList, roleGetList, roleUpdate, tagCreate, tagDelete, tagGet, tagGetAllRelatedTags, tagGetList, tagGetPopularTags, tagUpdate, tenantCreate, tenantDelete, tenantDeleteDefaultConnectionString, tenantGet, tenantGetDefaultConnectionString, tenantGetList, tenantUpdate, tenantUpdateDefaultConnectionString, timeZoneSettingsGet, timeZoneSettingsGetTimezones, timeZoneSettingsUpdate, userCreate, userDelete, userFindByEmail, userFindByUsername, userGet, userGetAssignableRoles, userGetList, userGetRoles, userLookupFindById, userLookupFindByUserName, userLookupGetCount, userLookupSearch, userUpdate, userUpdateRoles } from '../sdk.gen';
+import type { AbpApiDefinitionGetData, AbpApiDefinitionGetError, AbpApiDefinitionGetResponse, AbpApplicationConfigurationGetData, AbpApplicationConfigurationGetError, AbpApplicationConfigurationGetResponse, AbpApplicationLocalizationGetData, AbpApplicationLocalizationGetError, AbpApplicationLocalizationGetResponse, AbpTenantFindTenantByIdData, AbpTenantFindTenantByIdError, AbpTenantFindTenantByIdResponse, AbpTenantFindTenantByNameData, AbpTenantFindTenantByNameError, AbpTenantFindTenantByNameResponse, AccountRegisterData, AccountRegisterError, AccountRegisterResponse, AccountResetPasswordData, AccountResetPasswordError, AccountSendPasswordResetCodeData, AccountSendPasswordResetCodeError, AccountVerifyPasswordResetTokenData, AccountVerifyPasswordResetTokenError, AccountVerifyPasswordResetTokenResponse, AuditLogGetData, AuditLogGetError, AuditLogGetListData, AuditLogGetListError, AuditLogGetListResponse, AuditLogGetResponse, BackgroundJobDeleteData, BackgroundJobDeleteError, BackgroundJobGetData, BackgroundJobGetError, BackgroundJobGetListData, BackgroundJobGetListError, BackgroundJobGetListResponse, BackgroundJobGetResponse, BackgroundJobGetWaitingJobsData, BackgroundJobGetWaitingJobsError, BackgroundJobGetWaitingJobsResponse, BackgroundJobPendingData, BackgroundJobPendingError, BackgroundJobPendingResponse, CaptchaGenerateData, CaptchaGenerateResponse, CarouselCreateData, CarouselCreateError, CarouselCreateResponse, CarouselDeleteData, CarouselDeleteError, CarouselGetData, CarouselGetError, CarouselGetListByProductData, CarouselGetListByProductError, CarouselGetListByProductResponse, CarouselGetListData, CarouselGetListError, CarouselGetListResponse, CarouselGetResponse, CarouselUpdateData, CarouselUpdateError, CarouselUpdateResponse, CartAddItemData, CartAddItemError, CartAddItemResponse, CartClearData, CartClearError, CartGetData, CartGetError, CartGetResponse, CartRemoveItemData, CartRemoveItemError, CartRemoveItemResponse, CartSelectAllData, CartSelectAllError, CartSelectAllResponse, CartSetItemSelectedData, CartSetItemSelectedError, CartSetItemSelectedResponse, CartUpdateQuantityData, CartUpdateQuantityError, CartUpdateQuantityResponse, DynamicClaimsRefreshData, DynamicClaimsRefreshError, EmailSettingsGetData, EmailSettingsGetError, EmailSettingsGetResponse, EmailSettingsSendTestEmailData, EmailSettingsSendTestEmailError, EmailSettingsUpdateData, EmailSettingsUpdateError, FeaturesDeleteData, FeaturesDeleteError, FeaturesGetData, FeaturesGetError, FeaturesGetResponse, FeaturesUpdateData, FeaturesUpdateError, LoginCheckPasswordData, LoginCheckPasswordError, LoginCheckPasswordResponse, LoginLoginData, LoginLoginError, LoginLoginResponse, LoginLogoutData, LoginLogoutError, MallMediaCreateData, MallMediaCreateError, MallMediaCreateResponse, MallMediaDeleteData, MallMediaDeleteError, MallMediaDownloadData, MallMediaDownloadError, MallMediaDownloadResponse, MallMediaGetData, MallMediaGetError, MallMediaGetListData, MallMediaGetListError, MallMediaGetListResponse, MallMediaGetResponse, MallMediaPreviewData, MallMediaPreviewError, MallMediaPreviewResponse, PermissionsGetByGroupData, PermissionsGetByGroupError, PermissionsGetByGroupResponse, PermissionsGetData, PermissionsGetError, PermissionsGetResponse, PermissionsUpdateData, PermissionsUpdateError, PostAgUiProductsData, PostCreateData, PostCreateError, PostCreateResponse, PostDeleteData, PostDeleteError, PostGetData, PostGetError, PostGetListByProductData, PostGetListByProductError, PostGetListByProductResponse, PostGetListData, PostGetListError, PostGetListResponse, PostGetResponse, PostUpdateData, PostUpdateError, PostUpdateResponse, ProductCreateData, ProductCreateError, ProductCreateResponse, ProductDeleteData, ProductDeleteError, ProductGetData, ProductGetError, ProductGetListData, ProductGetListError, ProductGetListResponse, ProductGetResponse, ProductGetSkusData, ProductGetSkusError, ProductGetSkusResponse, ProductTagAddTagToProductData, ProductTagAddTagToProductError, ProductTagRemoveTagFromProductData, ProductTagRemoveTagFromProductError, ProductTagSetProductTagsData, ProductTagSetProductTagsError, ProductUpdateData, ProductUpdateError, ProductUpdateResponse, ProductUpsertSkusData, ProductUpsertSkusError, ProductUpsertSkusResponse, ProfileChangePasswordData, ProfileChangePasswordError, ProfileGetData, ProfileGetError, ProfileGetResponse, ProfileUpdateData, ProfileUpdateError, ProfileUpdateResponse, RoleCreateData, RoleCreateError, RoleCreateResponse, RoleDeleteData, RoleDeleteError, RoleGetAllListData, RoleGetAllListError, RoleGetAllListResponse, RoleGetData, RoleGetError, RoleGetListData, RoleGetListError, RoleGetListResponse, RoleGetResponse, RoleUpdateData, RoleUpdateError, RoleUpdateResponse, TagCreateData, TagCreateError, TagCreateResponse, TagDeleteData, TagDeleteError, TagGetAllRelatedTagsData, TagGetAllRelatedTagsError, TagGetAllRelatedTagsResponse, TagGetData, TagGetError, TagGetListData, TagGetListError, TagGetListResponse, TagGetPopularTagsData, TagGetPopularTagsError, TagGetPopularTagsResponse, TagGetResponse, TagUpdateData, TagUpdateError, TagUpdateResponse, TenantCreateData, TenantCreateError, TenantCreateResponse, TenantDeleteData, TenantDeleteDefaultConnectionStringData, TenantDeleteDefaultConnectionStringError, TenantDeleteError, TenantGetData, TenantGetDefaultConnectionStringData, TenantGetDefaultConnectionStringError, TenantGetDefaultConnectionStringResponse, TenantGetError, TenantGetListData, TenantGetListError, TenantGetListResponse, TenantGetResponse, TenantUpdateData, TenantUpdateDefaultConnectionStringData, TenantUpdateDefaultConnectionStringError, TenantUpdateError, TenantUpdateResponse, TimeZoneSettingsGetData, TimeZoneSettingsGetError, TimeZoneSettingsGetResponse, TimeZoneSettingsGetTimezonesData, TimeZoneSettingsGetTimezonesError, TimeZoneSettingsGetTimezonesResponse, TimeZoneSettingsUpdateData, TimeZoneSettingsUpdateError, UserCreateData, UserCreateError, UserCreateResponse, UserDeleteData, UserDeleteError, UserFindByEmailData, UserFindByEmailError, UserFindByEmailResponse, UserFindByUsernameData, UserFindByUsernameError, UserFindByUsernameResponse, UserGetAssignableRolesData, UserGetAssignableRolesError, UserGetAssignableRolesResponse, UserGetData, UserGetError, UserGetListData, UserGetListError, UserGetListResponse, UserGetResponse, UserGetRolesData, UserGetRolesError, UserGetRolesResponse, UserLookupFindByIdData, UserLookupFindByIdError, UserLookupFindByIdResponse, UserLookupFindByUserNameData, UserLookupFindByUserNameError, UserLookupFindByUserNameResponse, UserLookupGetCountData, UserLookupGetCountError, UserLookupGetCountResponse, UserLookupSearchData, UserLookupSearchError, UserLookupSearchResponse, UserUpdateData, UserUpdateError, UserUpdateResponse, UserUpdateRolesData, UserUpdateRolesError } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
@@ -288,21 +288,6 @@ export const captchaGenerateOptions = (options?: Options<CaptchaGenerateData>) =
     queryKey: captchaGenerateQueryKey(options)
 });
 
-export const carouselGetListQueryKey = (options?: Options<CarouselGetListData>) => createQueryKey('carouselGetList', options);
-
-export const carouselGetListOptions = (options?: Options<CarouselGetListData>) => queryOptions<CarouselGetListResponse, CarouselGetListError, CarouselGetListResponse, ReturnType<typeof carouselGetListQueryKey>>({
-    queryFn: async ({ queryKey, signal }) => {
-        const { data } = await carouselGetList({
-            ...options,
-            ...queryKey[0],
-            signal,
-            throwOnError: true
-        });
-        return data;
-    },
-    queryKey: carouselGetListQueryKey(options)
-});
-
 export const carouselCreateMutation = (options?: Partial<Options<CarouselCreateData>>): UseMutationOptions<CarouselCreateResponse, CarouselCreateError, Options<CarouselCreateData>> => {
     const mutationOptions: UseMutationOptions<CarouselCreateResponse, CarouselCreateError, Options<CarouselCreateData>> = {
         mutationFn: async (fnOptions) => {
@@ -359,6 +344,36 @@ export const carouselUpdateMutation = (options?: Partial<Options<CarouselUpdateD
     };
     return mutationOptions;
 };
+
+export const carouselGetListQueryKey = (options?: Options<CarouselGetListData>) => createQueryKey('carouselGetList', options);
+
+export const carouselGetListOptions = (options?: Options<CarouselGetListData>) => queryOptions<CarouselGetListResponse, CarouselGetListError, CarouselGetListResponse, ReturnType<typeof carouselGetListQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await carouselGetList({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: carouselGetListQueryKey(options)
+});
+
+export const carouselGetListByProductQueryKey = (options: Options<CarouselGetListByProductData>) => createQueryKey('carouselGetListByProduct', options);
+
+export const carouselGetListByProductOptions = (options: Options<CarouselGetListByProductData>) => queryOptions<CarouselGetListByProductResponse, CarouselGetListByProductError, CarouselGetListByProductResponse, ReturnType<typeof carouselGetListByProductQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await carouselGetListByProduct({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: carouselGetListByProductQueryKey(options)
+});
 
 export const cartAddItemMutation = (options?: Partial<Options<CartAddItemData>>): UseMutationOptions<CartAddItemResponse, CartAddItemError, Options<CartAddItemData>> => {
     const mutationOptions: UseMutationOptions<CartAddItemResponse, CartAddItemError, Options<CartAddItemData>> = {
@@ -734,6 +749,93 @@ export const permissionsGetByGroupOptions = (options?: Options<PermissionsGetByG
     queryKey: permissionsGetByGroupQueryKey(options)
 });
 
+export const postGetListQueryKey = (options?: Options<PostGetListData>) => createQueryKey('postGetList', options);
+
+export const postGetListOptions = (options?: Options<PostGetListData>) => queryOptions<PostGetListResponse, PostGetListError, PostGetListResponse, ReturnType<typeof postGetListQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await postGetList({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: postGetListQueryKey(options)
+});
+
+export const postCreateMutation = (options?: Partial<Options<PostCreateData>>): UseMutationOptions<PostCreateResponse, PostCreateError, Options<PostCreateData>> => {
+    const mutationOptions: UseMutationOptions<PostCreateResponse, PostCreateError, Options<PostCreateData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await postCreate({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const postDeleteMutation = (options?: Partial<Options<PostDeleteData>>): UseMutationOptions<unknown, PostDeleteError, Options<PostDeleteData>> => {
+    const mutationOptions: UseMutationOptions<unknown, PostDeleteError, Options<PostDeleteData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await postDelete({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const postGetQueryKey = (options: Options<PostGetData>) => createQueryKey('postGet', options);
+
+export const postGetOptions = (options: Options<PostGetData>) => queryOptions<PostGetResponse, PostGetError, PostGetResponse, ReturnType<typeof postGetQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await postGet({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: postGetQueryKey(options)
+});
+
+export const postUpdateMutation = (options?: Partial<Options<PostUpdateData>>): UseMutationOptions<PostUpdateResponse, PostUpdateError, Options<PostUpdateData>> => {
+    const mutationOptions: UseMutationOptions<PostUpdateResponse, PostUpdateError, Options<PostUpdateData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await postUpdate({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const postGetListByProductQueryKey = (options: Options<PostGetListByProductData>) => createQueryKey('postGetListByProduct', options);
+
+export const postGetListByProductOptions = (options: Options<PostGetListByProductData>) => queryOptions<PostGetListByProductResponse, PostGetListByProductError, PostGetListByProductResponse, ReturnType<typeof postGetListByProductQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await postGetListByProduct({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: postGetListByProductQueryKey(options)
+});
+
 export const productGetListQueryKey = (options?: Options<ProductGetListData>) => createQueryKey('productGetList', options);
 
 export const productGetListOptions = (options?: Options<ProductGetListData>) => queryOptions<ProductGetListResponse, ProductGetListError, ProductGetListResponse, ReturnType<typeof productGetListQueryKey>>({
@@ -834,93 +936,6 @@ export const productUpsertSkusMutation = (options?: Partial<Options<ProductUpser
     };
     return mutationOptions;
 };
-
-export const productPostGetListQueryKey = (options?: Options<ProductPostGetListData>) => createQueryKey('productPostGetList', options);
-
-export const productPostGetListOptions = (options?: Options<ProductPostGetListData>) => queryOptions<ProductPostGetListResponse, ProductPostGetListError, ProductPostGetListResponse, ReturnType<typeof productPostGetListQueryKey>>({
-    queryFn: async ({ queryKey, signal }) => {
-        const { data } = await productPostGetList({
-            ...options,
-            ...queryKey[0],
-            signal,
-            throwOnError: true
-        });
-        return data;
-    },
-    queryKey: productPostGetListQueryKey(options)
-});
-
-export const productPostCreateMutation = (options?: Partial<Options<ProductPostCreateData>>): UseMutationOptions<ProductPostCreateResponse, ProductPostCreateError, Options<ProductPostCreateData>> => {
-    const mutationOptions: UseMutationOptions<ProductPostCreateResponse, ProductPostCreateError, Options<ProductPostCreateData>> = {
-        mutationFn: async (fnOptions) => {
-            const { data } = await productPostCreate({
-                ...options,
-                ...fnOptions,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-    return mutationOptions;
-};
-
-export const productPostDeleteMutation = (options?: Partial<Options<ProductPostDeleteData>>): UseMutationOptions<unknown, ProductPostDeleteError, Options<ProductPostDeleteData>> => {
-    const mutationOptions: UseMutationOptions<unknown, ProductPostDeleteError, Options<ProductPostDeleteData>> = {
-        mutationFn: async (fnOptions) => {
-            const { data } = await productPostDelete({
-                ...options,
-                ...fnOptions,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-    return mutationOptions;
-};
-
-export const productPostGetQueryKey = (options: Options<ProductPostGetData>) => createQueryKey('productPostGet', options);
-
-export const productPostGetOptions = (options: Options<ProductPostGetData>) => queryOptions<ProductPostGetResponse, ProductPostGetError, ProductPostGetResponse, ReturnType<typeof productPostGetQueryKey>>({
-    queryFn: async ({ queryKey, signal }) => {
-        const { data } = await productPostGet({
-            ...options,
-            ...queryKey[0],
-            signal,
-            throwOnError: true
-        });
-        return data;
-    },
-    queryKey: productPostGetQueryKey(options)
-});
-
-export const productPostUpdateMutation = (options?: Partial<Options<ProductPostUpdateData>>): UseMutationOptions<ProductPostUpdateResponse, ProductPostUpdateError, Options<ProductPostUpdateData>> => {
-    const mutationOptions: UseMutationOptions<ProductPostUpdateResponse, ProductPostUpdateError, Options<ProductPostUpdateData>> = {
-        mutationFn: async (fnOptions) => {
-            const { data } = await productPostUpdate({
-                ...options,
-                ...fnOptions,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-    return mutationOptions;
-};
-
-export const productPostGetListByProductQueryKey = (options: Options<ProductPostGetListByProductData>) => createQueryKey('productPostGetListByProduct', options);
-
-export const productPostGetListByProductOptions = (options: Options<ProductPostGetListByProductData>) => queryOptions<ProductPostGetListByProductResponse, ProductPostGetListByProductError, ProductPostGetListByProductResponse, ReturnType<typeof productPostGetListByProductQueryKey>>({
-    queryFn: async ({ queryKey, signal }) => {
-        const { data } = await productPostGetListByProduct({
-            ...options,
-            ...queryKey[0],
-            signal,
-            throwOnError: true
-        });
-        return data;
-    },
-    queryKey: productPostGetListByProductQueryKey(options)
-});
 
 export const productTagAddTagToProductMutation = (options?: Partial<Options<ProductTagAddTagToProductData>>): UseMutationOptions<unknown, ProductTagAddTagToProductError, Options<ProductTagAddTagToProductData>> => {
     const mutationOptions: UseMutationOptions<unknown, ProductTagAddTagToProductError, Options<ProductTagAddTagToProductData>> = {

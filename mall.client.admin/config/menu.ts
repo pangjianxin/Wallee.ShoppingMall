@@ -53,6 +53,11 @@ export const navMain: MenuItemWithPermissions[] = [
         url: "/carousels",
         permissions: [],
       },
+      {
+        title: "内容管理",
+        url: "/posts",
+        permissions: [],
+      },
     ],
   },
   {

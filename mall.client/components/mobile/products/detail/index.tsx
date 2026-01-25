@@ -3,14 +3,14 @@
 import { useState } from "react";
 import { ProductImageCarousel } from "@/components/mobile/products/product-image-carousel";
 import { ProductInfo } from "@/components/mobile/products/detail/information";
-import { ProductServices } from "@/components/mobile/products/detail/product-service";
+import { ProductTags } from "@/components/mobile/products/detail/product-tags";
 import { SkuSelector } from "@/components/mobile/products/detail/sku-selector";
 import { QuantitySelector } from "@/components/mobile/products/detail/quantity-selector";
 import { BottomActionBar } from "@/components/mobile/products/detail/bottom-action-bar";
 import type {
   WalleeMallProductsDtosProductDto,
   WalleeMallProductsDtosProductSkuDto,
-  WalleeMallCmsDtosProductPostDto,
+  WalleeMallCmsDtosPostDto,
   WalleeMallTagsDtosTagDto,
 } from "@/openapi";
 import { Badge } from "@/components/ui/badge";
@@ -20,7 +20,7 @@ import { toast } from "sonner";
 
 type Props = {
   product?: WalleeMallProductsDtosProductDto;
-  posts?: WalleeMallCmsDtosProductPostDto[];
+  posts?: WalleeMallCmsDtosPostDto[];
   relatedTags?: WalleeMallTagsDtosTagDto[];
 };
 export default function ProductDetail({ product, posts, relatedTags }: Props) {
@@ -28,18 +28,9 @@ export default function ProductDetail({ product, posts, relatedTags }: Props) {
     useState<WalleeMallProductsDtosProductSkuDto | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [isFavorite, setIsFavorite] = useState(false);
-  const [cartCount, setCartCount] = useState(2);
 
   const maxQuantity = selectedSku?.stockQuantity || 99;
 
-  const handleAddToCart = () => {
-    if (!selectedSku) {
-      toast.error("请先选择商品规格");
-      return;
-    }
-    setCartCount((prev) => prev + quantity);
-    toast.success(`已将 ${quantity} 件商品加入购物车`);
-  };
 
   const handleBuyNow = () => {
     if (!selectedSku) {
@@ -67,8 +58,8 @@ export default function ProductDetail({ product, posts, relatedTags }: Props) {
       />
       {/* Product Info */}
       <ProductInfo product={product!} relativeTags={[{ name: "促销" }]} />
-      {/* Services */}
-      <ProductServices tags={relatedTags || []} />
+      {/* Tags */}
+      <ProductTags tags={relatedTags || []} />
       {/* Product Posts */}
       <ExpandableContainer>
         <ProductPostTabs posts={posts || []} />
@@ -88,12 +79,11 @@ export default function ProductDetail({ product, posts, relatedTags }: Props) {
       <div className="h-20 bg-background" />
       {/* Bottom Action Bar */}
       <BottomActionBar
-        onAddToCart={handleAddToCart}
+        selectedSkuId={selectedSku?.id}
         onBuyNow={handleBuyNow}
         onToggleFavorite={handleToggleFavorite}
         onContact={handleContact}
         isFavorite={isFavorite}
-        cartCount={cartCount}
         disabled={selectedSku?.stockQuantity === 0}
       />
     </div>

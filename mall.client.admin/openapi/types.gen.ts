@@ -447,13 +447,13 @@ export type VoloAbpApplicationDtosPagedResultDtoOfMallMediaDto = {
     totalCount?: number;
 };
 
-export type VoloAbpApplicationDtosPagedResultDtoOfProductDto = {
-    items?: Array<WalleeMallProductsDtosProductDto> | null;
+export type VoloAbpApplicationDtosPagedResultDtoOfPostDto = {
+    items?: Array<WalleeMallCmsDtosPostDto> | null;
     totalCount?: number;
 };
 
-export type VoloAbpApplicationDtosPagedResultDtoOfProductPostDto = {
-    items?: Array<WalleeMallCmsDtosProductPostDto> | null;
+export type VoloAbpApplicationDtosPagedResultDtoOfProductDto = {
+    items?: Array<WalleeMallProductsDtosProductDto> | null;
     totalCount?: number;
 };
 
@@ -1340,32 +1340,43 @@ export type WalleeMallCartsDtosUpdateCartItemSelectionDto = {
     isSelected?: boolean;
 };
 
-export type WalleeMallCmsDtosCreateProductPostDto = {
+export type WalleeMallCmsDtosCreatePostDto = {
     productId?: string;
-    category?: WalleeMallCmsProductPostCategory;
+    category?: WalleeMallCmsPostCategory;
+    title?: string | null;
     content?: string | null;
 };
 
-export type WalleeMallCmsDtosProductPostDto = {
+export type WalleeMallCmsDtosPostDto = {
     id?: string;
     creationTime?: string;
     creatorId?: string | null;
     lastModificationTime?: string | null;
     lastModifierId?: string | null;
+    productInfo?: WalleeMallCmsDtosProductInfoDto;
+    title?: string | null;
+    content?: string | null;
+};
+
+export type WalleeMallCmsDtosProductInfoDto = {
     productId?: string;
-    category?: WalleeMallCmsProductPostCategory;
+    category?: WalleeMallCmsPostCategory;
+};
+
+export type WalleeMallCmsDtosUpdatePostDto = {
+    title?: string | null;
     content?: string | null;
 };
 
-export type WalleeMallCmsDtosUpdateProductPostDto = {
-    content?: string | null;
-};
-
-export enum WalleeMallCmsProductPostCategory {
+export enum WalleeMallCmsPostCategory {
     /**
-     * 产品详情
+     * 商品详情
      */
-    产品详情 = 1
+    商品详情 = 1,
+    /**
+     * 商品规格
+     */
+    商品规格 = 2
 }
 
 export type WalleeMallMediasDtosMallMediaDto = {
@@ -2277,71 +2288,6 @@ export type CaptchaGenerateResponses = {
 
 export type CaptchaGenerateResponse = CaptchaGenerateResponses[keyof CaptchaGenerateResponses];
 
-export type CarouselGetListData = {
-    body?: never;
-    path?: never;
-    query?: {
-        'Title.Eq'?: string;
-        'Title.Not'?: string;
-        'Title.Equals'?: string;
-        'Title.Contains'?: string;
-        'Title.NotContains'?: string;
-        'Title.StartsWith'?: string;
-        'Title.NotStartsWith'?: string;
-        'Title.EndsWith'?: string;
-        'Title.NotEndsWith'?: string;
-        'Title.IsNull'?: boolean;
-        'Title.IsNotNull'?: boolean;
-        'Title.IsEmpty'?: boolean;
-        'Title.IsNotEmpty'?: boolean;
-        'Title.CombineWith'?: AutoFiltererEnumsCombineType;
-        'Title.Compare'?: SystemStringComparison;
-        SkipCount?: number;
-        MaxResultCount?: number;
-        Sorting?: string;
-        CombineWith?: AutoFiltererEnumsCombineType;
-    };
-    url: '/api/mall/carousels';
-};
-
-export type CarouselGetListErrors = {
-    /**
-     * Bad Request
-     */
-    400: VoloAbpHttpRemoteServiceErrorResponse;
-    /**
-     * Unauthorized
-     */
-    401: VoloAbpHttpRemoteServiceErrorResponse;
-    /**
-     * Forbidden
-     */
-    403: VoloAbpHttpRemoteServiceErrorResponse;
-    /**
-     * Not Found
-     */
-    404: VoloAbpHttpRemoteServiceErrorResponse;
-    /**
-     * Internal Server Error
-     */
-    500: VoloAbpHttpRemoteServiceErrorResponse;
-    /**
-     * Not Implemented
-     */
-    501: VoloAbpHttpRemoteServiceErrorResponse;
-};
-
-export type CarouselGetListError = CarouselGetListErrors[keyof CarouselGetListErrors];
-
-export type CarouselGetListResponses = {
-    /**
-     * OK
-     */
-    200: VoloAbpApplicationDtosPagedResultDtoOfCarouselDto;
-};
-
-export type CarouselGetListResponse = CarouselGetListResponses[keyof CarouselGetListResponses];
-
 export type CarouselCreateData = {
     body?: WalleeMallCarouselsDtosCreateCarouselDto;
     path?: never;
@@ -2525,6 +2471,118 @@ export type CarouselUpdateResponses = {
 };
 
 export type CarouselUpdateResponse = CarouselUpdateResponses[keyof CarouselUpdateResponses];
+
+export type CarouselGetListData = {
+    body?: never;
+    path?: never;
+    query?: {
+        'Title.Eq'?: string;
+        'Title.Not'?: string;
+        'Title.Equals'?: string;
+        'Title.Contains'?: string;
+        'Title.NotContains'?: string;
+        'Title.StartsWith'?: string;
+        'Title.NotStartsWith'?: string;
+        'Title.EndsWith'?: string;
+        'Title.NotEndsWith'?: string;
+        'Title.IsNull'?: boolean;
+        'Title.IsNotNull'?: boolean;
+        'Title.IsEmpty'?: boolean;
+        'Title.IsNotEmpty'?: boolean;
+        'Title.CombineWith'?: AutoFiltererEnumsCombineType;
+        'Title.Compare'?: SystemStringComparison;
+        SkipCount?: number;
+        MaxResultCount?: number;
+        Sorting?: string;
+        CombineWith?: AutoFiltererEnumsCombineType;
+    };
+    url: '/api/mall/carousels/list';
+};
+
+export type CarouselGetListErrors = {
+    /**
+     * Bad Request
+     */
+    400: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Unauthorized
+     */
+    401: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Forbidden
+     */
+    403: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Not Found
+     */
+    404: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Internal Server Error
+     */
+    500: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Not Implemented
+     */
+    501: VoloAbpHttpRemoteServiceErrorResponse;
+};
+
+export type CarouselGetListError = CarouselGetListErrors[keyof CarouselGetListErrors];
+
+export type CarouselGetListResponses = {
+    /**
+     * OK
+     */
+    200: VoloAbpApplicationDtosPagedResultDtoOfCarouselDto;
+};
+
+export type CarouselGetListResponse = CarouselGetListResponses[keyof CarouselGetListResponses];
+
+export type CarouselGetListByProductData = {
+    body?: never;
+    path: {
+        productId: string;
+    };
+    query?: never;
+    url: '/api/mall/carousels/list/{productId}';
+};
+
+export type CarouselGetListByProductErrors = {
+    /**
+     * Bad Request
+     */
+    400: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Unauthorized
+     */
+    401: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Forbidden
+     */
+    403: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Not Found
+     */
+    404: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Internal Server Error
+     */
+    500: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Not Implemented
+     */
+    501: VoloAbpHttpRemoteServiceErrorResponse;
+};
+
+export type CarouselGetListByProductError = CarouselGetListByProductErrors[keyof CarouselGetListByProductErrors];
+
+export type CarouselGetListByProductResponses = {
+    /**
+     * OK
+     */
+    200: Array<WalleeMallCarouselsDtosCarouselDto>;
+};
+
+export type CarouselGetListByProductResponse = CarouselGetListByProductResponses[keyof CarouselGetListByProductResponses];
 
 export type CartAddItemData = {
     body?: WalleeMallCartsDtosAddCartItemDto;
@@ -3744,6 +3802,287 @@ export type PermissionsGetByGroupResponses = {
 
 export type PermissionsGetByGroupResponse = PermissionsGetByGroupResponses[keyof PermissionsGetByGroupResponses];
 
+export type PostGetListData = {
+    body?: never;
+    path?: never;
+    query?: {
+        SkipCount?: number;
+        MaxResultCount?: number;
+        Sorting?: string;
+        CombineWith?: AutoFiltererEnumsCombineType;
+    };
+    url: '/api/mall/product-posts';
+};
+
+export type PostGetListErrors = {
+    /**
+     * Bad Request
+     */
+    400: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Unauthorized
+     */
+    401: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Forbidden
+     */
+    403: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Not Found
+     */
+    404: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Internal Server Error
+     */
+    500: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Not Implemented
+     */
+    501: VoloAbpHttpRemoteServiceErrorResponse;
+};
+
+export type PostGetListError = PostGetListErrors[keyof PostGetListErrors];
+
+export type PostGetListResponses = {
+    /**
+     * OK
+     */
+    200: VoloAbpApplicationDtosPagedResultDtoOfPostDto;
+};
+
+export type PostGetListResponse = PostGetListResponses[keyof PostGetListResponses];
+
+export type PostCreateData = {
+    body?: WalleeMallCmsDtosCreatePostDto;
+    path?: never;
+    query?: never;
+    url: '/api/mall/product-posts';
+};
+
+export type PostCreateErrors = {
+    /**
+     * Bad Request
+     */
+    400: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Unauthorized
+     */
+    401: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Forbidden
+     */
+    403: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Not Found
+     */
+    404: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Internal Server Error
+     */
+    500: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Not Implemented
+     */
+    501: VoloAbpHttpRemoteServiceErrorResponse;
+};
+
+export type PostCreateError = PostCreateErrors[keyof PostCreateErrors];
+
+export type PostCreateResponses = {
+    /**
+     * OK
+     */
+    200: WalleeMallCmsDtosPostDto;
+};
+
+export type PostCreateResponse = PostCreateResponses[keyof PostCreateResponses];
+
+export type PostDeleteData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/mall/product-posts/{id}';
+};
+
+export type PostDeleteErrors = {
+    /**
+     * Bad Request
+     */
+    400: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Unauthorized
+     */
+    401: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Forbidden
+     */
+    403: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Not Found
+     */
+    404: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Internal Server Error
+     */
+    500: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Not Implemented
+     */
+    501: VoloAbpHttpRemoteServiceErrorResponse;
+};
+
+export type PostDeleteError = PostDeleteErrors[keyof PostDeleteErrors];
+
+export type PostDeleteResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type PostGetData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/mall/product-posts/{id}';
+};
+
+export type PostGetErrors = {
+    /**
+     * Bad Request
+     */
+    400: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Unauthorized
+     */
+    401: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Forbidden
+     */
+    403: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Not Found
+     */
+    404: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Internal Server Error
+     */
+    500: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Not Implemented
+     */
+    501: VoloAbpHttpRemoteServiceErrorResponse;
+};
+
+export type PostGetError = PostGetErrors[keyof PostGetErrors];
+
+export type PostGetResponses = {
+    /**
+     * OK
+     */
+    200: WalleeMallCmsDtosPostDto;
+};
+
+export type PostGetResponse = PostGetResponses[keyof PostGetResponses];
+
+export type PostUpdateData = {
+    body?: WalleeMallCmsDtosUpdatePostDto;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/mall/product-posts/{id}';
+};
+
+export type PostUpdateErrors = {
+    /**
+     * Bad Request
+     */
+    400: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Unauthorized
+     */
+    401: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Forbidden
+     */
+    403: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Not Found
+     */
+    404: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Internal Server Error
+     */
+    500: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Not Implemented
+     */
+    501: VoloAbpHttpRemoteServiceErrorResponse;
+};
+
+export type PostUpdateError = PostUpdateErrors[keyof PostUpdateErrors];
+
+export type PostUpdateResponses = {
+    /**
+     * OK
+     */
+    200: WalleeMallCmsDtosPostDto;
+};
+
+export type PostUpdateResponse = PostUpdateResponses[keyof PostUpdateResponses];
+
+export type PostGetListByProductData = {
+    body?: never;
+    path: {
+        productId: string;
+    };
+    query?: never;
+    url: '/api/mall/product-posts/product/{productId}';
+};
+
+export type PostGetListByProductErrors = {
+    /**
+     * Bad Request
+     */
+    400: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Unauthorized
+     */
+    401: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Forbidden
+     */
+    403: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Not Found
+     */
+    404: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Internal Server Error
+     */
+    500: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Not Implemented
+     */
+    501: VoloAbpHttpRemoteServiceErrorResponse;
+};
+
+export type PostGetListByProductError = PostGetListByProductErrors[keyof PostGetListByProductErrors];
+
+export type PostGetListByProductResponses = {
+    /**
+     * OK
+     */
+    200: Array<WalleeMallCmsDtosPostDto>;
+};
+
+export type PostGetListByProductResponse = PostGetListByProductResponses[keyof PostGetListByProductResponses];
+
 export type ProductGetListData = {
     body?: never;
     path?: never;
@@ -4086,287 +4425,6 @@ export type ProductUpsertSkusResponses = {
 };
 
 export type ProductUpsertSkusResponse = ProductUpsertSkusResponses[keyof ProductUpsertSkusResponses];
-
-export type ProductPostGetListData = {
-    body?: never;
-    path?: never;
-    query?: {
-        SkipCount?: number;
-        MaxResultCount?: number;
-        Sorting?: string;
-        CombineWith?: AutoFiltererEnumsCombineType;
-    };
-    url: '/api/mall/product-posts';
-};
-
-export type ProductPostGetListErrors = {
-    /**
-     * Bad Request
-     */
-    400: VoloAbpHttpRemoteServiceErrorResponse;
-    /**
-     * Unauthorized
-     */
-    401: VoloAbpHttpRemoteServiceErrorResponse;
-    /**
-     * Forbidden
-     */
-    403: VoloAbpHttpRemoteServiceErrorResponse;
-    /**
-     * Not Found
-     */
-    404: VoloAbpHttpRemoteServiceErrorResponse;
-    /**
-     * Internal Server Error
-     */
-    500: VoloAbpHttpRemoteServiceErrorResponse;
-    /**
-     * Not Implemented
-     */
-    501: VoloAbpHttpRemoteServiceErrorResponse;
-};
-
-export type ProductPostGetListError = ProductPostGetListErrors[keyof ProductPostGetListErrors];
-
-export type ProductPostGetListResponses = {
-    /**
-     * OK
-     */
-    200: VoloAbpApplicationDtosPagedResultDtoOfProductPostDto;
-};
-
-export type ProductPostGetListResponse = ProductPostGetListResponses[keyof ProductPostGetListResponses];
-
-export type ProductPostCreateData = {
-    body?: WalleeMallCmsDtosCreateProductPostDto;
-    path?: never;
-    query?: never;
-    url: '/api/mall/product-posts';
-};
-
-export type ProductPostCreateErrors = {
-    /**
-     * Bad Request
-     */
-    400: VoloAbpHttpRemoteServiceErrorResponse;
-    /**
-     * Unauthorized
-     */
-    401: VoloAbpHttpRemoteServiceErrorResponse;
-    /**
-     * Forbidden
-     */
-    403: VoloAbpHttpRemoteServiceErrorResponse;
-    /**
-     * Not Found
-     */
-    404: VoloAbpHttpRemoteServiceErrorResponse;
-    /**
-     * Internal Server Error
-     */
-    500: VoloAbpHttpRemoteServiceErrorResponse;
-    /**
-     * Not Implemented
-     */
-    501: VoloAbpHttpRemoteServiceErrorResponse;
-};
-
-export type ProductPostCreateError = ProductPostCreateErrors[keyof ProductPostCreateErrors];
-
-export type ProductPostCreateResponses = {
-    /**
-     * OK
-     */
-    200: WalleeMallCmsDtosProductPostDto;
-};
-
-export type ProductPostCreateResponse = ProductPostCreateResponses[keyof ProductPostCreateResponses];
-
-export type ProductPostDeleteData = {
-    body?: never;
-    path: {
-        id: string;
-    };
-    query?: never;
-    url: '/api/mall/product-posts/{id}';
-};
-
-export type ProductPostDeleteErrors = {
-    /**
-     * Bad Request
-     */
-    400: VoloAbpHttpRemoteServiceErrorResponse;
-    /**
-     * Unauthorized
-     */
-    401: VoloAbpHttpRemoteServiceErrorResponse;
-    /**
-     * Forbidden
-     */
-    403: VoloAbpHttpRemoteServiceErrorResponse;
-    /**
-     * Not Found
-     */
-    404: VoloAbpHttpRemoteServiceErrorResponse;
-    /**
-     * Internal Server Error
-     */
-    500: VoloAbpHttpRemoteServiceErrorResponse;
-    /**
-     * Not Implemented
-     */
-    501: VoloAbpHttpRemoteServiceErrorResponse;
-};
-
-export type ProductPostDeleteError = ProductPostDeleteErrors[keyof ProductPostDeleteErrors];
-
-export type ProductPostDeleteResponses = {
-    /**
-     * OK
-     */
-    200: unknown;
-};
-
-export type ProductPostGetData = {
-    body?: never;
-    path: {
-        id: string;
-    };
-    query?: never;
-    url: '/api/mall/product-posts/{id}';
-};
-
-export type ProductPostGetErrors = {
-    /**
-     * Bad Request
-     */
-    400: VoloAbpHttpRemoteServiceErrorResponse;
-    /**
-     * Unauthorized
-     */
-    401: VoloAbpHttpRemoteServiceErrorResponse;
-    /**
-     * Forbidden
-     */
-    403: VoloAbpHttpRemoteServiceErrorResponse;
-    /**
-     * Not Found
-     */
-    404: VoloAbpHttpRemoteServiceErrorResponse;
-    /**
-     * Internal Server Error
-     */
-    500: VoloAbpHttpRemoteServiceErrorResponse;
-    /**
-     * Not Implemented
-     */
-    501: VoloAbpHttpRemoteServiceErrorResponse;
-};
-
-export type ProductPostGetError = ProductPostGetErrors[keyof ProductPostGetErrors];
-
-export type ProductPostGetResponses = {
-    /**
-     * OK
-     */
-    200: WalleeMallCmsDtosProductPostDto;
-};
-
-export type ProductPostGetResponse = ProductPostGetResponses[keyof ProductPostGetResponses];
-
-export type ProductPostUpdateData = {
-    body?: WalleeMallCmsDtosUpdateProductPostDto;
-    path: {
-        id: string;
-    };
-    query?: never;
-    url: '/api/mall/product-posts/{id}';
-};
-
-export type ProductPostUpdateErrors = {
-    /**
-     * Bad Request
-     */
-    400: VoloAbpHttpRemoteServiceErrorResponse;
-    /**
-     * Unauthorized
-     */
-    401: VoloAbpHttpRemoteServiceErrorResponse;
-    /**
-     * Forbidden
-     */
-    403: VoloAbpHttpRemoteServiceErrorResponse;
-    /**
-     * Not Found
-     */
-    404: VoloAbpHttpRemoteServiceErrorResponse;
-    /**
-     * Internal Server Error
-     */
-    500: VoloAbpHttpRemoteServiceErrorResponse;
-    /**
-     * Not Implemented
-     */
-    501: VoloAbpHttpRemoteServiceErrorResponse;
-};
-
-export type ProductPostUpdateError = ProductPostUpdateErrors[keyof ProductPostUpdateErrors];
-
-export type ProductPostUpdateResponses = {
-    /**
-     * OK
-     */
-    200: WalleeMallCmsDtosProductPostDto;
-};
-
-export type ProductPostUpdateResponse = ProductPostUpdateResponses[keyof ProductPostUpdateResponses];
-
-export type ProductPostGetListByProductData = {
-    body?: never;
-    path: {
-        productId: string;
-    };
-    query?: never;
-    url: '/api/mall/product-posts/product/{productId}';
-};
-
-export type ProductPostGetListByProductErrors = {
-    /**
-     * Bad Request
-     */
-    400: VoloAbpHttpRemoteServiceErrorResponse;
-    /**
-     * Unauthorized
-     */
-    401: VoloAbpHttpRemoteServiceErrorResponse;
-    /**
-     * Forbidden
-     */
-    403: VoloAbpHttpRemoteServiceErrorResponse;
-    /**
-     * Not Found
-     */
-    404: VoloAbpHttpRemoteServiceErrorResponse;
-    /**
-     * Internal Server Error
-     */
-    500: VoloAbpHttpRemoteServiceErrorResponse;
-    /**
-     * Not Implemented
-     */
-    501: VoloAbpHttpRemoteServiceErrorResponse;
-};
-
-export type ProductPostGetListByProductError = ProductPostGetListByProductErrors[keyof ProductPostGetListByProductErrors];
-
-export type ProductPostGetListByProductResponses = {
-    /**
-     * OK
-     */
-    200: Array<WalleeMallCmsDtosProductPostDto>;
-};
-
-export type ProductPostGetListByProductResponse = ProductPostGetListByProductResponses[keyof ProductPostGetListByProductResponses];
 
 export type ProductTagAddTagToProductData = {
     body?: WalleeMallProductsDtosCreateProductTagDto;

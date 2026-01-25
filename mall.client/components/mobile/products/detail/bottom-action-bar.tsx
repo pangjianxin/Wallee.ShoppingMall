@@ -1,28 +1,48 @@
 "use client";
 
 import { ShoppingCart, Heart, MessageCircle } from "lucide-react";
+import { useActionState, useEffect } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { addItemToCart } from "@/actions/carts";
+import { Spinner } from "@/components/ui/spinner";
 
 interface BottomActionBarProps {
-  onAddToCart: () => void;
   onBuyNow: () => void;
   onToggleFavorite?: () => void;
   onContact?: () => void;
   isFavorite?: boolean;
   cartCount?: number;
   disabled?: boolean;
+  selectedSkuId?: string;
 }
 
 export function BottomActionBar({
-  onAddToCart,
   onBuyNow,
   onToggleFavorite,
   onContact,
+  selectedSkuId,
   isFavorite = false,
-  cartCount = 0,
   disabled = false,
 }: BottomActionBarProps) {
+  const [cartState, formAction, isPending] = useActionState(addItemToCart, {
+    status: "idle",
+    message: "",
+  });
+
+  useEffect(() => {
+    if (cartState.status === "idle") {
+      return;
+    }
+
+    if (cartState.status === "error") {
+      toast.error(cartState.message ?? "加入失败，请重试");
+      return;
+    }
+
+    toast.success(cartState.message ?? "已加入购物车");
+  }, [cartState]);
   return (
     <div className="fixed bottom-(--footer-height) left-0 right-0 z-50 border-t border-border bg-card px-4 py-3 safe-area-pb">
       <div className="mx-auto flex max-w-lg items-center gap-4">
@@ -36,7 +56,7 @@ export function BottomActionBar({
             <MessageCircle className="h-5 w-5 text-muted-foreground" />
             <span className="text-[10px] text-muted-foreground">客服</span>
           </button>
-          
+
           <button
             onClick={onToggleFavorite}
             className="flex flex-col items-center gap-1"
@@ -45,38 +65,39 @@ export function BottomActionBar({
             <Heart
               className={cn(
                 "h-5 w-5 transition-colors",
-                isFavorite ? "fill-sale text-sale" : "text-muted-foreground"
+                isFavorite ? "fill-sale text-sale" : "text-muted-foreground",
               )}
             />
             <span className="text-[10px] text-muted-foreground">收藏</span>
           </button>
-          
-          <button
-            onClick={onAddToCart}
-            className="relative flex flex-col items-center gap-1"
-            aria-label="购物车"
-            disabled={disabled}
-          >
-            <ShoppingCart className="h-5 w-5 text-muted-foreground" />
-            <span className="text-[10px] text-muted-foreground">购物车</span>
-            {cartCount > 0 && (
-              <span className="absolute -right-2 -top-1 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-sale px-1 text-[10px] font-medium text-sale-foreground">
-                {cartCount > 99 ? "99+" : cartCount}
-              </span>
+
+          <form action={formAction}>
+            <input
+              type="hidden"
+              id="skuId"
+              name="skuId"
+              value={selectedSkuId ?? ""}
+            />
+            <input type="hidden" id="quantity" name="quantity" value={1} />
+            {isPending ? (
+              <Spinner />
+            ) : (
+              <button
+                type="submit"
+                className="relative flex flex-col items-center gap-1"
+                aria-label="购物车"
+              >
+                <ShoppingCart className="h-5 w-5 text-muted-foreground" />
+                <span className="text-[10px] text-muted-foreground">
+                  购物车
+                </span>
+              </button>
             )}
-          </button>
+          </form>
         </div>
 
         {/* Action Buttons */}
-        <div className="flex flex-1 gap-2">
-          <Button
-            onClick={onAddToCart}
-            disabled={disabled}
-            variant="outline"
-            className="h-11 flex-1 rounded-full border-primary text-primary hover:bg-primary/5 bg-transparent"
-          >
-            加入购物车
-          </Button>
+        <div className="flex flex-1 gap-2 justify-end">
           <Button
             onClick={onBuyNow}
             disabled={disabled}

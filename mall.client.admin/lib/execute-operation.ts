@@ -46,7 +46,7 @@ interface ExecuteOperationOptions {
  */
 export const executeOperation = async <T>(
   operation: () => Promise<T>,
-  options: ExecuteOperationOptions = {}
+  options: ExecuteOperationOptions = {},
 ): Promise<T | undefined> => {
   const {
     successMessage = "操作成功",
@@ -74,6 +74,7 @@ export const executeOperation = async <T>(
 
     return result;
   } catch (error: any) {
+    console.log(error);
     // 解析并显示错误
     const errorMessage = errorMessagePrefix
       ? `${errorMessagePrefix}: ${parseVoloAbpError(error)}`

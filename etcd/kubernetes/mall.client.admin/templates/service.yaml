@@ -1,0 +1,17 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "mall-admin-client.fullname" . }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "mall-admin-client.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  selector:
+    {{- include "mall-admin-client.selectorLabels" . | nindent 4 }}
+    app: {{ .Values.app }}
+  ports:
+  - name: {{ .Values.service.name }}
+    port: {{ .Values.service.port }}
+    targetPort: {{ .Values.deploy.containerPort }}

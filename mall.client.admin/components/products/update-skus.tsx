@@ -8,7 +8,6 @@ import { Label } from "@/components/ui/label";
 import { Trash2, Plus, X } from "lucide-react";
 import { useUpdateProductSkus } from "@/hooks/products/update-skus";
 import type { WalleeMallProductsDtosProductDto } from "@/openapi";
-import { Checkbox } from "@/components/ui/checkbox";
 import { executeOperation } from "@/lib/execute-operation";
 import { useState } from "react";
 import {
@@ -150,21 +149,6 @@ export function ProductSkuForm({ entity }: ProductSkuFormProps) {
               </p>
             )}
 
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="validateSkuCodeUniqueness"
-                checked={form.watch("validateSkuCodeUniqueness")}
-                onCheckedChange={(checked) =>
-                  form.setValue("validateSkuCodeUniqueness", checked as boolean)
-                }
-              />
-              <Label
-                htmlFor="validateSkuCodeUniqueness"
-                className="cursor-pointer"
-              >
-                验证 SKU 编码唯一性
-              </Label>
-            </div>
             <DialogFooter>
               <DialogClose asChild>
                 <Button

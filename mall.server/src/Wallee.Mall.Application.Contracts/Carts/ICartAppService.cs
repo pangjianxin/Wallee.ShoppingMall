@@ -8,11 +8,9 @@ public interface ICartAppService : IApplicationService
 {
     Task<CartDto> GetAsync();
 
-    Task<CartDto> AddItemAsync(AddCartItemDto input);
-
-    Task<CartDto> UpdateQuantityAsync(UpdateCartItemQuantityDto input);
-
+    Task AddItemAsync(AddCartItemDto input);
     Task<CartDto> RemoveItemAsync(CartRemoveItemDto input);
+    Task<CartDto> UpdateQuantityAsync(UpdateCartItemQuantityDto input);
 
     Task<CartDto> SetItemSelectedAsync(UpdateCartItemSelectionDto input);
 

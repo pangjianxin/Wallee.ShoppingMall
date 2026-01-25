@@ -1,6 +1,12 @@
 import { NextPage } from "next";
-import { productGet } from "@/openapi";
+import {
+  productGet,
+  postGetListByProduct,
+  tagGetAllRelatedTags,
+  carouselGetListByProduct,
+} from "@/openapi";
 import { client } from "@/hey-api/client";
+
 import ProductDetail from "@/components/products/detail";
 import { Suspense } from "react";
 
@@ -23,7 +29,34 @@ const Wrapper: NextPage<Props> = async ({ params }) => {
     path: { id },
   }).then((res) => res.data);
 
-  return <ProductDetail entity={promise} />;
+  const postsPromise = postGetListByProduct({
+    throwOnError: true,
+    client,
+    path: { productId: id },
+  }).then((res) => res.data);
+
+  const tagsPromise = tagGetAllRelatedTags({
+    throwOnError: true,
+    client,
+    path: { productId: id },
+  }).then((res) => res.data);
+
+  const carouselsPromise = carouselGetListByProduct({
+    throwOnError: true,
+    client,
+    path: {
+      productId: id,
+    },
+  }).then((res) => res.data);
+
+  return (
+    <ProductDetail
+      entity={promise}
+      productPosts={postsPromise}
+      relativeTags={tagsPromise}
+      productCarousels={carouselsPromise}
+    />
+  );
 };
 
 Page.displayName = "ProductPage";

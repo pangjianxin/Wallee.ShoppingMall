@@ -49,7 +49,7 @@ export default function NavUser() {
   };
 
   const handleProfile = () => {
-    router.push(`/profile`);
+    router.push(`/account/profile`);
   };
 
   const handleSignatureManagement = () => {

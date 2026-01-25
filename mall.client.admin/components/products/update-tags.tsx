@@ -15,19 +15,20 @@ import { WalleeMallProductsDtosProductDto } from "@/openapi";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { TagSelector, TagSelectorRef } from "@/components/tags/selector";
-
+import { ExpandableContainer } from "@/components/shared/expandable-container";
+import { ProductCard } from "@/components/products/card";
 type Props = {
-  entity: WalleeMallProductsDtosProductDto;
+  product: WalleeMallProductsDtosProductDto;
 };
 
-const Update: FC<Props> = ({ entity }) => {
+const Update: FC<Props> = ({ product }) => {
   const [open, setOpen] = useState(true);
 
   const router = useRouter();
   const tagRef = useRef<TagSelectorRef>(null);
   const handleSubmit = async () => {
     if (tagRef.current?.onSubmit) {
-      await tagRef.current.onSubmit(entity.id!);
+      await tagRef.current.onSubmit(product.id!);
     }
     toast.success("操作成功");
     setOpen(false);
@@ -57,9 +58,17 @@ const Update: FC<Props> = ({ entity }) => {
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-4 mt-4">
+          {product && (
+            <ExpandableContainer allowCollapse={true}>
+              <div className="flex flex-col gap-2 mb-4">
+                <h3 className="font-medium">关联商品信息</h3>
+                <ProductCard product={product} />
+              </div>
+            </ExpandableContainer>
+          )}
           <div className="space-y-2">
             <Label>商品标签</Label>
-            <TagSelector ref={tagRef} productId={entity.id!} />
+            <TagSelector ref={tagRef} productId={product.id!} />
           </div>
         </div>
         <DialogFooter>

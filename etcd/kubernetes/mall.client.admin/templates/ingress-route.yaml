@@ -1,0 +1,50 @@
+{{- if .Values.ingress.enabled -}}
+apiVersion: {{ .Values.ingress.apiVersion }}
+kind: IngressRoute
+metadata:
+  name: {{ .Values.ingress.host }}-https  ## https 单独定义一个，和http分离部署
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "mall-admin-client.labels" . | nindent 4 }}
+spec:
+  entryPoints:
+  - websecure
+  routes:
+    - kind: Rule
+      match: Host(`{{ .Values.ingress.host }}`) && PathPrefix(`/`)
+      services:
+        - kind: Service
+          name: {{ include "mall-admin-client.fullname" . }}
+          namespace: {{ .Values.namespace }}
+          passHostHeader: true
+          port: {{ .Values.service.port }}
+  tls:
+    secretName: {{ .Values.ingress.tlsSecretName }}  ## 此处引用k8s secret
+---
+apiVersion: {{ .Values.ingress.apiVersion }}
+kind: IngressRoute
+metadata:
+  name: {{ .Values.ingress.host }}-http ## http 单独定义一个，和https分离部署
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "mall-admin-client.labels" . | nindent 4 }}
+spec:
+  entryPoints:
+    - web
+  routes:
+    - kind: Rule
+      match: Host(`{{ .Values.ingress.host }}`) && PathPrefix(`/`)
+      {{- if and .Values.ingress.redirectMiddleware.enabled .Values.ingress.redirectMiddleware.name }}
+      middlewares:
+        - name: {{ .Values.ingress.redirectMiddleware.name }}
+          {{- if .Values.ingress.redirectMiddleware.namespace }}
+          namespace: {{ .Values.ingress.redirectMiddleware.namespace }}
+          {{- end }}
+      {{- end }}
+      services:
+        - kind: Service
+          name: {{ include "mall-admin-client.fullname" . }}
+          namespace: {{ .Values.namespace }}
+          passHostHeader: true
+          port: {{ .Values.service.port }}
+{{- end }}

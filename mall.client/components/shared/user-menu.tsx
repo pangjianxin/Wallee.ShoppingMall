@@ -21,7 +21,6 @@ type Props = {
 };
 const UserMenu: FC<Props> = ({ className, size = "sm" }) => {
   const session = useSession();
-  console.log(session.data);
   const isAuthenticated = !!session.data?.user;
   const router = useRouter();
   const handleSignin = () => {

@@ -1,0 +1,51 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "mall-client.fullname" . }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "mall-client.labels" . | nindent 4 }}
+spec:
+  minReadySeconds: 60
+  replicas: {{ .Values.deploy.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "mall-client.selectorLabels" . | nindent 6 }}
+      app: {{ .Values.app }}
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        #如果configmap变化，重新部署
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }} 
+        #总是希望helm upgrade时重新部署 
+        rollme: {{ randAlphaNum 5 | quote }} 
+      labels:
+        {{- include "mall-client.selectorLabels" . | nindent 8 }}
+        app: {{ .Values.app }}
+    spec:
+      {{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml .Values.imagePullSecrets | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: {{ include "mall-client.name" . }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - name: http
+          containerPort: {{ .Values.deploy.containerPort }}
+        resources:
+          limits:
+            memory: {{ .Values.deploy.resources.limits.memory }}
+            cpu: {{ .Values.deploy.resources.limits.cpu }}
+          requests:
+            memory: {{ .Values.deploy.resources.requests.memory }}
+            cpu: {{ .Values.deploy.resources.requests.cpu }}
+        envFrom:
+        - configMapRef:
+            name: {{ include "mall-client.configmapName" . }}
+      terminationGracePeriodSeconds: 180
+      terminationGracePeriodSeconds: 180

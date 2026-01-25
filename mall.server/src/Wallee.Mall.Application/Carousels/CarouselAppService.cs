@@ -1,5 +1,6 @@
 using AutoFilterer.Extensions;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Services;
@@ -28,6 +29,12 @@ public class CarouselAppService : CrudAppService<Carousel, CarouselDto, Guid, Ca
         var entity = new Carousel(GuidGenerator.Create(), input.Title, input.Description, input.Content, input.CoverImageMediaId, input.Priority, input.ProductId);
         await Repository.InsertAsync(entity);
         return await MapToGetOutputDtoAsync(entity);
+    }
+
+    public async Task<List<CarouselDto>> GetListByProductAsync(Guid productId)
+    {
+        var list = await Repository.GetListAsync(it => it.ProductId == productId);
+        return await MapToGetListOutputDtosAsync(list);
     }
 
     public override async Task<CarouselDto> UpdateAsync(Guid id, UpdateCarouselDto input)

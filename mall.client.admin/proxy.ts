@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth";
 
 // 公共路径白名单 - 无需认证即可访问
 const PUBLIC_PATHS = [
+  "/",
   "/account/login",
   "/account/register",
   "/account/forgot-password",
@@ -11,7 +12,7 @@ const PUBLIC_PATHS = [
 ];
 
 // 公共路径前缀 - 以这些前缀开头的路径无需认证
-const PUBLIC_PATH_PREFIXES = ["/"];
+const PUBLIC_PATH_PREFIXES: string[] = [];
 
 /**
  * 检查路径是否为公共路径（无需认证）
@@ -44,7 +45,7 @@ export async function proxy(request: NextRequest) {
   if (!session) {
     const loginUrl = new URL("/account/login", request.url);
     // 添加回调 URL，登录成功后返回原页面
-    loginUrl.searchParams.set("callbackUrl", path);
+    loginUrl.searchParams.set("cb", path);
     return NextResponse.redirect(loginUrl);
   }
   

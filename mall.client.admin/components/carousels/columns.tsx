@@ -2,7 +2,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
 import { WalleeMallCarouselsDtosCarouselDto } from "@/openapi";
-import { Badge } from "@/components/ui/badge";
 import { PermissionButton } from "@/components/auth/permission-button";
 import { Text, SortAsc } from "lucide-react";
 
@@ -60,21 +59,6 @@ export const createColumns = ({
             <span className="max-w-[200px] truncate">
               {row.getValue("priority") || "-"}
             </span>
-          </div>
-        );
-      },
-    },
-
-    {
-      accessorKey: "link",
-      meta: { label: "外部链接" },
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} label="外部链接" />
-      ),
-      cell: ({ row }) => {
-        return (
-          <div className="flex space-x-2">
-            <Badge variant="default">{row.getValue("link") || "-"}</Badge>
           </div>
         );
       },

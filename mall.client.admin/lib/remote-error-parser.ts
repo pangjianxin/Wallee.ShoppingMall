@@ -1,13 +1,17 @@
 export type VoloAbpHttpRemoteServiceErrorInfo = {
-  code?: string | null;
-  message?: string | null;
-  details?: string | null;
-  data?: object | null;
-  validationErrors?: Array<VoloAbpHttpRemoteServiceValidationErrorInfo> | null;
-};
-
-export type VoloAbpHttpRemoteServiceErrorResponse = {
-  error?: VoloAbpHttpRemoteServiceErrorInfo;
+  error?: {
+    message?: string | null;
+    code?: string | number | null;
+    originalError?: {
+      error?: {
+        code?: string | number | null;
+        message?: string | null;
+        details?: string | null;
+        data?: object | null;
+        validationErrors?: Array<VoloAbpHttpRemoteServiceValidationErrorInfo> | null;
+      } | null;
+    } | null;
+  } | null;
 };
 
 export type VoloAbpHttpRemoteServiceValidationErrorInfo = {
@@ -21,47 +25,32 @@ export type VoloAbpHttpRemoteServiceValidationErrorInfo = {
  * @param error The error object to parse
  * @returns A formatted error message string
  */
-export function parseVoloAbpError(
-  e: any
-): string {
-  // 首先检查是否是规范化后的错误对象
-  if (e && typeof e === 'object') {
-    // 检查 error.error.message（规范化错误）
-    if (e.error?.message && typeof e.error.message === 'string' && e.error.message.trim() !== '') {
-      return e.error.message;
-    }
-    
-    // 检查 error.message（规范化错误或原始错误）
-    if (e.message && typeof e.message === 'string' && e.message.trim() !== '') {
-      return e.message;
-    }
+export function parseVoloAbpError(e: any): string {
+  const pickMessage = (source: any): string | null => {
+    if (!source || typeof source !== "object") return null;
 
-    // 检查 ABP 标准错误结构
-    const abpError = e.error ?? e;
-    
     if (
-      abpError?.details &&
-      typeof abpError.details === "string" &&
-      abpError?.details.trim() !== ""
+      source.details &&
+      typeof source.details === "string" &&
+      source.details.trim() !== ""
     ) {
-      return abpError.details;
+      return source.details;
     }
 
     if (
-      abpError?.message &&
-      typeof abpError.message === "string" &&
-      abpError.message.trim() !== ""
+      source.message &&
+      typeof source.message === "string" &&
+      source.message.trim() !== ""
     ) {
-      return abpError.message;
+      return source.message;
     }
 
     if (
-      abpError?.validationErrors &&
-      Array.isArray(abpError.validationErrors) &&
-      abpError.validationErrors.length > 0
+      source.validationErrors &&
+      Array.isArray(source.validationErrors) &&
+      source.validationErrors.length > 0
     ) {
-      // Format validation errors
-      const validationMessages = abpError.validationErrors
+      const validationMessages = source.validationErrors
         .filter((ve: any) => ve.message)
         .map((ve: any) => {
           const message = ve.message || "";
@@ -77,10 +66,53 @@ export function parseVoloAbpError(
       }
     }
 
-    // 检查 code 字段
-    if (e.code && typeof e.code === 'string' && e.code.trim() !== '') {
-      return e.code;
+    if (source.code !== undefined && source.code !== null) {
+      const code = String(source.code).trim();
+      if (code !== "") return code;
     }
+
+    return null;
+  };
+
+  const findOriginalErrorInfo = (source: any) => {
+    return source?.error?.originalError?.error ?? source?.originalError?.error;
+  };
+
+  // 首先检查是否是规范化后的错误对象
+  if (e && typeof e === 'object') {
+    // 优先输出最内层的 message
+    if (
+      e.error?.originalError?.error?.message &&
+      typeof e.error.originalError.error.message === "string" &&
+      e.error.originalError.error.message.trim() !== ""
+    ) {
+      return e.error.originalError.error.message;
+    }
+
+    // 检查 error.error.message（规范化错误）
+    if (
+      e.error?.message &&
+      typeof e.error.message === "string" &&
+      e.error.message.trim() !== ""
+    ) {
+      return e.error.message;
+    }
+
+    // 检查 error.message（规范化错误或原始错误）
+    if (e.message && typeof e.message === "string" && e.message.trim() !== "") {
+      return e.message;
+    }
+
+    // 检查 ABP 标准错误结构
+    const abpError = e.error ?? e;
+
+    const abpMessage = pickMessage(abpError);
+    if (abpMessage) return abpMessage;
+
+    // 检查 originalError 链路
+    const originalError = findOriginalErrorInfo(e);
+    const originalMessage = pickMessage(originalError);
+    if (originalMessage) return originalMessage;
   }
 
   // 如果 e 是字符串

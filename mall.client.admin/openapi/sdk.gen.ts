@@ -2,7 +2,7 @@
 
 import { type Client, formDataBodySerializer, type Options as Options2, type TDataShape } from './client';
 import { client } from './client.gen';
-import type { AbpApiDefinitionGetData, AbpApiDefinitionGetErrors, AbpApiDefinitionGetResponses, AbpApplicationConfigurationGetData, AbpApplicationConfigurationGetErrors, AbpApplicationConfigurationGetResponses, AbpApplicationLocalizationGetData, AbpApplicationLocalizationGetErrors, AbpApplicationLocalizationGetResponses, AbpTenantFindTenantByIdData, AbpTenantFindTenantByIdErrors, AbpTenantFindTenantByIdResponses, AbpTenantFindTenantByNameData, AbpTenantFindTenantByNameErrors, AbpTenantFindTenantByNameResponses, AccountRegisterData, AccountRegisterErrors, AccountRegisterResponses, AccountResetPasswordData, AccountResetPasswordErrors, AccountResetPasswordResponses, AccountSendPasswordResetCodeData, AccountSendPasswordResetCodeErrors, AccountSendPasswordResetCodeResponses, AccountVerifyPasswordResetTokenData, AccountVerifyPasswordResetTokenErrors, AccountVerifyPasswordResetTokenResponses, AuditLogGetData, AuditLogGetErrors, AuditLogGetListData, AuditLogGetListErrors, AuditLogGetListResponses, AuditLogGetResponses, BackgroundJobDeleteData, BackgroundJobDeleteErrors, BackgroundJobDeleteResponses, BackgroundJobGetData, BackgroundJobGetErrors, BackgroundJobGetListData, BackgroundJobGetListErrors, BackgroundJobGetListResponses, BackgroundJobGetResponses, BackgroundJobGetWaitingJobsData, BackgroundJobGetWaitingJobsErrors, BackgroundJobGetWaitingJobsResponses, BackgroundJobPendingData, BackgroundJobPendingErrors, BackgroundJobPendingResponses, CaptchaGenerateData, CaptchaGenerateResponses, CarouselCreateData, CarouselCreateErrors, CarouselCreateResponses, CarouselDeleteData, CarouselDeleteErrors, CarouselDeleteResponses, CarouselGetData, CarouselGetErrors, CarouselGetListData, CarouselGetListErrors, CarouselGetListResponses, CarouselGetResponses, CarouselUpdateData, CarouselUpdateErrors, CarouselUpdateResponses, CartAddItemData, CartAddItemErrors, CartAddItemResponses, CartClearData, CartClearErrors, CartClearResponses, CartGetData, CartGetErrors, CartGetResponses, CartRemoveItemData, CartRemoveItemErrors, CartRemoveItemResponses, CartSelectAllData, CartSelectAllErrors, CartSelectAllResponses, CartSetItemSelectedData, CartSetItemSelectedErrors, CartSetItemSelectedResponses, CartUpdateQuantityData, CartUpdateQuantityErrors, CartUpdateQuantityResponses, DynamicClaimsRefreshData, DynamicClaimsRefreshErrors, DynamicClaimsRefreshResponses, EmailSettingsGetData, EmailSettingsGetErrors, EmailSettingsGetResponses, EmailSettingsSendTestEmailData, EmailSettingsSendTestEmailErrors, EmailSettingsSendTestEmailResponses, EmailSettingsUpdateData, EmailSettingsUpdateErrors, EmailSettingsUpdateResponses, FeaturesDeleteData, FeaturesDeleteErrors, FeaturesDeleteResponses, FeaturesGetData, FeaturesGetErrors, FeaturesGetResponses, FeaturesUpdateData, FeaturesUpdateErrors, FeaturesUpdateResponses, LoginCheckPasswordData, LoginCheckPasswordErrors, LoginCheckPasswordResponses, LoginLoginData, LoginLoginErrors, LoginLoginResponses, LoginLogoutData, LoginLogoutErrors, LoginLogoutResponses, MallMediaCreateData, MallMediaCreateErrors, MallMediaCreateResponses, MallMediaDeleteData, MallMediaDeleteErrors, MallMediaDeleteResponses, MallMediaDownloadData, MallMediaDownloadErrors, MallMediaDownloadResponses, MallMediaGetData, MallMediaGetErrors, MallMediaGetListData, MallMediaGetListErrors, MallMediaGetListResponses, MallMediaGetResponses, MallMediaPreviewData, MallMediaPreviewErrors, MallMediaPreviewResponses, PermissionsGetByGroupData, PermissionsGetByGroupErrors, PermissionsGetByGroupResponses, PermissionsGetData, PermissionsGetErrors, PermissionsGetResponses, PermissionsUpdateData, PermissionsUpdateErrors, PermissionsUpdateResponses, PostAgUiProductsData, PostAgUiProductsResponses, ProductCreateData, ProductCreateErrors, ProductCreateResponses, ProductDeleteData, ProductDeleteErrors, ProductDeleteResponses, ProductGetData, ProductGetErrors, ProductGetListData, ProductGetListErrors, ProductGetListResponses, ProductGetResponses, ProductGetSkusData, ProductGetSkusErrors, ProductGetSkusResponses, ProductPostCreateData, ProductPostCreateErrors, ProductPostCreateResponses, ProductPostDeleteData, ProductPostDeleteErrors, ProductPostDeleteResponses, ProductPostGetData, ProductPostGetErrors, ProductPostGetListByProductData, ProductPostGetListByProductErrors, ProductPostGetListByProductResponses, ProductPostGetListData, ProductPostGetListErrors, ProductPostGetListResponses, ProductPostGetResponses, ProductPostUpdateData, ProductPostUpdateErrors, ProductPostUpdateResponses, ProductTagAddTagToProductData, ProductTagAddTagToProductErrors, ProductTagAddTagToProductResponses, ProductTagRemoveTagFromProductData, ProductTagRemoveTagFromProductErrors, ProductTagRemoveTagFromProductResponses, ProductTagSetProductTagsData, ProductTagSetProductTagsErrors, ProductTagSetProductTagsResponses, ProductUpdateData, ProductUpdateErrors, ProductUpdateResponses, ProductUpsertSkusData, ProductUpsertSkusErrors, ProductUpsertSkusResponses, ProfileChangePasswordData, ProfileChangePasswordErrors, ProfileChangePasswordResponses, ProfileGetData, ProfileGetErrors, ProfileGetResponses, ProfileUpdateData, ProfileUpdateErrors, ProfileUpdateResponses, RoleCreateData, RoleCreateErrors, RoleCreateResponses, RoleDeleteData, RoleDeleteErrors, RoleDeleteResponses, RoleGetAllListData, RoleGetAllListErrors, RoleGetAllListResponses, RoleGetData, RoleGetErrors, RoleGetListData, RoleGetListErrors, RoleGetListResponses, RoleGetResponses, RoleUpdateData, RoleUpdateErrors, RoleUpdateResponses, TagCreateData, TagCreateErrors, TagCreateResponses, TagDeleteData, TagDeleteErrors, TagDeleteResponses, TagGetAllRelatedTagsData, TagGetAllRelatedTagsErrors, TagGetAllRelatedTagsResponses, TagGetData, TagGetErrors, TagGetListData, TagGetListErrors, TagGetListResponses, TagGetPopularTagsData, TagGetPopularTagsErrors, TagGetPopularTagsResponses, TagGetResponses, TagUpdateData, TagUpdateErrors, TagUpdateResponses, TenantCreateData, TenantCreateErrors, TenantCreateResponses, TenantDeleteData, TenantDeleteDefaultConnectionStringData, TenantDeleteDefaultConnectionStringErrors, TenantDeleteDefaultConnectionStringResponses, TenantDeleteErrors, TenantDeleteResponses, TenantGetData, TenantGetDefaultConnectionStringData, TenantGetDefaultConnectionStringErrors, TenantGetDefaultConnectionStringResponses, TenantGetErrors, TenantGetListData, TenantGetListErrors, TenantGetListResponses, TenantGetResponses, TenantUpdateData, TenantUpdateDefaultConnectionStringData, TenantUpdateDefaultConnectionStringErrors, TenantUpdateDefaultConnectionStringResponses, TenantUpdateErrors, TenantUpdateResponses, TimeZoneSettingsGetData, TimeZoneSettingsGetErrors, TimeZoneSettingsGetResponses, TimeZoneSettingsGetTimezonesData, TimeZoneSettingsGetTimezonesErrors, TimeZoneSettingsGetTimezonesResponses, TimeZoneSettingsUpdateData, TimeZoneSettingsUpdateErrors, TimeZoneSettingsUpdateResponses, UserCreateData, UserCreateErrors, UserCreateResponses, UserDeleteData, UserDeleteErrors, UserDeleteResponses, UserFindByEmailData, UserFindByEmailErrors, UserFindByEmailResponses, UserFindByUsernameData, UserFindByUsernameErrors, UserFindByUsernameResponses, UserGetAssignableRolesData, UserGetAssignableRolesErrors, UserGetAssignableRolesResponses, UserGetData, UserGetErrors, UserGetListData, UserGetListErrors, UserGetListResponses, UserGetResponses, UserGetRolesData, UserGetRolesErrors, UserGetRolesResponses, UserLookupFindByIdData, UserLookupFindByIdErrors, UserLookupFindByIdResponses, UserLookupFindByUserNameData, UserLookupFindByUserNameErrors, UserLookupFindByUserNameResponses, UserLookupGetCountData, UserLookupGetCountErrors, UserLookupGetCountResponses, UserLookupSearchData, UserLookupSearchErrors, UserLookupSearchResponses, UserUpdateData, UserUpdateErrors, UserUpdateResponses, UserUpdateRolesData, UserUpdateRolesErrors, UserUpdateRolesResponses } from './types.gen';
+import type { AbpApiDefinitionGetData, AbpApiDefinitionGetErrors, AbpApiDefinitionGetResponses, AbpApplicationConfigurationGetData, AbpApplicationConfigurationGetErrors, AbpApplicationConfigurationGetResponses, AbpApplicationLocalizationGetData, AbpApplicationLocalizationGetErrors, AbpApplicationLocalizationGetResponses, AbpTenantFindTenantByIdData, AbpTenantFindTenantByIdErrors, AbpTenantFindTenantByIdResponses, AbpTenantFindTenantByNameData, AbpTenantFindTenantByNameErrors, AbpTenantFindTenantByNameResponses, AccountRegisterData, AccountRegisterErrors, AccountRegisterResponses, AccountResetPasswordData, AccountResetPasswordErrors, AccountResetPasswordResponses, AccountSendPasswordResetCodeData, AccountSendPasswordResetCodeErrors, AccountSendPasswordResetCodeResponses, AccountVerifyPasswordResetTokenData, AccountVerifyPasswordResetTokenErrors, AccountVerifyPasswordResetTokenResponses, AuditLogGetData, AuditLogGetErrors, AuditLogGetListData, AuditLogGetListErrors, AuditLogGetListResponses, AuditLogGetResponses, BackgroundJobDeleteData, BackgroundJobDeleteErrors, BackgroundJobDeleteResponses, BackgroundJobGetData, BackgroundJobGetErrors, BackgroundJobGetListData, BackgroundJobGetListErrors, BackgroundJobGetListResponses, BackgroundJobGetResponses, BackgroundJobGetWaitingJobsData, BackgroundJobGetWaitingJobsErrors, BackgroundJobGetWaitingJobsResponses, BackgroundJobPendingData, BackgroundJobPendingErrors, BackgroundJobPendingResponses, CaptchaGenerateData, CaptchaGenerateResponses, CarouselCreateData, CarouselCreateErrors, CarouselCreateResponses, CarouselDeleteData, CarouselDeleteErrors, CarouselDeleteResponses, CarouselGetData, CarouselGetErrors, CarouselGetListByProductData, CarouselGetListByProductErrors, CarouselGetListByProductResponses, CarouselGetListData, CarouselGetListErrors, CarouselGetListResponses, CarouselGetResponses, CarouselUpdateData, CarouselUpdateErrors, CarouselUpdateResponses, CartAddItemData, CartAddItemErrors, CartAddItemResponses, CartClearData, CartClearErrors, CartClearResponses, CartGetData, CartGetErrors, CartGetResponses, CartRemoveItemData, CartRemoveItemErrors, CartRemoveItemResponses, CartSelectAllData, CartSelectAllErrors, CartSelectAllResponses, CartSetItemSelectedData, CartSetItemSelectedErrors, CartSetItemSelectedResponses, CartUpdateQuantityData, CartUpdateQuantityErrors, CartUpdateQuantityResponses, DynamicClaimsRefreshData, DynamicClaimsRefreshErrors, DynamicClaimsRefreshResponses, EmailSettingsGetData, EmailSettingsGetErrors, EmailSettingsGetResponses, EmailSettingsSendTestEmailData, EmailSettingsSendTestEmailErrors, EmailSettingsSendTestEmailResponses, EmailSettingsUpdateData, EmailSettingsUpdateErrors, EmailSettingsUpdateResponses, FeaturesDeleteData, FeaturesDeleteErrors, FeaturesDeleteResponses, FeaturesGetData, FeaturesGetErrors, FeaturesGetResponses, FeaturesUpdateData, FeaturesUpdateErrors, FeaturesUpdateResponses, LoginCheckPasswordData, LoginCheckPasswordErrors, LoginCheckPasswordResponses, LoginLoginData, LoginLoginErrors, LoginLoginResponses, LoginLogoutData, LoginLogoutErrors, LoginLogoutResponses, MallMediaCreateData, MallMediaCreateErrors, MallMediaCreateResponses, MallMediaDeleteData, MallMediaDeleteErrors, MallMediaDeleteResponses, MallMediaDownloadData, MallMediaDownloadErrors, MallMediaDownloadResponses, MallMediaGetData, MallMediaGetErrors, MallMediaGetListData, MallMediaGetListErrors, MallMediaGetListResponses, MallMediaGetResponses, MallMediaPreviewData, MallMediaPreviewErrors, MallMediaPreviewResponses, PermissionsGetByGroupData, PermissionsGetByGroupErrors, PermissionsGetByGroupResponses, PermissionsGetData, PermissionsGetErrors, PermissionsGetResponses, PermissionsUpdateData, PermissionsUpdateErrors, PermissionsUpdateResponses, PostAgUiProductsData, PostAgUiProductsResponses, PostCreateData, PostCreateErrors, PostCreateResponses, PostDeleteData, PostDeleteErrors, PostDeleteResponses, PostGetData, PostGetErrors, PostGetListByProductData, PostGetListByProductErrors, PostGetListByProductResponses, PostGetListData, PostGetListErrors, PostGetListResponses, PostGetResponses, PostUpdateData, PostUpdateErrors, PostUpdateResponses, ProductCreateData, ProductCreateErrors, ProductCreateResponses, ProductDeleteData, ProductDeleteErrors, ProductDeleteResponses, ProductGetData, ProductGetErrors, ProductGetListData, ProductGetListErrors, ProductGetListResponses, ProductGetResponses, ProductGetSkusData, ProductGetSkusErrors, ProductGetSkusResponses, ProductTagAddTagToProductData, ProductTagAddTagToProductErrors, ProductTagAddTagToProductResponses, ProductTagRemoveTagFromProductData, ProductTagRemoveTagFromProductErrors, ProductTagRemoveTagFromProductResponses, ProductTagSetProductTagsData, ProductTagSetProductTagsErrors, ProductTagSetProductTagsResponses, ProductUpdateData, ProductUpdateErrors, ProductUpdateResponses, ProductUpsertSkusData, ProductUpsertSkusErrors, ProductUpsertSkusResponses, ProfileChangePasswordData, ProfileChangePasswordErrors, ProfileChangePasswordResponses, ProfileGetData, ProfileGetErrors, ProfileGetResponses, ProfileUpdateData, ProfileUpdateErrors, ProfileUpdateResponses, RoleCreateData, RoleCreateErrors, RoleCreateResponses, RoleDeleteData, RoleDeleteErrors, RoleDeleteResponses, RoleGetAllListData, RoleGetAllListErrors, RoleGetAllListResponses, RoleGetData, RoleGetErrors, RoleGetListData, RoleGetListErrors, RoleGetListResponses, RoleGetResponses, RoleUpdateData, RoleUpdateErrors, RoleUpdateResponses, TagCreateData, TagCreateErrors, TagCreateResponses, TagDeleteData, TagDeleteErrors, TagDeleteResponses, TagGetAllRelatedTagsData, TagGetAllRelatedTagsErrors, TagGetAllRelatedTagsResponses, TagGetData, TagGetErrors, TagGetListData, TagGetListErrors, TagGetListResponses, TagGetPopularTagsData, TagGetPopularTagsErrors, TagGetPopularTagsResponses, TagGetResponses, TagUpdateData, TagUpdateErrors, TagUpdateResponses, TenantCreateData, TenantCreateErrors, TenantCreateResponses, TenantDeleteData, TenantDeleteDefaultConnectionStringData, TenantDeleteDefaultConnectionStringErrors, TenantDeleteDefaultConnectionStringResponses, TenantDeleteErrors, TenantDeleteResponses, TenantGetData, TenantGetDefaultConnectionStringData, TenantGetDefaultConnectionStringErrors, TenantGetDefaultConnectionStringResponses, TenantGetErrors, TenantGetListData, TenantGetListErrors, TenantGetListResponses, TenantGetResponses, TenantUpdateData, TenantUpdateDefaultConnectionStringData, TenantUpdateDefaultConnectionStringErrors, TenantUpdateDefaultConnectionStringResponses, TenantUpdateErrors, TenantUpdateResponses, TimeZoneSettingsGetData, TimeZoneSettingsGetErrors, TimeZoneSettingsGetResponses, TimeZoneSettingsGetTimezonesData, TimeZoneSettingsGetTimezonesErrors, TimeZoneSettingsGetTimezonesResponses, TimeZoneSettingsUpdateData, TimeZoneSettingsUpdateErrors, TimeZoneSettingsUpdateResponses, UserCreateData, UserCreateErrors, UserCreateResponses, UserDeleteData, UserDeleteErrors, UserDeleteResponses, UserFindByEmailData, UserFindByEmailErrors, UserFindByEmailResponses, UserFindByUsernameData, UserFindByUsernameErrors, UserFindByUsernameResponses, UserGetAssignableRolesData, UserGetAssignableRolesErrors, UserGetAssignableRolesResponses, UserGetData, UserGetErrors, UserGetListData, UserGetListErrors, UserGetListResponses, UserGetResponses, UserGetRolesData, UserGetRolesErrors, UserGetRolesResponses, UserLookupFindByIdData, UserLookupFindByIdErrors, UserLookupFindByIdResponses, UserLookupFindByUserNameData, UserLookupFindByUserNameErrors, UserLookupFindByUserNameResponses, UserLookupGetCountData, UserLookupGetCountErrors, UserLookupGetCountResponses, UserLookupSearchData, UserLookupSearchErrors, UserLookupSearchResponses, UserUpdateData, UserUpdateErrors, UserUpdateResponses, UserUpdateRolesData, UserUpdateRolesErrors, UserUpdateRolesResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -140,12 +140,6 @@ export const captchaGenerate = <ThrowOnError extends boolean = false>(options?: 
     ...options
 });
 
-export const carouselGetList = <ThrowOnError extends boolean = false>(options?: Options<CarouselGetListData, ThrowOnError>) => (options?.client ?? client).get<CarouselGetListResponses, CarouselGetListErrors, ThrowOnError>({
-    security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/mall/carousels',
-    ...options
-});
-
 export const carouselCreate = <ThrowOnError extends boolean = false>(options?: Options<CarouselCreateData, ThrowOnError>) => (options?.client ?? client).post<CarouselCreateResponses, CarouselCreateErrors, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/api/mall/carousels',
@@ -176,6 +170,18 @@ export const carouselUpdate = <ThrowOnError extends boolean = false>(options: Op
         'Content-Type': 'application/json',
         ...options.headers
     }
+});
+
+export const carouselGetList = <ThrowOnError extends boolean = false>(options?: Options<CarouselGetListData, ThrowOnError>) => (options?.client ?? client).get<CarouselGetListResponses, CarouselGetListErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/mall/carousels/list',
+    ...options
+});
+
+export const carouselGetListByProduct = <ThrowOnError extends boolean = false>(options: Options<CarouselGetListByProductData, ThrowOnError>) => (options.client ?? client).get<CarouselGetListByProductResponses, CarouselGetListByProductErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/mall/carousels/list/{productId}',
+    ...options
 });
 
 export const cartAddItem = <ThrowOnError extends boolean = false>(options?: Options<CartAddItemData, ThrowOnError>) => (options?.client ?? client).put<CartAddItemResponses, CartAddItemErrors, ThrowOnError>({
@@ -383,6 +389,50 @@ export const permissionsGetByGroup = <ThrowOnError extends boolean = false>(opti
     ...options
 });
 
+export const postGetList = <ThrowOnError extends boolean = false>(options?: Options<PostGetListData, ThrowOnError>) => (options?.client ?? client).get<PostGetListResponses, PostGetListErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/mall/product-posts',
+    ...options
+});
+
+export const postCreate = <ThrowOnError extends boolean = false>(options?: Options<PostCreateData, ThrowOnError>) => (options?.client ?? client).post<PostCreateResponses, PostCreateErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/mall/product-posts',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options?.headers
+    }
+});
+
+export const postDelete = <ThrowOnError extends boolean = false>(options: Options<PostDeleteData, ThrowOnError>) => (options.client ?? client).delete<PostDeleteResponses, PostDeleteErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/mall/product-posts/{id}',
+    ...options
+});
+
+export const postGet = <ThrowOnError extends boolean = false>(options: Options<PostGetData, ThrowOnError>) => (options.client ?? client).get<PostGetResponses, PostGetErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/mall/product-posts/{id}',
+    ...options
+});
+
+export const postUpdate = <ThrowOnError extends boolean = false>(options: Options<PostUpdateData, ThrowOnError>) => (options.client ?? client).put<PostUpdateResponses, PostUpdateErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/mall/product-posts/{id}',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+export const postGetListByProduct = <ThrowOnError extends boolean = false>(options: Options<PostGetListByProductData, ThrowOnError>) => (options.client ?? client).get<PostGetListByProductResponses, PostGetListByProductErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/mall/product-posts/product/{productId}',
+    ...options
+});
+
 export const productGetList = <ThrowOnError extends boolean = false>(options?: Options<ProductGetListData, ThrowOnError>) => (options?.client ?? client).get<ProductGetListResponses, ProductGetListErrors, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/api/mall/products',
@@ -435,50 +485,6 @@ export const productUpsertSkus = <ThrowOnError extends boolean = false>(options:
         'Content-Type': 'application/json',
         ...options.headers
     }
-});
-
-export const productPostGetList = <ThrowOnError extends boolean = false>(options?: Options<ProductPostGetListData, ThrowOnError>) => (options?.client ?? client).get<ProductPostGetListResponses, ProductPostGetListErrors, ThrowOnError>({
-    security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/mall/product-posts',
-    ...options
-});
-
-export const productPostCreate = <ThrowOnError extends boolean = false>(options?: Options<ProductPostCreateData, ThrowOnError>) => (options?.client ?? client).post<ProductPostCreateResponses, ProductPostCreateErrors, ThrowOnError>({
-    security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/mall/product-posts',
-    ...options,
-    headers: {
-        'Content-Type': 'application/json',
-        ...options?.headers
-    }
-});
-
-export const productPostDelete = <ThrowOnError extends boolean = false>(options: Options<ProductPostDeleteData, ThrowOnError>) => (options.client ?? client).delete<ProductPostDeleteResponses, ProductPostDeleteErrors, ThrowOnError>({
-    security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/mall/product-posts/{id}',
-    ...options
-});
-
-export const productPostGet = <ThrowOnError extends boolean = false>(options: Options<ProductPostGetData, ThrowOnError>) => (options.client ?? client).get<ProductPostGetResponses, ProductPostGetErrors, ThrowOnError>({
-    security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/mall/product-posts/{id}',
-    ...options
-});
-
-export const productPostUpdate = <ThrowOnError extends boolean = false>(options: Options<ProductPostUpdateData, ThrowOnError>) => (options.client ?? client).put<ProductPostUpdateResponses, ProductPostUpdateErrors, ThrowOnError>({
-    security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/mall/product-posts/{id}',
-    ...options,
-    headers: {
-        'Content-Type': 'application/json',
-        ...options.headers
-    }
-});
-
-export const productPostGetListByProduct = <ThrowOnError extends boolean = false>(options: Options<ProductPostGetListByProductData, ThrowOnError>) => (options.client ?? client).get<ProductPostGetListByProductResponses, ProductPostGetListByProductErrors, ThrowOnError>({
-    security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/mall/product-posts/product/{productId}',
-    ...options
 });
 
 export const productTagAddTagToProduct = <ThrowOnError extends boolean = false>(options?: Options<ProductTagAddTagToProductData, ThrowOnError>) => (options?.client ?? client).put<ProductTagAddTagToProductResponses, ProductTagAddTagToProductErrors, ThrowOnError>({

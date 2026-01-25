@@ -16,17 +16,32 @@ export const authClient = createAuthClient({
 
 export const { useSession, signOut, signIn } = authClient;
 
+// 仅允许同源下的安全回调地址，避免开放重定向
+function getSafeRedirect(callbackUrl?: string) {
+  if (!callbackUrl) return "/";
+
+  try {
+    const url = new URL(callbackUrl, window.location.origin);
+    if (url.origin !== window.location.origin) return "/";
+    return `${url.pathname}${url.search}${url.hash}`;
+  } catch {
+    return "/";
+  }
+}
+
 // Export custom credentials sign-in function for convenience
 export async function signInWithCredentials({
   username,
   password,
   captchaid,
   captchacode,
+  callbackUrl,
 }: {
   username: string;
   password: string;
   captchaid: string;
   captchacode: string;
+  callbackUrl?: string;
 }) {
   try {
     const result = await authClient.signInCredentials({
@@ -38,12 +53,12 @@ export async function signInWithCredentials({
 
     if (result.error) {
       return {
-        error: result.error.message || "invalid_grant",
+        error: (result.error as any)?.message || "invalid_grant",
       };
     }
 
     // Reload to update session
-    window.location.href = "/";
+    window.location.href = getSafeRedirect(callbackUrl);
     return { success: true };
   } catch (error: any) {
     return {

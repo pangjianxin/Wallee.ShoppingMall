@@ -30,6 +30,11 @@ public class EfCoreProductRepository(IDbContextProvider<MallDbContext> dbContext
         return await GetListAsync(predicate!, includeDetails: true, cancellationToken: cancellationToken);
     }
 
+    public async Task<IQueryable<Product>> GetQueryableWithNoTrackingAsync()
+    {
+        return (await WithDetailsAsync()).AsNoTracking();
+    }
+
     public override async Task<IQueryable<Product>> WithDetailsAsync()
     {
         return (await GetQueryableAsync()).IncludeDetails();

@@ -56,7 +56,7 @@ const UserMenu: FC<Props> = ({ className, size = "sm" }) => {
           <DropdownMenuGroup>
             <DropdownMenuItem
               onClick={() => {
-                router.push(`/identity/profile`);
+                router.push(`/account/profile`);
               }}
             >
               账户设置

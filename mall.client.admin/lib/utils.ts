@@ -21,3 +21,37 @@ export const getDiscountText = (value: number | undefined) => {
   const discount = (value * 10).toFixed(2);
   return `${discount}折`;
 };
+
+export const getCurrencySymbol = (currency?: string | null) => {
+  if (!currency) return "¥";
+  const normalized = currency.toUpperCase();
+  switch (normalized) {
+    case "CNY":
+    case "RMB":
+      return "¥";
+    case "USD":
+      return "$";
+    case "EUR":
+      return "€";
+    case "GBP":
+      return "£";
+    case "JPY":
+      return "¥";
+    case "HKD":
+      return "HK$";
+    case "TWD":
+      return "NT$";
+    case "KRW":
+      return "₩";
+    default:
+      return currency;
+  }
+};
+
+export const formatMoney = (
+  value?: number | null,
+  currency?: string | null,
+) => {
+  if (value === undefined || value === null) return "-";
+  return `${getCurrencySymbol(currency)}${value.toFixed(2)}`;
+};

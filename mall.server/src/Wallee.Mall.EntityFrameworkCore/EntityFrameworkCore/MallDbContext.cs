@@ -69,7 +69,7 @@ public class MallDbContext(DbContextOptions<MallDbContext> options) :
     public DbSet<ProductSku> ProductSkus { get; set; }
     public DbSet<Carousel> Carousels { get; set; }
     public DbSet<MallMedia> MallMedias { get; set; }
-    public DbSet<ProductPost> ProductPosts { get; set; }
+    public DbSet<Post> Posts { get; set; }
 
     public DbSet<Cart> Carts { get; set; }
     public DbSet<CartItem> CartItems { get; set; }
@@ -178,10 +178,14 @@ public class MallDbContext(DbContextOptions<MallDbContext> options) :
             b.Property(it => it.Content).IsRequired().HasMaxLength(int.MaxValue);
         });
 
-        builder.Entity<ProductPost>(b =>
+        builder.Entity<Post>(b =>
         {
-            b.ToTable(MallConsts.DbTablePrefix + "ProductPosts", MallConsts.DbSchema);
+            b.ToTable(MallConsts.DbTablePrefix + "Posts", MallConsts.DbSchema);
             b.ConfigureByConvention();
+            b.OwnsOne(it => it.ProductInfo, config =>
+            {
+                config.ToJson();
+            });
             b.Property(it => it.Content).HasMaxLength(int.MaxValue).IsRequired();
         });
 

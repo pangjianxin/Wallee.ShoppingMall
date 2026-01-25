@@ -27,6 +27,11 @@ public class MallPermissionDefinitionProvider : PermissionDefinitionProvider
         productPermission.AddChild(MallPermissions.Product.Update, L("Permission:Update"));
         productPermission.AddChild(MallPermissions.Product.Delete, L("Permission:Delete"));
 
+        var postPermission = myGroup.AddPermission(MallPermissions.Post.Default, L("Permission:Post"));
+        postPermission.AddChild(MallPermissions.Post.Create, L("Permission:Create"));
+        postPermission.AddChild(MallPermissions.Post.Update, L("Permission:Update"));
+        postPermission.AddChild(MallPermissions.Post.Delete, L("Permission:Delete"));
+
         var cartPermission = myGroup.AddPermission(MallPermissions.Cart.Default, L("Permission:Cart"));
         cartPermission.AddChild(MallPermissions.Cart.Read, L("Permission:Read"));
         cartPermission.AddChild(MallPermissions.Cart.Manage, L("Permission:Manage"));

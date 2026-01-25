@@ -22,7 +22,7 @@ public class CartAppService(
     }
 
 
-    public async Task<CartDto> AddItemAsync(AddCartItemDto input)
+    public async Task AddItemAsync(AddCartItemDto input)
     {
         var userId = CurrentUser.GetId();
         var cart = await GetOrCreateCartAsync(userId);
@@ -30,8 +30,6 @@ public class CartAppService(
         cart.AddItem(input.SkuId, input.Quantity);
 
         await cartRepository.UpdateAsync(cart, autoSave: true);
-
-        return await MapToDtoAsync(cart);
     }
 
 
@@ -126,13 +124,14 @@ public class CartAppService(
 
         var skuIds = cart.Items.Select(x => x.SkuId).Distinct().ToList();
 
-        var products = await productRepository.WithDetailsAsync();
+        var products = await productRepository.GetQueryableWithNoTrackingAsync();
+
         var skuInfosQuery = products
-            .SelectMany(p => (p.Skus ?? Enumerable.Empty<ProductSku>()).Select(s => new
+            .SelectMany(p => p.Skus.Select(s => new
             {
                 ProductId = p.Id,
                 ProductName = p.Name,
-                p.ProductCovers,
+                ProductCoverIds = p.ProductCovers.Select(c => c.MallMediaId).ToList(),
                 SkuId = s.Id,
                 SkuOriginalPrice = s.OriginalPrice,
                 SkuDiscountRate = s.DiscountRate,
@@ -168,7 +167,7 @@ public class CartAppService(
 
                 ProductId = sku.ProductId,
                 ProductName = sku.ProductName,
-                ProductCovers = sku.ProductCovers?.Select(c => c.MallMediaId).ToList(),
+                ProductCovers = [.. sku.ProductCoverIds],
                 Currency = sku.SkuCurrency,
                 Price = price,
                 StockQuantity = sku.SkuStockQuantity

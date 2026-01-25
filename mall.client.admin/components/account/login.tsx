@@ -27,10 +27,10 @@ const ERROR_MESSAGES: Record<string, string> = {
   invalid_grant: "登录失败，请检查用户名、密码或图形验证码",
 };
 type Props = {
-  returnUrl?: string;
+  cb?: string;
 };
 
-const Login: FC<Props> = ({ returnUrl }: Props) => {
+const Login: FC<Props> = ({ cb }: Props) => {
   const searchParams = useSearchParams();
 
   const errorCode = searchParams.get("error");
@@ -59,6 +59,7 @@ const Login: FC<Props> = ({ returnUrl }: Props) => {
         password: data.password,
         captchaid: data.captchaid,
         captchacode: data.captchacode,
+        callbackUrl: cb,
       });
 
       if (result.error) {

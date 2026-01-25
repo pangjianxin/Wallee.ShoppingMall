@@ -56,7 +56,7 @@ public class MallEntityFrameworkCoreModule : AbpModule
             options.AddRepository<Tag, TagRepository>();
             options.AddRepository<Product, EfCoreProductRepository>();
             options.AddRepository<Carousel, EfCoreCarouselRepository>();
-            options.AddRepository<ProductPost, EfCoreProductPostRepository>();
+            options.AddRepository<Post, EfCorePostRepository>();
             options.AddRepository<Cart, EfCoreCartRepository>();
         });
 

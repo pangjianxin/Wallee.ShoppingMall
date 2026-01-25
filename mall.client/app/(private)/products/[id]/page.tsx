@@ -2,7 +2,7 @@ import ProductDetail from "@/components/mobile/products/detail";
 import { client } from "@/hey-api/client";
 import {
   productGet,
-  productPostGetListByProduct,
+  postGetListByProduct,
   tagGetAllRelatedTags,
 } from "@/openapi";
 import { FC } from "react";
@@ -30,7 +30,7 @@ const Page: FC<Props> = async ({ params }) => {
     },
   });
 
-  const { data: posts } = await productPostGetListByProduct({
+  const { data: posts } = await postGetListByProduct({
     client,
     throwOnError: true,
     path: {

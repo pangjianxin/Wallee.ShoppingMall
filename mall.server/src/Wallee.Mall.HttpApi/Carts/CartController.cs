@@ -9,9 +9,9 @@ namespace Wallee.Mall.Carts
     {
         [HttpPut]
         [Route("items/add")]
-        public async Task<CartDto> AddItemAsync(AddCartItemDto input)
+        public async Task AddItemAsync(AddCartItemDto input)
         {
-            return await service.AddItemAsync(input);
+            await service.AddItemAsync(input);
         }
 
         [HttpPut]

@@ -12,8 +12,8 @@ import { FC, useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
-  WalleeMallCmsDtosProductPostDto,
-  WalleeMallCmsProductPostCategory,
+  WalleeMallCmsDtosPostDto,
+  WalleeMallCmsPostCategory,
   WalleeMallProductsDtosProductDto,
 } from "@/openapi";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -29,7 +29,7 @@ import { FolderCodeIcon } from "lucide-react";
 import Editor from "@/components/shared/editor/editor";
 
 const PostsView: FC<{
-  posts: WalleeMallCmsDtosProductPostDto[];
+  posts: WalleeMallCmsDtosPostDto[];
   product: WalleeMallProductsDtosProductDto;
 }> = ({ posts, product }) => {
   const router = useRouter();
@@ -73,7 +73,7 @@ const PostsView: FC<{
       <TabsList className="mb-3 w-full justify-start gap-2 overflow-x-auto rounded-md bg-muted/40 p-1">
         {posts.map((post) => (
           <TabsTrigger key={post.id} value={post.id as string}>
-            {WalleeMallCmsProductPostCategory[post.category as number]}
+            {WalleeMallCmsPostCategory[post.productInfo?.category as number]}
           </TabsTrigger>
         ))}
       </TabsList>
@@ -82,7 +82,11 @@ const PostsView: FC<{
           <div className="flex flex-col gap-3">
             <div className="bg-background flex flex-wrap items-center justify-between gap-2">
               <div className="text-base font-medium">
-                {WalleeMallCmsProductPostCategory[post.category as number]}
+                {
+                  WalleeMallCmsPostCategory[
+                    post.productInfo?.category as number
+                  ]
+                }
               </div>
               <div className="flex items-center gap-2">
                 <Button size="sm" variant="destructive">
@@ -111,7 +115,7 @@ const PostsView: FC<{
 
 type Props = {
   product: WalleeMallProductsDtosProductDto;
-  posts: WalleeMallCmsDtosProductPostDto[];
+  posts: WalleeMallCmsDtosPostDto[];
 };
 export const ProductPostTabs: FC<Props> = ({ product, posts }) => {
   const [open, setOpen] = useState(true);
