@@ -90,7 +90,7 @@ export const ProductImageCarousel: FC<Props> = ({
       )}
 
       {badge && (
-        <div className="absolute left-1.5 top-1.5 z-10 px-1.5 py-0.5 text-[10px] sm:left-2 sm:top-2 sm:text-xs">
+        <div className="absolute left-0 top-0 z-10 text-[10px] sm:left-2 sm:text-xs">
           {badge}
         </div>
       )}

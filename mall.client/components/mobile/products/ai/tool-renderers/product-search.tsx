@@ -1,6 +1,6 @@
 "use client";
 import { z } from "zod";
-import { ProductCard } from "@/components/mobile/products/product-card";
+import { ProductCard } from "@/components/mobile/products/card";
 import { WalleeMallProductsDtosProductDto } from "@/openapi";
 
 const ProductCoverSchema = z.object({

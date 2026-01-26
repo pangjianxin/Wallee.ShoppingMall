@@ -1,6 +1,6 @@
 "use client";
 import { use } from "react";
-import { ProductCard } from "@/components/mobile/products/product-card";
+import { ProductCard } from "@/components/mobile/products/card";
 import { MobilePagination } from "@/components/shared/pagination";
 import type { VoloAbpApplicationDtosPagedResultDtoOfProductDto } from "@/openapi";
 import { ProductSearchSheet } from "@/components/mobile/products/search-sheet";

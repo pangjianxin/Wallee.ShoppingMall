@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { WalleeMallProductsDtosProductDto } from "@/openapi";
 import { use } from "react";
-import { ProductCard } from "@/components/mobile/products/product-card";
+import { ProductCard } from "@/components/mobile/products/card";
 
 type Props = {
   productsPromise: Promise<

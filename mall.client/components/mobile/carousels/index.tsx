@@ -49,12 +49,15 @@ export const Carousels: FC<Props> = ({ carousels }) => {
                     : { loading: "lazy" as const })}
                 />
                 {carousel.title ? (
-                  <Link
-                    href={`/carousels/${carousel.id}`}
-                    className="absolute bottom-0 left-0 right-0 z-10 rounded-xs px-1 text-sm font-base text-white shadow-md line-clamp-2 backdrop-blur-sm"
-                  >
-                    {carousel.title}
-                  </Link>
+                  <>
+                    <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-12 bg-linear-to-t from-black/40 via-black/20 to-transparent" />
+                    <Link
+                      href={`/carousels/${carousel.id}`}
+                      className="absolute inset-x-0 bottom-0 z-20 px-2 pt-4 text-sm font-medium text-white drop-shadow-md line-clamp-2"
+                    >
+                      {carousel.title}
+                    </Link>
+                  </>
                 ) : null}
               </CarouselItem>
             ))}
