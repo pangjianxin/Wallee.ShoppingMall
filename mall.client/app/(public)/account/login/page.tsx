@@ -1,15 +1,16 @@
 import Login from "@/components/mobile/account/login";
+import { SearchParams } from "nuqs/server";
 import { NextPage } from "next";
 
 type Props = {
-  searchParams?: Promise<{ [key: string]: string | undefined }>;
+  searchParams?: Promise<SearchParams>;
 };
 
 const Page: NextPage<Props> = async ({ searchParams }) => {
   const search = await searchParams;
   return (
     <>
-      <Login callbackUrl={search?.callbackUrl || undefined} />
+      <Login cb={(search?.["cb"] as string) || undefined} />
     </>
   );
 };

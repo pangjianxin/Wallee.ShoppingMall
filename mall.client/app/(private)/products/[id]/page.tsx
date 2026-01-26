@@ -22,6 +22,8 @@ const Page: FC<Props> = async ({ params }) => {
     },
   });
 
+  console.log("Related tags:", tags);
+
   const { data: product } = await productGet({
     client,
     throwOnError: true,

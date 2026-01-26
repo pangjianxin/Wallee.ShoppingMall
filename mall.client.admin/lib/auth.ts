@@ -44,6 +44,7 @@ function normalizeRole(role: string | string[] | undefined): string[] {
 }
 
 export const auth = betterAuth({
+  trustedOrigins: [process.env.NEXT_PUBLIC_APP_URL as string],
   //https://www.better-auth.com/docs/concepts/session-management#stateless-session-management
   session: {
     cookieCache: {
@@ -112,7 +113,7 @@ export const auth = betterAuth({
     customSession(async (sessionData, ctx) => {
       // Get the user's accounts to retrieve tokens
       const accounts = await ctx.context.internalAdapter.findAccounts(
-        sessionData.user.id
+        sessionData.user.id,
       );
       const account = accounts?.[0] as ExtendedAccountData | undefined;
 
@@ -167,7 +168,7 @@ export const auth = betterAuth({
               captchacode: parsed.captchacode,
               scope: process.env.NEXTAUTH_SCOPE || "",
             }),
-          }
+          },
         );
 
         const data = await tokenResponse.json();
@@ -206,7 +207,9 @@ export const auth = betterAuth({
             accessToken: data.access_token,
             refreshToken: data.refresh_token,
             idToken: data.id_token,
-            expiresAt: decodedJWT.exp ? new Date(decodedJWT.exp * 1000) : undefined,
+            expiresAt: decodedJWT.exp
+              ? new Date(decodedJWT.exp * 1000)
+              : undefined,
           },
 
           onSignIn(userData) {
@@ -230,7 +233,9 @@ export const auth = betterAuth({
               accessToken: data.access_token,
               refreshToken: data.refresh_token,
               idToken: data.id_token,
-              expiresAt: decodedJWT.exp ? new Date(decodedJWT.exp * 1000) : undefined,
+              expiresAt: decodedJWT.exp
+                ? new Date(decodedJWT.exp * 1000)
+                : undefined,
             };
           },
         };
@@ -243,7 +248,7 @@ export const auth = betterAuth({
       // Extract and store additional OIDC claims
       if (ctx.context.user && ctx.context.session) {
         const accounts = await ctx.context.internalAdapter.findAccounts(
-          ctx.context.session.user.id
+          ctx.context.session.user.id,
         );
 
         if (accounts && accounts.length > 0 && accounts[0].idToken) {
@@ -259,4 +264,3 @@ export const auth = betterAuth({
     }),
   },
 });
-

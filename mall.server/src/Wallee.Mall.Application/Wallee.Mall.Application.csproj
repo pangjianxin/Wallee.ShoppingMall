@@ -16,7 +16,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Fonts\RobotoMono-Light.ttf" />
     <None Remove="MallApplicationModule.cs~RF19bc9a9.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Fonts\RobotoMono-Light.ttf" />
   </ItemGroup>
 
   <ItemGroup>

@@ -8,7 +8,7 @@ const categories = [
 
 export function CategoryGrid() {
   return (
-    <section className="container px-4 py-12 md:py-16">
+    <section className="container py-4">
       <h3 className="mb-8 text-center font-serif text-3xl font-semibold text-foreground">
         精选分类
       </h3>

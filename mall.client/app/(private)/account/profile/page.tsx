@@ -4,7 +4,7 @@ import { client } from "@/hey-api/client";
 import { profileGet } from "@/openapi";
 import { cn } from "@/lib/utils";
 import { MobilePageHeader } from "@/components/mobile/sections/page-header";
-
+export const dynamic = "force-dynamic";
 const Page: NextPage = async () => {
   const { data: profile } = await profileGet({ client });
   return (

@@ -11,12 +11,13 @@ const ProductsChat: FC = () => {
     <CopilotKit
       runtimeUrl="/api/copilotkit"
       agent="products"
+      //runtimeUrl="/ag-ui/products"
       headers={{
         Authorization: `Bearer ${session?.data?.session.token}`,
       }}
       renderToolCalls={[ProductSearchRenderer]}
     >
-      <CopilotChat />
+      <CopilotChat agentId="products" />
     </CopilotKit>
   );
 };

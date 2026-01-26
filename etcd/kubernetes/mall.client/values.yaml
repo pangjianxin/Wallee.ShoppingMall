@@ -1,8 +1,8 @@
 namespace: wallee
 app: mall-client
 
-nameOverride: ""
-fullnameOverride: ""
+nameOverride: "mall-client"
+fullnameOverride: "mall-client"
 
 image:
   repository: registry.cn-hangzhou.aliyuncs.com/jianxin-zx/mall
@@ -33,7 +33,7 @@ ingress:
   enabled: true
   apiVersion: traefik.io/v1alpha1
   host: mall.creotech.cn
-  tlsSecretName: wildcard-cert
+  tlsSecretName: mall-cert
   # 引用已存在的重定向 Middleware
   redirectMiddleware:
     enabled: true

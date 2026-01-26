@@ -45,11 +45,11 @@ export function ProductTags({ tags }: Props) {
         </div>
       </div>
 
-      {tags?.length ? (
+      {tags?.length > 0 ? (
         <div className="space-y-2">
           <div className="text-xs font-medium text-foreground">商品标签</div>
           <div className="flex flex-wrap gap-2">
-            {tags.map((tag, index) => (
+            {tags?.map((tag, index) => (
               <Badge key={index} variant="outline" className="gap-1.5">
                 <ShoppingCart className="h-3.5 w-3.5 text-muted-foreground" />
                 <span className="text-muted-foreground">{tag.name}</span>

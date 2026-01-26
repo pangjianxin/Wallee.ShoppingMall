@@ -15,16 +15,12 @@ export const ProductCarousels: FC<Props> = ({ carousels }) => {
         <p className="text-sm text-muted-foreground">暂无轮播图</p>
       )}
       {carousels.map((carousel) => (
-        <div key={carousel.id} className="rounded-md border border-dashed p-3">
-          <div className="mb-2 flex items-center justify-between gap-2">
-            <div className="grid sm:grid-cols-[1fr_3fr]">
-              <div className="relative aspect-square">
+        <div key={carousel.id} className="flex flex-col gap-2 rounded-md border border-dashed p-3">
+          <div className="mb-2">
+            <div className="grid sm:grid-cols-[1fr_3fr] gap-2 w-full">
+              <div className="relative aspect-video">
                 <Image
-                  src={
-                    carousel.coverImageMediaId
-                      ? `${process.env.NEXT_PUBLIC_MEDIA_DOWNLOAD_URL}/${carousel.coverImageMediaId}`
-                      : "/placeholder.svg?height=60&width=60"
-                  }
+                  src={`${process.env.NEXT_PUBLIC_MEDIA_DOWNLOAD_URL}/${carousel.coverImageMediaId}`}
                   alt={carousel.title || "轮播图封面"}
                   fill
                   sizes="100%"

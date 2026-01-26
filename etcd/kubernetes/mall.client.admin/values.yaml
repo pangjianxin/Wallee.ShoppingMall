@@ -33,7 +33,7 @@ ingress:
   enabled: true
   apiVersion: traefik.io/v1alpha1
   host: mall-admin.creotech.cn
-  tlsSecretName: wildcard-cert
+  tlsSecretName: mall-admin-cert
   # 引用已存在的重定向 Middleware
   redirectMiddleware:
     enabled: true

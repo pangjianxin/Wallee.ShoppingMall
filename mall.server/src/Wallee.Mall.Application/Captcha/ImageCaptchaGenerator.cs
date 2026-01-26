@@ -48,7 +48,7 @@ namespace Wallee.Mall.Captcha
             try
             {
                 var assembly = System.Reflection.Assembly.GetExecutingAssembly();
-                const string fontResourceName = "Wallee.AI.OrgMap.Fonts.RobotoMono-Light.ttf";
+                const string fontResourceName = "Wallee.Mall.Fonts.RobotoMono-Light.ttf";
                 using var stream = assembly.GetManifestResourceStream(fontResourceName);
                 if (stream != null)
                 {

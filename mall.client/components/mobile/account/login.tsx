@@ -31,15 +31,17 @@ const ERROR_MESSAGES: Record<string, string> = {
   invalid_grant: "登录失败，请检查用户名、密码或图形验证码",
 };
 type Props = {
-  callbackUrl?: string;
+  cb?: string;
 };
 
-const Login: FC<Props> = ({ callbackUrl }: Props) => {
+const Login: FC<Props> = ({ cb }: Props) => {
   const searchParams = useSearchParams();
   const errorCode = searchParams.get("error");
-  const redirectUrl = callbackUrl || searchParams.get("callbackUrl") || "/";
+  const redirectUrl = cb || searchParams.get("callbackUrl") || "/";
   const [error, setError] = useState<string | null>(
-    errorCode ? ERROR_MESSAGES[errorCode] || ERROR_MESSAGES.invalid_grant : null
+    errorCode
+      ? ERROR_MESSAGES[errorCode] || ERROR_MESSAGES.invalid_grant
+      : null,
   );
   const router = useRouter();
 

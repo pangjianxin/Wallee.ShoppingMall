@@ -1,5 +1,7 @@
 # Wallee 商城管理系统 (Shopping Mall Management System)
-
+```bash kubectl create secret tls mall-cert --key mall.creotech.cn.key --cert mall.creotech.cn.crt --dry-run=client -o yaml > tls.yaml
+ kubectl apply -f tls.yaml
+ ```
 ## 🔐 身份认证 (Authentication)
 
 本项目使用 **Better-auth** 与后端 ASP.NET Core + OpenIddict 集成实现身份认证。
