@@ -3,6 +3,7 @@ using Microsoft.Agents.AI.Hosting;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using Volo.Abp.Account;
 using Volo.Abp.FeatureManagement;
 using Volo.Abp.Identity;
@@ -12,6 +13,7 @@ using Volo.Abp.PermissionManagement;
 using Volo.Abp.SettingManagement;
 using Volo.Abp.TenantManagement;
 using Wallee.Mall.DeepSeek;
+using Wallee.Mall.OneBound;
 using Wallee.Mall.Products.Tools;
 
 namespace Wallee.Mall;
@@ -31,6 +33,20 @@ public class MallApplicationModule : AbpModule
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
+        var configuration = context.Services.GetConfiguration();
+
+        context.Services.AddHttpClient("one-bound", (provider, httpClient) =>
+        {
+
+            var endpoint = configuration["OneBound:Endpoint"];
+            httpClient.BaseAddress = new Uri(endpoint!);
+        });
+
+        Configure<OneboundOptions>(option =>
+        {
+            option.AppKey = configuration["OneBound:Key"]!;
+            option.AppSecret = configuration["OneBound:Secret"]!;
+        });
         // DeepSeek (OpenAI 兼容) 客户端创建
         context.Services.AddKeyedSingleton("deepseek", (provider, key) =>
         {
