@@ -1316,7 +1316,6 @@ export type WalleeMallCartsDtosCartItemDto = {
     isSelected?: boolean;
     productId?: string;
     productName?: string | null;
-    currency?: string | null;
     price?: number;
     stockQuantity?: number;
     productCovers?: Array<string> | null;
@@ -1391,16 +1390,16 @@ export type WalleeMallProductsDtosCreateProductDto = {
     name?: string | null;
     brand?: string | null;
     shortDescription?: string | null;
-    originalPrice?: number;
-    jdPrice?: number | null;
-    discountRate?: number;
-    productCovers?: Array<string> | null;
     sortOrder?: number;
 };
 
 export type WalleeMallProductsDtosCreateProductTagDto = {
     tagName: string;
     productId: string;
+};
+
+export type WalleeMallProductsDtosFetchSkuWithOneBoundDto = {
+    jdSkuId?: string | null;
 };
 
 export type WalleeMallProductsDtosPopularTagDto = {
@@ -1422,10 +1421,7 @@ export type WalleeMallProductsDtosProductDto = {
     name?: string | null;
     brand?: string | null;
     shortDescription?: string | null;
-    originalPrice?: number | null;
-    jdPrice?: number | null;
-    discountRate?: number;
-    currency?: string | null;
+    skuSnapshot?: WalleeMallProductsDtosProductSkuSnapshotDto;
     isActive?: boolean;
     sortOrder?: number;
     salesCount?: number;
@@ -1445,13 +1441,21 @@ export type WalleeMallProductsDtosProductSkuDto = {
     lastModificationTime?: string | null;
     lastModifierId?: string | null;
     productId?: string;
-    skuCode?: string | null;
     originalPrice?: number;
-    jdPrice?: number | null;
-    currency?: string | null;
+    price?: number;
     stockQuantity?: number;
     attributes?: Array<WalleeMallProductsDtosProductSkuAttributeDto> | null;
-    discountRate?: number;
+    attributesSignature?: string | null;
+    jdSkuId?: string | null;
+    jdPrice?: number | null;
+    discountText?: string | null;
+};
+
+export type WalleeMallProductsDtosProductSkuSnapshotDto = {
+    jdSkuId?: string | null;
+    jdPrice?: number | null;
+    originalPrice?: number;
+    price?: number;
 };
 
 export type WalleeMallProductsDtosRemoveProductTagDto = {
@@ -1464,25 +1468,24 @@ export type WalleeMallProductsDtosSetProductTagDto = {
     tags: Array<string>;
 };
 
+export type WalleeMallProductsDtosUpdateProductCoversDto = {
+    productCovers?: Array<string> | null;
+};
+
 export type WalleeMallProductsDtosUpdateProductDto = {
     name?: string | null;
     brand?: string | null;
     shortDescription?: string | null;
-    originalPrice?: number;
-    jdPrice?: number | null;
     isActive?: boolean;
-    discountRate?: number;
     sortOrder?: number;
-    productCovers?: Array<string> | null;
 };
 
 export type WalleeMallProductsDtosUpdateProductSkuDto = {
     id?: string | null;
-    skuCode?: string | null;
+    jdSkuId?: string | null;
     originalPrice?: number;
-    discountRate?: number;
+    price?: number;
     jdPrice?: number | null;
-    currency?: string | null;
     stockQuantity?: number;
     attributes?: Array<WalleeMallProductsDtosProductSkuAttributeDto> | null;
 };
@@ -2624,10 +2627,8 @@ export type CartAddItemResponses = {
     /**
      * OK
      */
-    200: WalleeMallCartsDtosCartDto;
+    200: unknown;
 };
-
-export type CartAddItemResponse = CartAddItemResponses[keyof CartAddItemResponses];
 
 export type CartClearData = {
     body?: never;
@@ -4379,7 +4380,7 @@ export type ProductGetSkusResponses = {
 
 export type ProductGetSkusResponse = ProductGetSkusResponses[keyof ProductGetSkusResponses];
 
-export type ProductUpsertSkusData = {
+export type ProductUpdateSkusData = {
     body?: WalleeMallProductsDtosUpsertProductSkusDto;
     path: {
         id: string;
@@ -4388,7 +4389,7 @@ export type ProductUpsertSkusData = {
     url: '/api/mall/products/{id}/skus';
 };
 
-export type ProductUpsertSkusErrors = {
+export type ProductUpdateSkusErrors = {
     /**
      * Bad Request
      */
@@ -4415,16 +4416,108 @@ export type ProductUpsertSkusErrors = {
     501: VoloAbpHttpRemoteServiceErrorResponse;
 };
 
-export type ProductUpsertSkusError = ProductUpsertSkusErrors[keyof ProductUpsertSkusErrors];
+export type ProductUpdateSkusError = ProductUpdateSkusErrors[keyof ProductUpdateSkusErrors];
 
-export type ProductUpsertSkusResponses = {
+export type ProductUpdateSkusResponses = {
     /**
      * OK
      */
     200: WalleeMallProductsDtosProductDto;
 };
 
-export type ProductUpsertSkusResponse = ProductUpsertSkusResponses[keyof ProductUpsertSkusResponses];
+export type ProductUpdateSkusResponse = ProductUpdateSkusResponses[keyof ProductUpdateSkusResponses];
+
+export type ProductFetchSkusWithOneBoundData = {
+    body?: WalleeMallProductsDtosFetchSkuWithOneBoundDto;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/mall/products/{id}/fetch-skus-with-one-bound';
+};
+
+export type ProductFetchSkusWithOneBoundErrors = {
+    /**
+     * Bad Request
+     */
+    400: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Unauthorized
+     */
+    401: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Forbidden
+     */
+    403: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Not Found
+     */
+    404: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Internal Server Error
+     */
+    500: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Not Implemented
+     */
+    501: VoloAbpHttpRemoteServiceErrorResponse;
+};
+
+export type ProductFetchSkusWithOneBoundError = ProductFetchSkusWithOneBoundErrors[keyof ProductFetchSkusWithOneBoundErrors];
+
+export type ProductFetchSkusWithOneBoundResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type ProductUpdateProductCoversData = {
+    body?: WalleeMallProductsDtosUpdateProductCoversDto;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/mall/products/{id}/covers';
+};
+
+export type ProductUpdateProductCoversErrors = {
+    /**
+     * Bad Request
+     */
+    400: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Unauthorized
+     */
+    401: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Forbidden
+     */
+    403: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Not Found
+     */
+    404: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Internal Server Error
+     */
+    500: VoloAbpHttpRemoteServiceErrorResponse;
+    /**
+     * Not Implemented
+     */
+    501: VoloAbpHttpRemoteServiceErrorResponse;
+};
+
+export type ProductUpdateProductCoversError = ProductUpdateProductCoversErrors[keyof ProductUpdateProductCoversErrors];
+
+export type ProductUpdateProductCoversResponses = {
+    /**
+     * OK
+     */
+    200: WalleeMallProductsDtosProductDto;
+};
+
+export type ProductUpdateProductCoversResponse = ProductUpdateProductCoversResponses[keyof ProductUpdateProductCoversResponses];
 
 export type ProductTagAddTagToProductData = {
     body?: WalleeMallProductsDtosCreateProductTagDto;

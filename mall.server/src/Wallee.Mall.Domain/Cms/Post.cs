@@ -37,13 +37,6 @@ namespace Wallee.Mall.Cms
                 return;
             }
 
-            if (productId.HasValue ^ category.HasValue)
-            {
-                throw new BusinessException("Mall:PostProductInfoInvalid")
-                    .WithData("ProductId", productId)
-                    .WithData("Category", category);
-            }
-
             ProductInfo = null;
         }
     }

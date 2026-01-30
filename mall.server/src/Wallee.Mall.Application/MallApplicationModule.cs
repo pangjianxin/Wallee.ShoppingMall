@@ -31,15 +31,19 @@ namespace Wallee.Mall;
     )]
 public class MallApplicationModule : AbpModule
 {
-    public override void ConfigureServices(ServiceConfigurationContext context)
+    public override void PreConfigureServices(ServiceConfigurationContext context)
     {
         var configuration = context.Services.GetConfiguration();
 
-        context.Services.AddHttpClient("one-bound", (provider, httpClient) =>
+        context.Services.AddHttpClient("oneBound", httpClient =>
         {
-
             var endpoint = configuration["OneBound:Endpoint"];
             httpClient.BaseAddress = new Uri(endpoint!);
+        });
+
+        context.Services.AddHttpClient("jd-image", (provider, httpClient) =>
+        {
+
         });
 
         Configure<OneboundOptions>(option =>
@@ -47,6 +51,10 @@ public class MallApplicationModule : AbpModule
             option.AppKey = configuration["OneBound:Key"]!;
             option.AppSecret = configuration["OneBound:Secret"]!;
         });
+    }
+    public override void ConfigureServices(ServiceConfigurationContext context)
+    {
+
         // DeepSeek (OpenAI 兼容) 客户端创建
         context.Services.AddKeyedSingleton("deepseek", (provider, key) =>
         {

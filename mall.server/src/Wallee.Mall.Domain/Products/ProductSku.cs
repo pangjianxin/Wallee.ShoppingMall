@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Volo.Abp.Domain.Entities.Auditing;
 using Wallee.Mall.Utils;
 
@@ -8,21 +9,51 @@ namespace Wallee.Mall.Products
     public class ProductSku : FullAuditedEntity<Guid>
     {
         public Guid ProductId { get; private set; }
-        public string SkuCode { get; private set; } = default!;
+        /// <summary>
+        /// 系统设定原价
+        /// </summary>
         public decimal OriginalPrice { get; private set; }
         /// <summary>
-        /// SKU 折扣率：1 = 不打折，0.7 = 7 折。
+        /// 系统设定现价
         /// </summary>
-        public decimal DiscountRate { get; private set; } = 1m;
-
+        public decimal Price { get; private set; }
+        /// <summary>
+        /// 系统设定库存
+        /// </summary>
+        public int StockQuantity { get; private set; }
+        public ICollection<ProductSkuAttribute> Attributes { get; private set; } = [];
+        public string AttributesSignature { get; private set; } = string.Empty;
+        /// <summary>
+        /// 京东SKUID
+        /// </summary>
+        public string JdSkuId { get; private set; } = string.Empty;
         /// <summary>
         /// 京东参考价（仅用于展示/比价，不参与系统销售价计算）。
         /// </summary>
         public decimal? JdPrice { get; private set; }
+        /// <summary>
+        /// 获取折扣显示文本（如"8.5折"）
+        /// </summary>
+        public string DiscountText
+        {
+            get
+            {
+                if (OriginalPrice <= 0)
+                {
+                    return "无折扣";
+                }
 
-        public string Currency { get; private set; } = "CNY";
-        public int StockQuantity { get; private set; }
-        public ICollection<ProductSkuAttribute> Attributes { get; private set; } = [];
+                var discountRate = Price / OriginalPrice;
+
+                if (discountRate >= 1m)
+                {
+                    return "无折扣";
+                }
+
+                var discount = discountRate * 10;
+                return $"{discount:0.#}折";
+            }
+        }
 
         private ProductSku()
         {
@@ -31,33 +62,36 @@ namespace Wallee.Mall.Products
         public ProductSku(
             Guid id,
             Guid productId,
-            string skuCode,
+            string jdSkuId,
             decimal originalPrice,
-            decimal discountRate,
+            decimal price,
             decimal? jdPrice,
-            string currency,
-            int StockQuantity,
+            int stockQuantity,
             IEnumerable<ProductSkuAttribute> attributes)
         {
             Id = id;
             ProductId = productId;
-            SetSkuCode(skuCode);
+            SetJdSkuId(jdSkuId);
             SetOriginalPrice(originalPrice);
-            SetDiscountRate(discountRate);
+            SetPrice(price);
             SetJdPrice(jdPrice);
-            SetCurrency(currency);
-            SetStock(StockQuantity);
+            SetStock(stockQuantity);
             SetAttributes([.. attributes]);
         }
 
-        public void SetSkuCode(string skuCode)
+        public void SetJdSkuId(string jdSkuId)
         {
-            if (string.IsNullOrWhiteSpace(skuCode))
+            if (string.IsNullOrWhiteSpace(jdSkuId))
             {
-                throw new ArgumentException("Sku code cannot be empty", nameof(skuCode));
+                throw new ArgumentException("Sku code cannot be empty", nameof(jdSkuId));
             }
 
-            SkuCode = skuCode.Trim();
+            JdSkuId = jdSkuId.Trim();
+        }
+
+        public void SetPrice(decimal price)
+        {
+            Price = price.ValidatePrice().RoundMoney();
         }
 
         public void SetOriginalPrice(decimal price)
@@ -65,34 +99,9 @@ namespace Wallee.Mall.Products
             OriginalPrice = price.ValidatePrice().RoundMoney();
         }
 
-        public void SetDiscountRate(decimal discountRate)
-        {
-            if (discountRate <= 0)
-            {
-                throw new ArgumentException("Discount rate must be greater than 0", nameof(discountRate));
-            }
-
-            if (discountRate > 1)
-            {
-                throw new ArgumentException("Discount rate cannot be greater than 1", nameof(discountRate));
-            }
-
-            DiscountRate = discountRate;
-        }
-
-        public void ResetDiscount()
-        {
-            DiscountRate = 1m;
-        }
-
         public void SetJdPrice(decimal? price)
         {
             JdPrice = price.HasValue ? price.Value.ValidatePrice().RoundMoney() : null;
-        }
-
-        public void SetCurrency(string currency)
-        {
-            Currency = string.IsNullOrWhiteSpace(currency) ? "CNY" : currency.Trim().ToUpperInvariant();
         }
 
         public void SetStock(int quantity)
@@ -119,11 +128,22 @@ namespace Wallee.Mall.Products
         public void SetAttributes(List<ProductSkuAttribute>? attributes)
         {
             Attributes = attributes ?? [];
+            AttributesSignature = NormalizeAttributesSignature(Attributes);
         }
 
-        public decimal GetSellingPrice()
+        public static string NormalizeAttributesSignature(IEnumerable<ProductSkuAttribute> attributes)
         {
-            return (OriginalPrice * DiscountRate).RoundMoney();
+            if (attributes == null)
+            {
+                return string.Empty;
+            }
+
+            return string.Join(string.Empty, attributes
+                .Where(a => !string.IsNullOrWhiteSpace(a.Key))
+                .Select(a => new { Key = a.Key.Trim(), Value = a.Value?.Trim() ?? string.Empty })
+                .OrderBy(a => a.Key, StringComparer.OrdinalIgnoreCase)
+                .ThenBy(a => a.Value, StringComparer.OrdinalIgnoreCase)
+                .Select(a => $"{a.Key}:{a.Value};"));
         }
     }
 }

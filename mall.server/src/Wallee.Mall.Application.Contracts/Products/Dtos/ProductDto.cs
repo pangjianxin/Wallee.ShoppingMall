@@ -9,14 +9,7 @@ namespace Wallee.Mall.Products.Dtos
         public string Name { get; set; } = default!;
         public string? Brand { get; set; }
         public string? ShortDescription { get; set; }
-        // 商品默认价格（可被 SKU 覆盖）
-        public decimal? OriginalPrice { get; set; }
-        public decimal? JdPrice { get; set; }
-        /// <summary>
-        /// 折扣率：1 = 不打折，0.7 = 7 折。
-        /// </summary>
-        public decimal DiscountRate { get; set; } = 1m;
-        public string? Currency { get; set; } = "CNY";
+        public ProductSkuSnapshotDto? SkuSnapshot { get; set; }
         // 状态字段（便于筛选上架/下架商品）
         public bool IsActive { get; set; } = true;
         // 排序权重（用于首页推荐、热销榜等）

@@ -16,8 +16,6 @@ public class CartItemDto : AuditedEntityDto<Guid>
 
     public string ProductName { get; set; } = string.Empty;
 
-    public string Currency { get; set; } = string.Empty;
-
     public decimal Price { get; set; }
 
     public int StockQuantity { get; set; }

@@ -27,6 +27,26 @@ public class EfCoreProductRepository(IDbContextProvider<MallDbContext> dbContext
             predicate = predicate?.And(p => p.Name.Contains(trimmed) || (p.Brand != null && p.Brand.Contains(trimmed)));
         }
 
+        if (attributeKey.IsNullOrWhiteSpace() == false)
+        {
+            var key = attributeKey.Trim();
+            var value = attributeValue?.Trim();
+
+            if (value.IsNullOrWhiteSpace() == false)
+            {
+                var signature = ProductSku.NormalizeAttributesSignature([
+                    new ProductSkuAttribute(key, value)
+                ]);
+
+                predicate = predicate?.And(p => p.Skus != null && p.Skus.Any(s => s.AttributesSignature.Contains(signature)));
+            }
+            else
+            {
+                var token = $"{key}:";
+                predicate = predicate?.And(p => p.Skus != null && p.Skus.Any(s => s.AttributesSignature.Contains(token)));
+            }
+        }
+
         return await GetListAsync(predicate!, includeDetails: true, cancellationToken: cancellationToken);
     }
 

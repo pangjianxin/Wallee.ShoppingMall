@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
-using Wallee.Mall.Products.Pricing;
-using Wallee.Mall.Utils;
+using Wallee.Mall.Products.Strategy;
 
 namespace Wallee.Mall.Products
 {
@@ -20,20 +19,7 @@ namespace Wallee.Mall.Products
         // 销量统计（冗余字段，便于排序，定期从订单同步）
         public int SalesCount { get; private set; } = 0;
 
-        // 商品默认价格（可被 SKU 覆盖）
-        public decimal OriginalPrice { get; private set; }
-
-        /// <summary>
-        /// 商品折扣率：1 = 不打折，0.7 = 7 折。
-        /// </summary>
-        public decimal DiscountRate { get; private set; } = 1m;
-
-        /// <summary>
-        /// 京东参考价（仅用于展示/比价，不参与系统销售价计算）。
-        /// </summary>
-        public decimal? JdPrice { get; private set; }
-
-        public string Currency { get; private set; } = "CNY";
+        public ProductSkuSnapshot? SkuSnapshot { get; set; }
 
         // 一对多 SKU
         public ICollection<ProductSku>? Skus { get; private set; }
@@ -47,44 +33,28 @@ namespace Wallee.Mall.Products
         public Product(
             Guid id,
             string name,
-            decimal originalPrice,
-            decimal discountRate,
             int sortOrder,
-            List<Guid> covers,
-            decimal? jdPrice,
             string? brand = null,
             string? shortDescription = null) : base(id)
         {
             SetName(name);
+            SetSortOrder(sortOrder);
             SetBrand(brand);
             SetShortDescription(shortDescription);
-            SetOriginalPrice(originalPrice);
-            SetJdPrice(jdPrice);
-            SetDiscountRate(discountRate);
-            SetSortOrder(sortOrder);
-            ProductCovers = covers.ConvertAll(it => new ProductCover { MallMediaId = it });
         }
 
         public void Update(
             string name,
-            decimal originalPrice,
-            decimal discountRate,
             int sortOrder,
             bool isActive,
-            List<Guid> productCovers,
-            decimal? jdPrice,
             string? brand = null,
             string? shortDescription = null)
         {
             SetName(name);
             SetBrand(brand);
             SetShortDescription(shortDescription);
-            SetOriginalPrice(originalPrice);
-            SetDiscountRate(discountRate);
             SetSortOrder(sortOrder);
-            SetJdPrice(jdPrice);
             SetActive(isActive);
-            SetProductCovers(productCovers);
         }
 
         public void SetName(string name)
@@ -102,25 +72,7 @@ namespace Wallee.Mall.Products
             ShortDescription = string.IsNullOrWhiteSpace(shortDescription) ? null : shortDescription.Trim();
         }
 
-        public void SetOriginalPrice(decimal price)
-        {
-            OriginalPrice = Check.Range(price, nameof(price), 0, decimal.MaxValue);
-        }
 
-        public void SetDiscountRate(decimal discountRate)
-        {
-            DiscountRate = Check.Range(discountRate, nameof(discountRate), 0.0001m, 1m);
-        }
-
-        public void SetJdPrice(decimal? price)
-        {
-            JdPrice = price;
-        }
-
-        public void SetCurrency(string currency)
-        {
-            Currency = string.IsNullOrWhiteSpace(currency) ? "CNY" : currency.Trim().ToUpperInvariant();
-        }
 
         public void SetActive(bool isActive)
         {
@@ -134,7 +86,7 @@ namespace Wallee.Mall.Products
 
         public void SetProductCovers(List<Guid> productCovers)
         {
-            ProductCovers = [.. productCovers.Select(it => new ProductCover { MallMediaId = it })];
+            ProductCovers = productCovers.ConvertAll(it => new ProductCover { MallMediaId = it });
         }
 
         public void IncrementSalesCount(int count = 1)
@@ -146,9 +98,9 @@ namespace Wallee.Mall.Products
             SalesCount += count;
         }
 
-        public decimal GetSellingPrice()
+        public void SetSkuSnapshot(ProductSkuSnapshot? snapshot)
         {
-            return (OriginalPrice * DiscountRate).RoundMoney();
+            SkuSnapshot = snapshot;
         }
 
         public void UpsertSkus(List<ProductSkuInput> inputs)
@@ -157,7 +109,7 @@ namespace Wallee.Mall.Products
             inputs ??= [];
 
             // 校验：SkuCode 不能为空
-            if (inputs.Any(x => string.IsNullOrWhiteSpace(x?.SkuCode)))
+            if (inputs.Any(x => string.IsNullOrWhiteSpace(x?.JdSkuId)))
             {
                 throw new ArgumentException("Sku code cannot be empty", nameof(inputs));
             }
@@ -170,7 +122,7 @@ namespace Wallee.Mall.Products
 
             // 校验：本次提交内 SkuCode 不重复（忽略大小写）
             var duplicatedCode = inputs
-                .Select(x => x.SkuCode.Trim())
+                .Select(x => x.JdSkuId.Trim())
                 .GroupBy(x => x, StringComparer.OrdinalIgnoreCase)
                 .Where(g => g.Count() > 1)
                 .Select(g => g.Key)
@@ -200,12 +152,9 @@ namespace Wallee.Mall.Products
             {
                 var existing = Skus.First(x => x.Id == id);
                 var input = inputById[id];
-
-                existing.SetSkuCode(input.SkuCode);
+                existing.SetJdSkuId(input.JdSkuId);
                 existing.SetOriginalPrice(input.OriginalPrice);
-                existing.SetDiscountRate(input.DiscountRate);
                 existing.SetJdPrice(input.JdPrice);
-                existing.SetCurrency(input.Currency ?? "CNY");
                 existing.SetStock(input.StockQuantity);
                 existing.SetAttributes(input.Attributes);
             }
@@ -217,26 +166,15 @@ namespace Wallee.Mall.Products
                 var sku = new ProductSku(
                     input.Id,
                     Id,
-                    input.SkuCode,
+                    input.JdSkuId,
                     input.OriginalPrice,
-                    input.DiscountRate,
+                    input.Price,
                     input.JdPrice,
-                    string.IsNullOrWhiteSpace(input.Currency) ? Currency : input.Currency,
                     input.StockQuantity,
                     input.Attributes);
 
                 Skus.Add(sku);
             }
-        }
-
-        public void ApplyPriceSnapshot(ProductPriceSnapshot snapshot)
-        {
-            ArgumentNullException.ThrowIfNull(snapshot);
-
-            SetOriginalPrice(snapshot.OriginalPrice);
-            SetDiscountRate(snapshot.DiscountRate);
-            SetJdPrice(snapshot.JdPrice);
-            SetCurrency(snapshot.Currency);
         }
     }
 }

@@ -8,15 +8,16 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Volo.Abp.DependencyInjection;
+using Volo.Abp.Json;
 using Wallee.Mall.OneBound.Dtos;
 
 namespace Wallee.Mall.OneBound;
 
 public sealed class OneboundClient(
-    [FromKeyedServices("one-bound")] HttpClient oneBoundClient,
+    IHttpClientFactory httpClientFactory,
+    IJsonSerializer jsonSerializer,
     IOptions<OneboundOptions> options) : ITransientDependency
 {
-    private readonly HttpClient _http = oneBoundClient;
     private readonly OneboundOptions _options = options.Value;
 
     private static readonly JsonSerializerOptions _jsonOptions = new(JsonSerializerDefaults.Web)
@@ -29,6 +30,7 @@ public sealed class OneboundClient(
         string numIid,
         CancellationToken cancellationToken = default)
     {
+        var oneBoundClient = httpClientFactory.CreateClient("oneBound");
         if (string.IsNullOrWhiteSpace(numIid))
         {
             throw new ArgumentException("numIid cannot be empty.", nameof(numIid));
@@ -43,11 +45,13 @@ public sealed class OneboundClient(
 
         var relativeUrl = QueryHelpers.AddQueryString("/jd/item_get_pro", parameters);
 
-        using var resp = await _http.GetAsync(relativeUrl, cancellationToken);
+        using var resp = await oneBoundClient.GetAsync(relativeUrl, cancellationToken);
+
         resp.EnsureSuccessStatusCode();
 
-        await using var stream = await resp.Content.ReadAsStreamAsync(cancellationToken);
-        var result = await JsonSerializer.DeserializeAsync<JdItemGetProResponse>(stream, _jsonOptions, cancellationToken);
+        var stream = await resp.Content.ReadAsStringAsync(cancellationToken);
+
+        var result = jsonSerializer.Deserialize<JdItemGetProResponse>(stream);
 
         return result ?? new JdItemGetProResponse();
     }

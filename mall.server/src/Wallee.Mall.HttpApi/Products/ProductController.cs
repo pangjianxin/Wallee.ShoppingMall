@@ -54,9 +54,23 @@ namespace Wallee.Mall.Products
 
         [HttpPut]
         [Route("{id}/skus")]
-        public async Task<ProductDto> UpsertSkusAsync(Guid id, UpsertProductSkusDto input)
+        public async Task<ProductDto> UpdateSkusAsync(Guid id, UpsertProductSkusDto input)
         {
-            return await service.UpsertSkusAsync(id, input);
+            return await service.UpdateSkusAsync(id, input);
+        }
+
+        [HttpPut]
+        [Route("{id}/fetch-skus-with-one-bound")]
+        public async Task FetchSkusWithOneBoundAsync(Guid id, FetchSkuWithOneBoundDto input)
+        {
+            await service.FetchSkusWithOneBoundAsync(id, input);
+        }
+
+        [HttpPut]
+        [Route("{id}/covers")]
+        public async Task<ProductDto> UpdateProductCovers(Guid id, UpdateProductCoversDto input)
+        {
+            return await service.UpdateProductCovers(id, input);
         }
     }
 }

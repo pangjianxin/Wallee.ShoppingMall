@@ -7,15 +7,16 @@ using Volo.Abp;
 using Volo.Abp.Application.Services;
 using Volo.Abp.BackgroundJobs;
 using Wallee.Mall.Medias.BackgroundJobs;
+using Wallee.Mall.Products.BackgroundJobs;
 using Wallee.Mall.Products.Dtos;
-using Wallee.Mall.Products.Pricing;
+using Wallee.Mall.Products.Strategy;
 
 namespace Wallee.Mall.Products
 {
     public class ProductAppService(
         IProductRepository repository,
         IBackgroundJobManager backgroundJobManager,
-        IProductPriceSyncStrategy productPriceSyncStrategy)
+        IProductSkuSnapshotSyncStrategy productSkuSnapshotSyncStrategy)
         : CrudAppService<Product, ProductDto, Guid, ProductGetListInput, CreateProductDto, UpdateProductDto>(repository), IProductAppService
     {
         public override async Task<ProductDto> CreateAsync(CreateProductDto input)
@@ -25,34 +26,31 @@ namespace Wallee.Mall.Products
                 throw new UserFriendlyException("该产品已存在");
             }
 
-            var entity = new Product(GuidGenerator.Create(), input.Name, input.OriginalPrice,
-                input.DiscountRate, input.SortOrder, input.ProductCovers, input.JdPrice, input.Brand, input.ShortDescription);
+            var entity = new Product(GuidGenerator.Create(), input.Name, input.SortOrder, input.Brand, input.ShortDescription);
+
             await Repository.InsertAsync(entity);
+
             return await MapToGetOutputDtoAsync(entity);
         }
 
-        public override async Task<ProductDto> UpdateAsync(Guid id, UpdateProductDto input)
+        public async Task FetchSkusWithOneBoundAsync(Guid id, FetchSkuWithOneBoundDto input)
         {
-            Product entity = await Repository.GetAsync(id);
+            await backgroundJobManager.EnqueueAsync(new OneBoundProductFetchingJobArgs
+            {
+                ProductId = id,
+                NumIid = input.JdSkuId
+            });
+        }
 
-            entity.Update(
-                input.Name,
-                input.OriginalPrice,
-                input.DiscountRate,
-                input.SortOrder,
-                input.IsActive,
-                input.ProductCovers,
-                input.JdPrice,
-                input.Brand,
-                input.ShortDescription);
+        public async Task<ProductDto> UpdateProductCovers(Guid id, UpdateProductCoversDto input)
+        {
+            Product entity = await repository.GetAsync(id);
 
             var deletedCover = entity.ProductCovers.Select(it => it.MallMediaId).Except(input.ProductCovers);
 
+            entity.SetProductCovers(input.ProductCovers);
+
             await CheckDeletedCoversAsync(deletedCover);
-
-            await Repository.UpdateAsync(entity);
-
-            return await MapToGetOutputDtoAsync(entity);
 
             async Task CheckDeletedCoversAsync(IEnumerable<Guid> deletedCover)
             {
@@ -65,21 +63,40 @@ namespace Wallee.Mall.Products
                      delay: TimeSpan.FromSeconds(5));
                 }
             }
+
+            await repository.UpdateAsync(entity);
+
+            return await MapToGetOutputDtoAsync(entity);
+        }
+
+        public override async Task<ProductDto> UpdateAsync(Guid id, UpdateProductDto input)
+        {
+            Product entity = await Repository.GetAsync(id);
+
+            entity.Update(
+                input.Name,
+                input.SortOrder,
+                input.IsActive,
+                input.Brand,
+                input.ShortDescription);
+
+            await Repository.UpdateAsync(entity);
+            return await MapToGetOutputDtoAsync(entity);
         }
 
         public async Task<List<ProductSkuDto>> GetSkusAsync(Guid id)
         {
             var product = await Repository.GetAsync(id);
-            var skus = product.Skus?.OrderBy(s => s.SkuCode).ToList() ?? [];
+            var skus = product.Skus?.OrderBy(s => s.JdSkuId).ToList() ?? [];
             return [.. skus.Select(ObjectMapper.Map<ProductSku, ProductSkuDto>)];
         }
 
-        public async Task<ProductDto> UpsertSkusAsync(Guid id, UpsertProductSkusDto input)
+        public async Task<ProductDto> UpdateSkusAsync(Guid id, UpsertProductSkusDto input)
         {
             var product = await Repository.GetAsync(id);
 
             var codes = (input.Items ?? [])
-                .Select(x => x.SkuCode)
+                .Select(x => x.JdSkuId)
                 .Where(x => !string.IsNullOrWhiteSpace(x))
                 .Select(x => x.Trim())
                 .ToList();
@@ -108,11 +125,10 @@ namespace Wallee.Mall.Products
                 return new ProductSkuInput
                 {
                     Id = skuId,
-                    SkuCode = item.SkuCode,
+                    JdSkuId = item.JdSkuId,
                     OriginalPrice = item.OriginalPrice,
-                    DiscountRate = item.DiscountRate,
+                    Price = item.Price,
                     JdPrice = item.JdPrice,
-                    Currency = item.Currency,
                     StockQuantity = item.StockQuantity,
                     Attributes = attributes
                 };
@@ -120,8 +136,9 @@ namespace Wallee.Mall.Products
 
             product.UpsertSkus(skuInputs);
 
-            var snapshot = await productPriceSyncStrategy.CalculateAsync(product);
-            product.ApplyPriceSnapshot(snapshot);
+            var snapshot = await productSkuSnapshotSyncStrategy.CalculateAsync(product);
+
+            product.SetSkuSnapshot(snapshot);
 
             await Repository.UpdateAsync(product, autoSave: true);
 

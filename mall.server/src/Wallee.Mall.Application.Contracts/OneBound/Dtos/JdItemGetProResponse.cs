@@ -174,19 +174,19 @@ public sealed class JdItemGetProItem
     public List<object>? Props { get; set; }
 
     [JsonPropertyName("total_sold")]
-    public string? TotalSold { get; set; }
+    public int? TotalSold { get; set; }
 
     [JsonPropertyName("skus")]
     public JdSkusContainer? Skus { get; set; }
 
     [JsonPropertyName("seller_id")]
-    public string? SellerId { get; set; }
+    public int? SellerId { get; set; }
 
     [JsonPropertyName("sales")]
-    public string? Sales { get; set; }
+    public int? Sales { get; set; }
 
     [JsonPropertyName("shop_id")]
-    public string? ShopId { get; set; }
+    public int? ShopId { get; set; }
 
     [JsonPropertyName("props_list")]
     public Dictionary<string, string>? PropsList { get; set; }
@@ -195,16 +195,16 @@ public sealed class JdItemGetProItem
     public JdSellerInfo? SellerInfo { get; set; }
 
     [JsonPropertyName("props_img")]
-    public Dictionary<string, string>? PropsImg { get; set; }
+    public JdPropImagesContainer? PropsImg { get; set; }
 
-    [JsonPropertyName("_ddf")]
-    public string? Ddf { get; set; }
+    [JsonPropertyName("error")]
+    public string? Error { get; set; }
 
-    [JsonPropertyName("shop_item")]
-    public List<object>? ShopItem { get; set; }
+    [JsonPropertyName("warning")]
+    public string? Warning { get; set; }
 
-    [JsonPropertyName("relate_items")]
-    public List<object>? RelateItems { get; set; }
+    [JsonPropertyName("url_log")]
+    public List<object>? UrlLog { get; set; }
 }
 
 public sealed class JdItemImagesContainer
@@ -266,15 +266,42 @@ public sealed class JdSku
 
 public sealed class JdSellerInfo
 {
-    [JsonPropertyName("shop_id")]
-    public long? ShopId { get; set; }
+    [JsonPropertyName("level")]
+    public string? Level { get; set; }
+
+    [JsonPropertyName("shop_type")]
+    public string? ShopType { get; set; }
+
+    [JsonPropertyName("user_num_id")]
+    public string? UserNumId { get; set; }
+
+    [JsonPropertyName("cid")]
+    public string? Cid { get; set; }
+
+    [JsonPropertyName("delivery_score")]
+    public string? DeliveryScore { get; set; }
+
+    [JsonPropertyName("item_score")]
+    public string? ItemScore { get; set; }
+
+    [JsonPropertyName("score")]
+    public string? Score { get; set; }
 
     [JsonPropertyName("zhuy")]
     public string? Zhuy { get; set; }
+
+    [JsonPropertyName("mall")]
+    public string? Mall { get; set; }
+
+    [JsonPropertyName("search_id")]
+    public string? SearchId { get; set; }
 
     [JsonPropertyName("nick")]
     public string? Nick { get; set; }
 
     [JsonPropertyName("shop_name")]
     public string? ShopName { get; set; }
+
+    [JsonPropertyName("title")]
+    public string? Title { get; set; }
 }

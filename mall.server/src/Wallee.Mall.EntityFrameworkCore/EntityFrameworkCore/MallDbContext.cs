@@ -99,45 +99,52 @@ public class MallDbContext(DbContextOptions<MallDbContext> options) :
             b.Property(p => p.Name).IsRequired().HasMaxLength(256);
             b.Property(p => p.Brand).HasMaxLength(128);
             b.Property(p => p.ShortDescription).HasMaxLength(1024);
-            b.Property(p => p.OriginalPrice).HasColumnType("decimal(18,2)");
-            b.Property(p => p.DiscountRate).HasColumnType("decimal(18,4)").HasDefaultValue(1m);
-            b.Property(p => p.JdPrice).HasColumnType("decimal(18,2)");
-            b.Property(p => p.Currency).IsRequired().HasMaxLength(8);
             b.Property(p => p.IsActive).HasDefaultValue(true);
             b.Property(p => p.SortOrder).HasDefaultValue(0);
             b.Property(p => p.SalesCount).HasDefaultValue(0);
 
             b.HasMany(p => p.Skus).WithOne().HasForeignKey(s => s.ProductId);
+            b.HasIndex(p => p.Name);
+            b.HasIndex(p => p.Brand);
+            b.HasIndex(p => p.IsActive);
+            b.HasIndex(p => new { p.IsActive, p.SortOrder, p.SalesCount });
+            b.HasIndex(p => p.CreationTime);
 
             b.OwnsMany(p => p.ProductCovers, pc =>
             {
                 pc.ToJson();
             });
 
-            b.HasIndex(p => p.Name);
-            b.HasIndex(p => p.Brand);
-            b.HasIndex(p => p.IsActive);
-            b.HasIndex(p => new { p.IsActive, p.SortOrder, p.SalesCount });
-            b.HasIndex(p => p.CreationTime);
+            b.OwnsOne(it => it.SkuSnapshot, config =>
+            {
+                config.ToJson();
+                config.Property(p => p.OriginalPrice).HasColumnType("decimal(18,2)");
+                config.Property(p => p.Price).HasColumnType("decimal(18,4)");
+                config.Property(p => p.JdPrice).HasColumnType("decimal(18,2)");
+            });
+
+
         });
 
         builder.Entity<ProductSku>(b =>
         {
             b.ToTable(MallConsts.DbTablePrefix + "ProductSkus", MallConsts.DbSchema);
             b.ConfigureByConvention();
-            b.Property(s => s.SkuCode).IsRequired().HasMaxLength(64);
+            b.Property(s => s.JdSkuId).IsRequired().HasMaxLength(64);
             b.Property(s => s.OriginalPrice).HasColumnType("decimal(18,2)");
-            b.Property(s => s.DiscountRate).HasColumnType("decimal(18,4)").HasDefaultValue(1m);
+            b.Property(s => s.Price).HasColumnType("decimal(18,4)").HasDefaultValue(1m);
             b.Property(s => s.JdPrice).HasColumnType("decimal(18,2)");
-            b.Property(s => s.Currency).IsRequired().HasMaxLength(8);
-            b.HasIndex(s => new { s.ProductId, s.SkuCode }).IsUnique();
+            b.Property(s => s.AttributesSignature).IsRequired().HasMaxLength(2048);
+            b.HasIndex(s => new { s.ProductId, s.JdSkuId }).IsUnique();
+            b.HasIndex(s => new { s.ProductId, s.AttributesSignature }).IsUnique();
             b.OwnsMany(s => s.Attributes, a =>
             {
                 a.ToJson();
                 a.Property(x => x.Key).HasMaxLength(128);
                 a.Property(x => x.Value).HasMaxLength(1024);
             });
-            //b.HasIndex(s => s.Attributes).HasMethod("gin");
+
+            b.Ignore(it => it.DiscountText);
         });
 
         builder.Entity<Tag>(b =>

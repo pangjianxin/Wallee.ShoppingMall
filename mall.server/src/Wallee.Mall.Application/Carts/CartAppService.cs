@@ -126,17 +126,15 @@ public class CartAppService(
 
         var products = await productRepository.GetQueryableWithNoTrackingAsync();
 
-        var skuInfosQuery = products
-            .SelectMany(p => p.Skus.Select(s => new
+        var skuInfosQuery = products.SelectMany(p => p.Skus!.Select(s => new
             {
                 ProductId = p.Id,
                 ProductName = p.Name,
                 ProductCoverIds = p.ProductCovers.Select(c => c.MallMediaId).ToList(),
                 SkuId = s.Id,
                 SkuOriginalPrice = s.OriginalPrice,
-                SkuDiscountRate = s.DiscountRate,
+                SkuDiscountRate = s.Price,
                 SkuJdPrice = s.JdPrice,
-                SkuCurrency = s.Currency,
                 SkuStockQuantity = s.StockQuantity,
             }))
             .Where(x => skuIds.Contains(x.SkuId));
@@ -164,11 +162,9 @@ public class CartAppService(
                 SkuId = item.SkuId,
                 Quantity = item.Quantity,
                 IsSelected = item.IsSelected,
-
                 ProductId = sku.ProductId,
                 ProductName = sku.ProductName,
                 ProductCovers = [.. sku.ProductCoverIds],
-                Currency = sku.SkuCurrency,
                 Price = price,
                 StockQuantity = sku.SkuStockQuantity
             });
