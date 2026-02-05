@@ -9,5 +9,6 @@ namespace Wallee.Mall.Products.BackgroundJobs
     {
         public Guid ProductId { get; set; }
         public List<string> ImageUrls { get; set; } = [];
+        public int RetryCount { get; set; }
     }
 }
