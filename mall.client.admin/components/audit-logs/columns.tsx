@@ -13,7 +13,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Calendar } from "lucide-react";
 export const createColumns = (
-  onDetail: (v: WalleeMallAuditLogsDtosAuditLogDto) => void | Promise<void>
+  onDetail: (v: WalleeMallAuditLogsDtosAuditLogDto) => void | Promise<void>,
 ): ColumnDef<WalleeMallAuditLogsDtosAuditLogDto>[] => [
   {
     accessorKey: "userName",
@@ -274,12 +274,12 @@ export const createColumns = (
         <div className="flex max-w-[100px] space-x-2">
           <Badge
             variant={
-              row.getValue<string>("httpStatusCode").toString().startsWith("2")
+              row.getValue<number>("httpStatusCode")?.toString().startsWith("2")
                 ? "default"
                 : "destructive"
             }
           >
-            {row.getValue("httpStatusCode")}
+            {row.getValue("httpStatusCode") ?? "-"}
           </Badge>
         </div>
       );

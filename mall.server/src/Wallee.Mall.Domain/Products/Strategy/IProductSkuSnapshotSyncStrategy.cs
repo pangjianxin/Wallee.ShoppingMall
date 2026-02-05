@@ -1,4 +1,4 @@
-using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,7 +11,7 @@ namespace Wallee.Mall.Products.Strategy;
 public interface IProductSkuSnapshotSyncStrategy
 {
     /// <summary>
-    /// Calculates the product-level default pricing values from current product state (including SKUs).
+    /// Calculates the product-level default pricing values from current SKUs.
     /// </summary>
-    Task<ProductSkuSnapshot?> CalculateAsync(Product product, CancellationToken cancellationToken = default);
+    Task<ProductSkuSnapshot> CalculateAsync(IEnumerable<ProductSku> skus, CancellationToken cancellationToken = default);
 }

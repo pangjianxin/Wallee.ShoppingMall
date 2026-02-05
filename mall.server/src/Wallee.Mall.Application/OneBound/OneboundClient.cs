@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
@@ -16,7 +17,8 @@ namespace Wallee.Mall.OneBound;
 public sealed class OneboundClient(
     IHttpClientFactory httpClientFactory,
     IJsonSerializer jsonSerializer,
-    IOptions<OneboundOptions> options) : ITransientDependency
+    IOptions<OneboundOptions> options,
+    ILogger<OneboundClient> logger) : ITransientDependency
 {
     private readonly OneboundOptions _options = options.Value;
 
@@ -26,15 +28,11 @@ public sealed class OneboundClient(
     };
 
     // 对应 jd/item_get_pro（按 OneBound 示例：/jd/item_get_pro/?key=...&secret=...&num_iid=...）
-    public async Task<JdItemGetProResponse> JdItemGetProTypedAsync(
+    public async Task<JdItemGetProResponse?> JdItemGetProTypedAsync(
         string numIid,
         CancellationToken cancellationToken = default)
     {
         var oneBoundClient = httpClientFactory.CreateClient("oneBound");
-        if (string.IsNullOrWhiteSpace(numIid))
-        {
-            throw new ArgumentException("numIid cannot be empty.", nameof(numIid));
-        }
 
         var parameters = new Dictionary<string, string?>(StringComparer.Ordinal)
         {
@@ -49,10 +47,19 @@ public sealed class OneboundClient(
 
         resp.EnsureSuccessStatusCode();
 
-        var stream = await resp.Content.ReadAsStringAsync(cancellationToken);
+        var responseTxt = await resp.Content.ReadAsStringAsync(cancellationToken);
 
-        var result = jsonSerializer.Deserialize<JdItemGetProResponse>(stream);
+        logger.LogInformation("fetch message from one-bound:{stream}", responseTxt);
 
-        return result ?? new JdItemGetProResponse();
+        var result = jsonSerializer.Deserialize<JdItemGetProResponse>(responseTxt);
+
+        string[] successCodes = ["0000"];
+
+        if (successCodes .Any(it => it == result.ErrorCode))
+        {
+            return result;
+        }
+
+        return null;
     }
 }

@@ -66,37 +66,60 @@ export const createColumns = ({
       },
     },
     {
-      accessorKey: "originalPrice",
+      accessorKey: "defaultOriginalPrice",
       meta: { label: "原价" },
       header: ({ column }) => (
         <DataTableColumnHeader column={column} label="原价" />
       ),
       cell: ({ row }) => {
-        const price = row.getValue("originalPrice") as number | undefined;
-        const currency = row.original.currency || "¥";
+        const price = row.getValue("defaultOriginalPrice") as
+          | number
+          | undefined;
+
         return (
           <div className="flex space-x-2">
             <span className="font-medium">
-              {price !== undefined ? `${price?.toFixed(2)}(${currency})` : "-"}
+              {price !== undefined ? `￥${price?.toFixed(2)}` : "-"}
             </span>
           </div>
         );
       },
     },
     {
-      accessorKey: "jdPrice",
+      accessorKey: "defaultPrice",
+      meta: { label: "售价" },
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} label="售价" />
+      ),
+      cell: ({ row }) => {
+        const price = row.getValue("defaultPrice") as number | undefined;
+
+        return (
+          <div className="flex space-x-2">
+            <span className="font-medium">
+              {price !== undefined ? `￥${price?.toFixed(2)}` : "-"}
+            </span>
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "defaultJdPrice",
       meta: { label: "京东参考价" },
       header: ({ column }) => (
         <DataTableColumnHeader column={column} label="京东参考价" />
       ),
       cell: ({ row }) => {
-        const price = row.getValue("jdPrice") as number | undefined | null;
-        const currency = row.original.currency || "¥";
+        const price = row.getValue("defaultJdPrice") as
+          | number
+          | undefined
+          | null;
+
         return (
           <div className="flex space-x-2">
             <span className="font-medium">
               {price !== undefined && price !== null
-                ? `${price?.toFixed(2)}(${currency})`
+                ? `￥${price?.toFixed(2)}`
                 : "-"}
             </span>
           </div>
@@ -104,18 +127,17 @@ export const createColumns = ({
       },
     },
     {
-      accessorKey: "discountRate",
+      accessorKey: "discountText",
       meta: { label: "折扣" },
       header: ({ column }) => (
         <DataTableColumnHeader column={column} label="折扣(1表示不打折)" />
       ),
       cell: ({ row }) => {
-        const price = row.getValue("discountRate") as number | null | undefined;
         return (
           <div className="flex space-x-2">
             <span className="font-medium text-red-600">
-              {price !== null && price !== undefined
-                ? `${price.toFixed(2)}`
+              {row.original.discountText !== "NONE"
+                ? row.original.discountText
                 : "-"}
             </span>
           </div>

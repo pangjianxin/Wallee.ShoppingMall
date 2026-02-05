@@ -1,4 +1,4 @@
-import { ProductSkuForm } from "@/components/products/update-skus";
+import ProductUpdateCovers from "@/components/products/update-covers";
 import { client } from "@/hey-api/client";
 import { productGet } from "@/openapi";
 import { NextPage } from "next";
@@ -6,7 +6,6 @@ type Props = {
   params: Promise<{ id: string }>;
 };
 const Page: NextPage<Props> = async ({ params }) => {
-
   const { id } = await params;
 
   const { data: entity } = await productGet({
@@ -14,9 +13,9 @@ const Page: NextPage<Props> = async ({ params }) => {
     client,
     throwOnError: true,
   });
-  
-  return <ProductSkuForm entity={entity} />;
+
+  return <ProductUpdateCovers entity={entity} />;
 };
 
-Page.displayName = "ProductSkusUpdatePage";
+Page.displayName = "ProductCoversUpdatePage";
 export default Page;

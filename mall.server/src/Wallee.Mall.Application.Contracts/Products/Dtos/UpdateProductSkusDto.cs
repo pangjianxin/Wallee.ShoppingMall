@@ -20,7 +20,7 @@ namespace Wallee.Mall.Products.Dtos
         public List<ProductSkuAttributeDto> Attributes { get; set; } = [];
     }
 
-    public class UpsertProductSkusDto
+    public class UpdateProductSkusDto
     {
         public List<UpdateProductSkuDto> Items { get; set; } = [];
     }

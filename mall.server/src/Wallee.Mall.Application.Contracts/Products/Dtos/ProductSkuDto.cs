@@ -24,7 +24,7 @@ namespace Wallee.Mall.Products.Dtos
         /// <summary>
         /// 京东SKUID
         /// </summary>
-        public string JdSkuId { get; set; } = string.Empty;
+        public string? JdSkuId { get; set; } = string.Empty;
         /// <summary>
         /// 京东参考价（仅用于展示/比价，不参与系统销售价计算）。
         /// </summary>

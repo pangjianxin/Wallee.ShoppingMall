@@ -4,6 +4,7 @@ using System.Linq;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
 using Wallee.Mall.Products.Strategy;
+using Wallee.Mall.Utils;
 
 namespace Wallee.Mall.Products
 {
@@ -19,7 +20,28 @@ namespace Wallee.Mall.Products
         // 销量统计（冗余字段，便于排序，定期从订单同步）
         public int SalesCount { get; private set; } = 0;
 
-        public ProductSkuSnapshot? SkuSnapshot { get; set; }
+        #region 默认SKU信息快照
+        /// <summary>
+        /// 京东商品的SKUID
+        /// </summary>
+        public string? DefaultJdSkuId { get; set; } = default!;
+        /// <summary>
+        /// 京东参考价（仅用于展示/比价，不参与系统销售价计算）。
+        /// </summary>
+        public decimal? DefaultJdPrice { get; set; }
+        /// <summary>
+        /// 商品原价格（可被 SKU 覆盖）
+        /// </summary>
+        public decimal DefaultOriginalPrice { get; set; }
+        /// <summary>
+        /// SKU 折扣率：1 = 不打折，0.7 = 7 折。
+        /// </summary>
+        public decimal DefaultPrice { get; set; }
+        /// <summary>
+        /// 折扣信息
+        /// </summary>
+        public string DiscountText => DefaultPrice.ToDiscountText(DefaultOriginalPrice);
+        #endregion
 
         // 一对多 SKU
         public ICollection<ProductSku>? Skus { get; private set; }
@@ -98,82 +120,71 @@ namespace Wallee.Mall.Products
             SalesCount += count;
         }
 
-        public void SetSkuSnapshot(ProductSkuSnapshot? snapshot)
+        public void SetSkuSnapshot(ProductSkuSnapshot snapshot)
         {
-            SkuSnapshot = snapshot;
+            DefaultJdSkuId = snapshot.JdSkuId;
+            DefaultJdPrice = snapshot.JdPrice;
+            DefaultOriginalPrice = snapshot.OriginalPrice;
+            DefaultPrice = snapshot.Price;
         }
 
-        public void UpsertSkus(List<ProductSkuInput> inputs)
+        public void UpdateJdSkuPrice(IDictionary<string, decimal?> jdPrices)
+        {
+            if (jdPrices == null || jdPrices.Count == 0)
+            {
+                return;
+            }
+
+            Skus ??= [];
+
+            foreach (var sku in Skus)
+            {
+                if (sku.JdSkuId != default)
+                {
+                    if (jdPrices.TryGetValue(sku.JdSkuId, out var jdPrice))
+                    {
+                        sku.SetJdPrice(jdPrice);
+                    }
+                }
+            }
+        }
+
+        public void UpdateSkus(List<ProductUpdateSkuInput> inputs)
         {
             Skus ??= [];
-            inputs ??= [];
-
-            // 校验：SkuCode 不能为空
-            if (inputs.Any(x => string.IsNullOrWhiteSpace(x?.JdSkuId)))
-            {
-                throw new ArgumentException("Sku code cannot be empty", nameof(inputs));
-            }
-
-            // 校验：Id 不能为空
-            if (inputs.Any(x => x.Id == Guid.Empty))
-            {
-                throw new ArgumentException("Sku id cannot be empty for upsert.", nameof(inputs));
-            }
-
-            // 校验：本次提交内 SkuCode 不重复（忽略大小写）
-            var duplicatedCode = inputs
-                .Select(x => x.JdSkuId.Trim())
-                .GroupBy(x => x, StringComparer.OrdinalIgnoreCase)
-                .Where(g => g.Count() > 1)
-                .Select(g => g.Key)
-                .FirstOrDefault();
-
-            if (duplicatedCode != null)
-            {
-                throw new BusinessException("Mall:SkuCodeAlreadyExists").WithData("SkuCode", duplicatedCode);
-            }
 
             var inputById = inputs.ToDictionary(x => x.Id);
+            var existingById = Skus.ToDictionary(x => x.Id);
 
-            var existingIds = Skus.Select(x => x.Id).ToHashSet();
-            var inputIds = inputById.Keys.ToHashSet();
+            var removedSkus = Skus.Where(sku => !inputById.ContainsKey(sku.Id)).ToList();
 
-            var toRemove = existingIds.Except(inputIds).ToList();
-            var toUpdate = existingIds.Intersect(inputIds).ToList();
-            var toAdd = inputIds.Except(existingIds).ToList();
-
-            foreach (var id in toRemove)
+            foreach (var sku in removedSkus)
             {
-                var existing = Skus.First(x => x.Id == id);
-                Skus.Remove(existing);
+                Skus.Remove(sku);
             }
 
-            foreach (var id in toUpdate)
+            foreach (var input in inputs)
             {
-                var existing = Skus.First(x => x.Id == id);
-                var input = inputById[id];
-                existing.SetJdSkuId(input.JdSkuId);
-                existing.SetOriginalPrice(input.OriginalPrice);
-                existing.SetJdPrice(input.JdPrice);
-                existing.SetStock(input.StockQuantity);
-                existing.SetAttributes(input.Attributes);
-            }
+                if (existingById.TryGetValue(input.Id, out var sku))
+                {
+                    sku.SetJdSkuId(input.JdSkuId);
+                    sku.SetOriginalPrice(input.OriginalPrice);
+                    sku.SetPrice(input.Price);
+                    sku.SetJdPrice(input.JdPrice);
+                    sku.SetStock(input.StockQuantity);
+                    sku.SetAttributes(input.Attributes ?? []);
+                    continue;
+                }
 
-            foreach (var id in toAdd)
-            {
-                var input = inputById[id];
-
-                var sku = new ProductSku(
+                Skus.Add(new ProductSku(
                     input.Id,
                     Id,
-                    input.JdSkuId,
                     input.OriginalPrice,
                     input.Price,
-                    input.JdPrice,
                     input.StockQuantity,
-                    input.Attributes);
-
-                Skus.Add(sku);
+                    input.JdSkuId,
+                    input.JdPrice,
+                    input.Attributes));
             }
         }
     }

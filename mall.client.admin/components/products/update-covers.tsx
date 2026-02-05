@@ -11,12 +11,11 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { FC, useState } from "react";
-import { useCreateCarousel } from "@/hooks/carousels/create";
+import { useUpdateProductCovers } from "@/hooks/products/update-covers";
 import {
   Form,
   FormItem,
   FormControl,
-  FormDescription,
   FormField,
   FormLabel,
   FormMessage,
@@ -33,21 +32,17 @@ import {
   FileUploadTrigger,
 } from "@/components/ui/file-upload";
 import { CloudUpload, X } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
-import { Editor } from "@/components/shared/editor/dynamic-editor";
+import Image from "next/image";
 import { WalleeMallProductsDtosProductDto } from "@/openapi";
-import { ProductCard } from "@/components/products/card";
-import { ExpandableContainer } from "@/components/shared/expandable-container";
 
 type Props = {
-  product?: WalleeMallProductsDtosProductDto;
+  entity: WalleeMallProductsDtosProductDto;
 };
 
-const Create: FC<Props> = ({ product }) => {
-  const { form, submit } = useCreateCarousel({ productId: product?.id });
-  const [open, setOpen] = useState(false);
+const UpdateCovers: FC<Props> = ({ entity }) => {
+  const [open, setOpen] = useState(true);
+  const { form, submit } = useUpdateProductCovers({ entity });
   const router = useRouter();
 
   const handleSubmit = form.handleSubmit(async (data) => {
@@ -59,6 +54,7 @@ const Create: FC<Props> = ({ product }) => {
         successMessage: "操作成功",
         onSuccess: async () => {
           setOpen(false);
+          form.reset();
           router.refresh();
         },
       },
@@ -66,50 +62,79 @@ const Create: FC<Props> = ({ product }) => {
   });
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={(e) => {
+        setOpen(e);
+        if (e === false) {
+          router.back();
+        }
+      }}
+    >
       <DialogTrigger asChild>
         <Button size={"sm"} variant="outline">
-          添加轮播图
+          更新封面
         </Button>
       </DialogTrigger>
       <Form {...form}>
-        <form onSubmit={handleSubmit} id="create-carousel-form">
+        <form onSubmit={handleSubmit} id="update-product-covers-form">
           <DialogContent
             className="sm:max-w-lg sm:max-h-[90vh] overflow-y-auto"
             onInteractOutside={(e) => e.preventDefault()}
           >
             <DialogHeader>
               <DialogTitle className="text-lg font-medium leading-normal">
-                创建轮播图_{product?.name ?? ""}
+                更新商品封面
               </DialogTitle>
               <DialogDescription>
-                轮播图信息填写完整后，点击提交按钮即可创建轮播图。
+                商品信息填写完整后，点击提交按钮即可更新商品封面。
               </DialogDescription>
             </DialogHeader>
             <div className="flex flex-col gap-4 mt-4">
-              {product && (
-                <ExpandableContainer
-                  allowCollapse={true}
-                  collapsedMaxHeight={200}
-                >
-                  <div className="flex flex-col gap-2">
-                    <h2 className="font-medium">关联商品信息</h2>
-                    <ProductCard product={product} />
-                  </div>
-                </ExpandableContainer>
-              )}
               <FormField
                 control={form.control}
-                name="title"
+                name="productCovers"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>轮播图标题</FormLabel>
+                    <FormLabel>旧商品封面</FormLabel>
                     <FormControl>
-                      <Input
-                        {...field}
-                        type="text"
-                        placeholder="请输入轮播图标题"
-                      />
+                      <div className="grid grid-cols-2 gap-4">
+                        {field.value && field.value.length > 0 ? (
+                          field.value.map((cover, index) => (
+                            <div
+                              key={index}
+                              className="relative aspect-square rounded-md overflow-hidden border group"
+                            >
+                              <Image
+                                src={`${process.env.NEXT_PUBLIC_MEDIA_PREVIEW_URL}/${cover.mallMediaId}`}
+                                alt={`商品封面 ${index + 1}`}
+                                className="object-cover"
+                                sizes="100%"
+                                fill
+                              />
+                              <Button
+                                type="button"
+                                variant="destructive"
+                                size="icon"
+                                className="absolute top-2 right-2 size-8 opacity-0 group-hover:opacity-100 transition-opacity"
+                                onClick={() => {
+                                  const newCovers = field.value.filter(
+                                    (_, i) => i !== index,
+                                  );
+                                  field.onChange(newCovers);
+                                }}
+                              >
+                                <X className="size-4" />
+                                <span className="sr-only">删除</span>
+                              </Button>
+                            </div>
+                          ))
+                        ) : (
+                          <p className="text-sm text-muted-foreground col-span-2">
+                            暂无已上传的封面图片
+                          </p>
+                        )}
+                      </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -118,45 +143,10 @@ const Create: FC<Props> = ({ product }) => {
 
               <FormField
                 control={form.control}
-                name="description"
+                name="newCovers"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>轮播图简介</FormLabel>
-                    <FormControl>
-                      <Textarea {...field} placeholder="请输入轮播图简介" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="priority"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>轮播图优先级</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        value={field.value}
-                        onChange={(e) => {
-                          field.onChange(Number(e.target.value));
-                        }}
-                      />
-                    </FormControl>
-                    <FormDescription>数值越大，优先级越高</FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="coverImageMediaId"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>轮播图封面</FormLabel>
+                    <FormLabel>新商品封面(最多十张)</FormLabel>
                     <FormControl>
                       <FileUpload
                         value={field.value}
@@ -167,7 +157,7 @@ const Create: FC<Props> = ({ product }) => {
                           <CloudUpload className="size-8" />
                           <FileUploadTrigger asChild>
                             <Button variant="link" size="sm" className="p-0">
-                              拖放文件或选择文件
+                              拖放文件或选择文件来上传新的商品封面
                             </Button>
                           </FileUploadTrigger>
                         </FileUploadDropzone>
@@ -199,25 +189,6 @@ const Create: FC<Props> = ({ product }) => {
                   </FormItem>
                 )}
               />
-
-              <FormField
-                control={form.control}
-                name="content"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>轮播图内容</FormLabel>
-                    <FormControl>
-                      <Editor
-                        value={field.value}
-                        onChange={field.onChange}
-                        readonly={false}
-                        className="min-h-[200px] max-h-[50vh] overflow-y-auto p-0 m-0 border border-dotted rounded-2xl"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
             </div>
             <DialogFooter>
               <DialogClose asChild>
@@ -225,7 +196,7 @@ const Create: FC<Props> = ({ product }) => {
               </DialogClose>
               <Button
                 type="submit"
-                form="create-carousel-form"
+                form="update-product-covers-form"
                 variant={"default"}
                 disabled={form.formState.isSubmitting}
               >
@@ -239,4 +210,4 @@ const Create: FC<Props> = ({ product }) => {
   );
 };
 
-export default Create;
+export default UpdateCovers;

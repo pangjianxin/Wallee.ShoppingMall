@@ -67,7 +67,9 @@ const Detail: React.FC<Props> = ({
                   variant="outline"
                   permission="Mall.Product.Update"
                 >
-                  <Link href={`/products/${productId}/update`}>编辑</Link>
+                  <Link href={`/products/${productId}/update-covers`}>
+                    编辑
+                  </Link>
                 </PermissionButton>
               ) : null
             }

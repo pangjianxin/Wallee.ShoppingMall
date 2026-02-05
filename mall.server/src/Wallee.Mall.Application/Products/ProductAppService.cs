@@ -33,16 +33,15 @@ namespace Wallee.Mall.Products
             return await MapToGetOutputDtoAsync(entity);
         }
 
-        public async Task FetchSkusWithOneBoundAsync(Guid id, FetchSkuWithOneBoundDto input)
+        public async Task CreateByJdSkuAsync(CreateProductByJdSkuDto input)
         {
-            await backgroundJobManager.EnqueueAsync(new OneBoundProductFetchingJobArgs
+            await backgroundJobManager.EnqueueAsync(new CreateProductByJdSkuJobArgs
             {
-                ProductId = id,
-                NumIid = input.JdSkuId
+                JdSkuId = input.JdSkuId
             });
         }
 
-        public async Task<ProductDto> UpdateProductCovers(Guid id, UpdateProductCoversDto input)
+        public async Task<ProductDto> UpdateCoversAsync(Guid id, UpdateProductCoversDto input)
         {
             Product entity = await repository.GetAsync(id);
 
@@ -91,9 +90,9 @@ namespace Wallee.Mall.Products
             return [.. skus.Select(ObjectMapper.Map<ProductSku, ProductSkuDto>)];
         }
 
-        public async Task<ProductDto> UpdateSkusAsync(Guid id, UpsertProductSkusDto input)
+        public async Task<ProductDto> UpdateSkusAsync(Guid id, UpdateProductSkusDto input)
         {
-            var product = await Repository.GetAsync(id);
+            var product = await repository.GetAsync(id);
 
             var codes = (input.Items ?? [])
                 .Select(x => x.JdSkuId)
@@ -122,7 +121,7 @@ namespace Wallee.Mall.Products
                     ? item.Attributes.Select(static it => new ProductSkuAttribute(it.Key, it.Value)).ToList()
                     : [];
 
-                return new ProductSkuInput
+                return new ProductUpdateSkuInput
                 {
                     Id = skuId,
                     JdSkuId = item.JdSkuId,
@@ -134,13 +133,15 @@ namespace Wallee.Mall.Products
                 };
             }).ToList();
 
-            product.UpsertSkus(skuInputs);
+            product.UpdateSkus(skuInputs);
 
-            var snapshot = await productSkuSnapshotSyncStrategy.CalculateAsync(product);
+            var snapshot = product.Skus != null && product.Skus.Count > 0
+                ? await productSkuSnapshotSyncStrategy.CalculateAsync(product.Skus)
+                : new ProductSkuSnapshot(product.DefaultJdSkuId, product.DefaultJdPrice, product.DefaultOriginalPrice, product.DefaultPrice);
 
             product.SetSkuSnapshot(snapshot);
 
-            await Repository.UpdateAsync(product, autoSave: true);
+            await repository.UpdateAsync(product, autoSave: true);
 
             return await MapToGetOutputDtoAsync(product);
         }

@@ -16,10 +16,10 @@ export function ProductInfo({ product, relativeTags }: ProductInfoProps) {
   const {
     brand,
     shortDescription,
-    originalPrice,
-    jdPrice,
-    discountRate,
-    currency = "¥",
+    defaultOriginalPrice,
+    defaultJdPrice,
+    defaultPrice,
+    discountText,
     salesCount,
   } = product;
 
@@ -38,37 +38,11 @@ export function ProductInfo({ product, relativeTags }: ProductInfoProps) {
     SGD: "S$",
     CHF: "CHF",
   };
-  const currencySymbol =
-    currencySymbolMap[String(currency).toUpperCase()] || currency;
+  const currencySymbol = currencySymbolMap["CNY"];
+  const hasDiscount = discountText !== "NONE";
 
-  const normalizedDiscountRate =
-    typeof discountRate === "number" && discountRate > 0
-      ? discountRate
-      : undefined;
-  const hasDiscount =
-    normalizedDiscountRate !== undefined &&
-    normalizedDiscountRate !== 1 &&
-    !!originalPrice;
-  const discountMultiplier =
-    normalizedDiscountRate === undefined
-      ? undefined
-      : normalizedDiscountRate > 1
-        ? normalizedDiscountRate / 100
-        : normalizedDiscountRate;
-  const discountPrice =
-    hasDiscount && discountMultiplier !== undefined
-      ? originalPrice! * discountMultiplier
-      : undefined;
   const savings =
-    hasDiscount && discountPrice !== undefined
-      ? originalPrice! - discountPrice
-      : undefined;
-  const discountText =
-    normalizedDiscountRate !== undefined
-      ? normalizedDiscountRate > 1
-        ? `${normalizedDiscountRate}折`
-        : `${(normalizedDiscountRate * 10).toFixed(1).replace(/\.0$/, "")}折`
-      : "";
+    hasDiscount && (defaultOriginalPrice as number) - (defaultPrice as number);
 
   return (
     <div className="rounded-lg bg-card px-3 py-4">
@@ -80,9 +54,7 @@ export function ProductInfo({ product, relativeTags }: ProductInfoProps) {
           </span>
           <span className="text-sm text-sale">{currencySymbol}</span>
           <span className="text-3xl font-bold text-sale">
-            {hasDiscount && discountPrice !== undefined
-              ? discountPrice.toFixed(2)
-              : originalPrice?.toFixed(2) || "--"}
+            {hasDiscount && discountText}
           </span>
           {hasDiscount && discountText && (
             <Badge
@@ -95,16 +67,16 @@ export function ProductInfo({ product, relativeTags }: ProductInfoProps) {
           {brand && <Badge variant={"outline"}>{brand}</Badge>}
         </div>
         <div className="flex flex-wrap items-center gap-3 text-xs">
-          {hasDiscount && originalPrice !== undefined && (
+          {hasDiscount && (
             <div className="flex items-center gap-1 text-muted-foreground">
               <span>原价</span>
               <span className="line-through">
                 {currencySymbol}
-                {originalPrice.toFixed(2)}
+                {defaultOriginalPrice}
               </span>
             </div>
           )}
-          {hasDiscount && savings !== undefined && savings > 0 && (
+          {hasDiscount && savings && (
             <Badge
               variant="secondary"
               className="bg-primary/10 text-primary text-[10px]"
@@ -113,12 +85,12 @@ export function ProductInfo({ product, relativeTags }: ProductInfoProps) {
               {savings.toFixed(2)}
             </Badge>
           )}
-          {jdPrice && (
+          {defaultJdPrice && (
             <div className="flex items-center gap-1 text-muted-foreground">
               <span>京东价</span>
               <span>
                 {currencySymbol}
-                {jdPrice?.toFixed(2)}
+                {defaultJdPrice?.toFixed(2)}
               </span>
             </div>
           )}

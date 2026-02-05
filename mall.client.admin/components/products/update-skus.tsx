@@ -34,13 +34,6 @@ import {
   InputGroupInput,
   InputGroupText,
 } from "@/components/ui/input-group";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { getDiscountText } from "@/lib/utils";
 
 interface ProductSkuFormProps {
@@ -69,18 +62,17 @@ export function ProductSkuForm({ entity }: ProductSkuFormProps) {
           form.reset();
           router.back();
         },
-      }
+      },
     );
   });
 
   const addNewSku = () => {
     append({
       id: "",
-      skuCode: "",
+      jdSkuId: "",
+      price: 0,
       originalPrice: 0,
-      discountRate: 1,
       jdPrice: 0,
-      currency: "CNY",
       stockQuantity: 0,
       attributes: [],
     });
@@ -237,7 +229,7 @@ function SkuCard({ index, form, onRemove }: SkuCardProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField
             control={form.control}
-            name={`items.${index}.skuCode`}
+            name={`items.${index}.jdSkuId`}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>SKU 编码</FormLabel>
@@ -248,35 +240,6 @@ function SkuCard({ index, form, onRemove }: SkuCardProps) {
                     placeholder="输入 SKU 编码"
                   />
                 </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name={`items.${index}.currency`}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>选择货币</FormLabel>
-                <Select {...field}>
-                  <FormControl>
-                    <SelectTrigger className="border-slate-300 focus:border-amber-500 focus:ring-amber-500 w-full">
-                      <SelectValue placeholder="请选择时段" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem key={"CNY"} value={"CNY"}>
-                      CNY
-                    </SelectItem>
-                    <SelectItem key={"USD"} value={"USD"}>
-                      USD
-                    </SelectItem>
-                    <SelectItem key={"JPY"} value={"JPY"}>
-                      JPY
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
                 <FormMessage />
               </FormItem>
             )}
@@ -307,10 +270,10 @@ function SkuCard({ index, form, onRemove }: SkuCardProps) {
 
           <FormField
             control={form.control}
-            name={`items.${index}.discountRate`}
+            name={`items.${index}.price`}
             render={({ field }) => (
               <FormItem>
-                <FormLabel>折扣率(0-1)</FormLabel>
+                <FormLabel>现价</FormLabel>
                 <FormControl>
                   <InputGroup>
                     <InputGroupInput
@@ -325,7 +288,10 @@ function SkuCard({ index, form, onRemove }: SkuCardProps) {
                     />
                     <InputGroupAddon align={"inline-end"}>
                       <InputGroupText>
-                        {getDiscountText(field.value)}
+                        {getDiscountText(
+                          field.value,
+                          form.getValues(`items.${index}.originalPrice`),
+                        )}
                       </InputGroupText>
                     </InputGroupAddon>
                   </InputGroup>

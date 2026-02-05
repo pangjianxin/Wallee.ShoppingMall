@@ -1,11 +1,10 @@
 import { WalleeMallProductsDtosProductDto } from "@/openapi";
 import { FC } from "react";
-import { formatMoney, getDiscountText } from "@/lib/utils";
+import { formatMoney } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 export const ProductInformation: FC<{
   product: WalleeMallProductsDtosProductDto;
 }> = ({ product }) => {
-  const currency = product.currency;
   return (
     <div className="flex flex-col gap-2">
       <div className="flex flex-wrap items-center gap-2">
@@ -24,18 +23,16 @@ export const ProductInformation: FC<{
 
       <div className="flex items-baseline gap-3">
         <span className="text-3xl font-bold text-primary">
-          {formatMoney(product.jdPrice ?? 0, currency)}
+          {formatMoney(product.defaultJdPrice ?? 0, "CNY")}
         </span>
-        {product.originalPrice &&
-          product.originalPrice > (product.jdPrice || 0) && (
+        {product.defaultOriginalPrice &&
+          product.defaultOriginalPrice > (product.defaultJdPrice || 0) && (
             <span className="text-lg text-muted-foreground line-through">
-              {formatMoney(product.originalPrice, currency)}
+              {formatMoney(product.defaultOriginalPrice, "CNY")}
             </span>
           )}
-        {product.discountRate !== undefined && product.discountRate < 1 && (
-          <Badge variant="destructive">
-            {(product.discountRate * 10).toFixed(1)}折
-          </Badge>
+        {product.discountText !== "NONE" && (
+          <Badge variant="destructive">{product.discountText}</Badge>
         )}
       </div>
 
@@ -43,26 +40,24 @@ export const ProductInformation: FC<{
         <div className="flex items-center justify-between gap-2">
           <span>京东价</span>
           <span className="font-medium text-foreground">
-            {formatMoney(product.jdPrice, currency)}
+            {formatMoney(product.defaultJdPrice, "CNY")}
           </span>
         </div>
         <div className="flex items-center justify-between gap-2">
           <span>原价</span>
           <span className="font-medium text-foreground">
-            {formatMoney(product.originalPrice, currency)}
+            {formatMoney(product.defaultOriginalPrice, "CNY")}
           </span>
         </div>
         <div className="flex items-center justify-between gap-2">
           <span>折扣率</span>
           <span className="font-medium text-foreground">
-            {product.discountRate !== undefined
-              ? `${getDiscountText(product.discountRate)}`
-              : "-"}
+            {product.discountText !== "NONE" ? product.discountText : "-"}
           </span>
         </div>
         <div className="flex items-center justify-between gap-2">
           <span>币种</span>
-          <span className="font-medium text-foreground">{currency || "-"}</span>
+          <span className="font-medium text-foreground">{"CNY"}</span>
         </div>
       </div>
 

@@ -1,4 +1,4 @@
-import { WalleeMallProductsDtosProductDto, productUpsertSkus } from "@/openapi";
+import { WalleeMallProductsDtosProductDto, productUpdateSkus } from "@/openapi";
 import { z } from "zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,22 +13,18 @@ export const useUpdateProductSkus = ({
       .array(
         z.object({
           id: z.string().optional(),
-          skuCode: z.string().min(1, { message: "SKU 代码不能为空" }),
+          jdSkuId: z.string().optional(),
           originalPrice: z.number().min(0, { message: "原价不能为负数" }),
-          discountRate: z
-            .number()
-            .min(0, { message: "折扣不能为负数" })
-            .max(1, { message: "折扣不能大于 1" }),
-          jdPrice: z.number().min(0, { message: "京东价不能为负数" }),
-          currency: z.string().min(1, { message: "币种不能为空" }),
+          price: z.number().min(0, { message: "现价不能为负数" }),
+          jdPrice: z.number().optional(),
           stockQuantity: z.number().min(0, { message: "库存数量不能为负数" }),
           attributes: z.array(
             z.object({
               key: z.string().min(1, { message: "属性键不能为空" }),
               value: z.string().min(1, { message: "属性值不能为空" }),
-            })
+            }),
           ),
-        })
+        }),
       )
       .min(1, { message: "请至少添加一个 SKU" }),
   });
@@ -41,11 +37,10 @@ export const useUpdateProductSkus = ({
       items:
         entity.skus?.map((sku) => ({
           id: sku.id,
-          skuCode: sku.skuCode || "",
+          jdSkuId: sku.jdSkuId || "",
           originalPrice: sku.originalPrice || 0,
-          discountRate: sku.discountRate ?? 1,
+          price: sku.price || 0,
           jdPrice: sku.jdPrice || 0,
-          currency: sku.currency || "CNY",
           stockQuantity: sku.stockQuantity || 0,
           attributes:
             sku.attributes?.map((a) => ({
@@ -57,7 +52,7 @@ export const useUpdateProductSkus = ({
   });
 
   const submit: SubmitHandler<FormValue> = async (data) => {
-    const { data: result } = await productUpsertSkus({
+    const { data: result } = await productUpdateSkus({
       throwOnError: true,
       path: { id: entity.id as string },
       body: {

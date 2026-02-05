@@ -20,32 +20,19 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { executeOperation } from "@/lib/execute-operation";
-import {
-  FileUpload,
-  FileUploadDropzone,
-  FileUploadItem,
-  FileUploadItemDelete,
-  FileUploadItemMetadata,
-  FileUploadItemPreview,
-  FileUploadList,
-  FileUploadTrigger,
-} from "@/components/ui/file-upload";
-import { CloudUpload, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useUpdateProduct } from "@/hooks/products/update";
 import { WalleeMallProductsDtosProductDto } from "@/openapi";
-import { Label } from "../ui/label";
-import Image from "next/image";
+import { Label } from "@/components/ui/label";
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
   InputGroupText,
 } from "@/components/ui/input-group";
-import { getDiscountText } from "@/lib/utils";
 
 type Props = {
   entity: WalleeMallProductsDtosProductDto;
@@ -67,7 +54,7 @@ const Update: FC<Props> = ({ entity }) => {
           form.reset();
           router.back();
         },
-      }
+      },
     );
   });
 
@@ -103,9 +90,9 @@ const Update: FC<Props> = ({ entity }) => {
                   <FormItem>
                     <FormLabel>商品名称</FormLabel>
                     <FormControl>
-                      <Input
+                      <Textarea
                         {...field}
-                        type="text"
+                        rows={2}
                         placeholder="请输入商品名称"
                       />
                     </FormControl>
@@ -141,92 +128,6 @@ const Update: FC<Props> = ({ entity }) => {
                     <FormControl>
                       <Textarea {...field} placeholder="请输入商品简介" />
                     </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="originalPrice"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>商品原价</FormLabel>
-                    <FormControl>
-                      <InputGroup>
-                        <InputGroupAddon>
-                          <InputGroupText>¥</InputGroupText>
-                        </InputGroupAddon>
-                        <InputGroupInput
-                          type="number"
-                          value={field.value}
-                          onChange={(e) => {
-                            field.onChange(Number(e.target.value));
-                          }}
-                        />
-                        <InputGroupAddon align="inline-end">
-                          <InputGroupText>CNY</InputGroupText>
-                        </InputGroupAddon>
-                      </InputGroup>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="jdPrice"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>商品京东参考价</FormLabel>
-                    <FormControl>
-                      <InputGroup>
-                        <InputGroupAddon>
-                          <InputGroupText>¥</InputGroupText>
-                        </InputGroupAddon>
-                        <InputGroupInput
-                          type="number"
-                          value={field.value}
-                          onChange={(e) => {
-                            field.onChange(Number(e.target.value));
-                          }}
-                        />
-                        <InputGroupAddon align="inline-end">
-                          <InputGroupText>CNY</InputGroupText>
-                        </InputGroupAddon>
-                      </InputGroup>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="discountRate"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>商品折扣率</FormLabel>
-                    <FormControl>
-                      <InputGroup>
-                        <InputGroupInput
-                          type="number"
-                          value={field.value}
-                          onChange={(e) => {
-                            field.onChange(Number(e.target.value));
-                          }}
-                        />
-                        <InputGroupAddon align="inline-end">
-                          <InputGroupText>
-                            {getDiscountText(field.value)}
-                          </InputGroupText>
-                        </InputGroupAddon>
-                      </InputGroup>
-                    </FormControl>
-                    <FormDescription>
-                      1表示不打折，0.9表示九折，0.8表示八折，以此类推。
-                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -281,105 +182,6 @@ const Update: FC<Props> = ({ entity }) => {
                           </p>
                         </div>
                       </Label>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="productCovers"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>旧商品封面</FormLabel>
-                    <FormControl>
-                      <div className="grid grid-cols-2 gap-4">
-                        {field.value && field.value.length > 0 ? (
-                          field.value.map((cover, index) => (
-                            <div
-                              key={index}
-                              className="relative aspect-square rounded-md overflow-hidden border group"
-                            >
-                              <Image
-                                src={`${process.env.NEXT_PUBLIC_MEDIA_PREVIEW_URL}/${cover.mallMediaId}`}
-                                alt={`商品封面 ${index + 1}`}
-                                className="object-cover"
-                                sizes="100%"
-                                fill
-                              />
-                              <Button
-                                type="button"
-                                variant="destructive"
-                                size="icon"
-                                className="absolute top-2 right-2 size-8 opacity-0 group-hover:opacity-100 transition-opacity"
-                                onClick={() => {
-                                  const newCovers = field.value.filter(
-                                    (_, i) => i !== index
-                                  );
-                                  field.onChange(newCovers);
-                                }}
-                              >
-                                <X className="size-4" />
-                                <span className="sr-only">删除</span>
-                              </Button>
-                            </div>
-                          ))
-                        ) : (
-                          <p className="text-sm text-muted-foreground col-span-2">
-                            暂无已上传的封面图片
-                          </p>
-                        )}
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="newCovers"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>新商品封面(最多十张)</FormLabel>
-                    <FormControl>
-                      <FileUpload
-                        value={field.value}
-                        onValueChange={field.onChange}
-                        multiple={true}
-                      >
-                        <FileUploadDropzone className="flex-col items-center border-dotted">
-                          <CloudUpload className="size-8" />
-                          <FileUploadTrigger asChild>
-                            <Button variant="link" size="sm" className="p-0">
-                              拖放文件或选择文件来上传新的商品封面
-                            </Button>
-                          </FileUploadTrigger>
-                        </FileUploadDropzone>
-                        <FileUploadList className="max-h-[400px] overflow-y-auto">
-                          {field.value?.map((file, index) => (
-                            <FileUploadItem
-                              key={index}
-                              value={file}
-                              className="grid grid-cols-[1fr_auto] gap-2 items-center"
-                            >
-                              <FileUploadItemPreview />
-                              <FileUploadItemDelete asChild>
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  className="size-7"
-                                >
-                                  <X />
-                                  <span className="sr-only">删除</span>
-                                </Button>
-                              </FileUploadItemDelete>
-                              <FileUploadItemMetadata className="truncate min-w-0" />
-                            </FileUploadItem>
-                          ))}
-                        </FileUploadList>
-                      </FileUpload>
                     </FormControl>
                     <FormMessage />
                   </FormItem>

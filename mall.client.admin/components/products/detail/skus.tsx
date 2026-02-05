@@ -7,6 +7,7 @@ import type {
   WalleeMallProductsDtosProductSkuDto,
   WalleeMallProductsDtosProductSkuAttributeDto,
 } from "@/openapi";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 interface ProductSkuListProps {
   skus: WalleeMallProductsDtosProductSkuDto[];
@@ -40,13 +41,14 @@ function SkuAttributes({
   }
 
   return (
-    <div className="flex flex-wrap gap-1.5">
+    <ScrollArea className="w-full rounded-md border whitespace-nowrap">
       {attributes.map((attr, index) => (
         <Badge key={index} variant="secondary" className="text-xs font-normal">
           {attr.key}: {attr.value}
         </Badge>
       ))}
-    </div>
+      <ScrollBar orientation="horizontal" />
+    </ScrollArea>
   );
 }
 
@@ -80,51 +82,57 @@ function StockStatus({ quantity }: { quantity?: number }) {
 }
 
 function SkuCard({ sku }: { sku: WalleeMallProductsDtosProductSkuDto }) {
-  const hasDiscount = sku.discountRate && sku.discountRate > 0;
-  const discountPercentage = hasDiscount
-    ? (sku.discountRate! * 100).toFixed(0)
-    : null;
+  const hasDiscount = sku.discountText && sku.discountText !== "NONE";
+  const hasSkuId = Boolean(sku.jdSkuId);
 
   return (
-    <div className="group relative overflow-hidden border border-dotted rounded-lg">
+    <div className="group relative overflow-hidden rounded-lg border border-dotted">
       {hasDiscount && (
-        <div className="absolute right-0 top-0 rounded-bl-lg bg-rose-500 px-2 py-1 text-xs font-semibold text-white">
-          -{discountPercentage}%
+        <div className="absolute right-0 top-0 rounded-bl-lg bg-rose-500 px-1.5 py-0.5 text-[10px] font-semibold text-white">
+          {sku.discountText}
         </div>
       )}
-      <div className="p-4">
-        <div className="flex flex-col gap-3">
-          {/* SKU Code */}
-          <div className="flex items-center gap-2">
-            <Tag className="h-4 w-4 text-muted-foreground" />
-            <span className="font-mono text-sm text-muted-foreground">
-              {sku.skuCode || "-"}
-            </span>
+      <div className="p-3">
+        <div className="flex flex-col gap-2">
+          {/* Header */}
+          <div className="flex items-start justify-between gap-2">
+            {hasSkuId ? (
+              <div className="flex items-center gap-1.5">
+                <Tag className="h-3.5 w-3.5 text-muted-foreground" />
+                <span className="font-mono text-xs text-muted-foreground">
+                  {sku.jdSkuId}
+                </span>
+              </div>
+            ) : (
+              <span className="text-xs text-muted-foreground">未设置SKU</span>
+            )}
           </div>
+
+          {/* SKU Code */}
 
           {/* Attributes */}
           <SkuAttributes attributes={sku.attributes} />
 
           {/* Price Section */}
-          <div className="flex items-baseline gap-3">
+          <div className="flex items-baseline gap-2">
             {sku.jdPrice ? (
               <>
-                <span className="text-xl font-bold text-foreground">
-                  {formatPrice(sku.jdPrice, sku.currency)}
+                <span className="text-lg font-bold text-foreground">
+                  {formatPrice(sku.jdPrice, "CNY")}
                 </span>
-                <span className="text-sm text-muted-foreground line-through">
-                  {formatPrice(sku.originalPrice, sku.currency)}
+                <span className="text-xs text-muted-foreground line-through">
+                  {formatPrice(sku.originalPrice, "CNY")}
                 </span>
               </>
             ) : (
-              <span className="text-xl font-bold text-foreground">
-                {formatPrice(sku.originalPrice, sku.currency)}
+              <span className="text-lg font-bold text-foreground">
+                {formatPrice(sku.originalPrice, "CNY")}
               </span>
             )}
           </div>
 
           {/* Footer: Stock & Date */}
-          <div className="flex items-center justify-between border-t pt-3">
+          <div className="flex items-center justify-between border-t pt-2">
             <StockStatus quantity={sku.stockQuantity} />
             <div className="flex items-center gap-1 text-xs text-muted-foreground">
               <Clock className="h-3 w-3" />

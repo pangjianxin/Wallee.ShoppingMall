@@ -1,4 +1,4 @@
-using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,42 +8,33 @@ namespace Wallee.Mall.Products.Strategy;
 
 /// <summary>
 /// Default (fixed) strategy:
-/// - Picks the SKU with the lowest selling price (OriginalPrice * DiscountRate)
-/// - Uses that SKU's OriginalPrice/DiscountRate/Currency
+/// - Picks the SKU with the lowest selling price
+/// - Uses that SKU's OriginalPrice/Price
 /// - JdPrice uses the minimum non-null JdPrice across all SKUs (for display/comparison)
-/// 
-/// Notes:
-/// - Requires that all SKUs use the same currency; otherwise throws a BusinessException.
 /// </summary>
 public class LowestSellingProductSkuSnapshotSyncStrategy : IProductSkuSnapshotSyncStrategy, ITransientDependency
 {
-    public Task<ProductSkuSnapshot?> CalculateAsync(Product product, CancellationToken cancellationToken = default)
+    public Task<ProductSkuSnapshot> CalculateAsync(IEnumerable<ProductSku> skus, CancellationToken cancellationToken = default)
     {
-        var skus = product.Skus?.ToList() ?? [];
+        var skuList = skus?.ToList() ?? [];
 
-        // No SKU: keep current product values.
-        if (skus.Count == 0)
+        if (skuList.Count == 0)
         {
-            return Task.FromResult(product.SkuSnapshot);
+            return Task.FromResult(new ProductSkuSnapshot(null, null, 0m, 0m));
         }
 
-        var chosen = skus
+        var chosen = skuList
             .OrderBy(x => x.Price)
             .ThenBy(x => x.OriginalPrice)
             .First();
 
-        var minJdPrice = skus
-            .Where(x => x.JdPrice.HasValue)
-            .Select(x => x.JdPrice!.Value)
-            .DefaultIfEmpty()
-            .Min();
-
-        return Task.FromResult<ProductSkuSnapshot?>(new ProductSkuSnapshot
-        {
-            JdSkuId = chosen.JdSkuId,
-            OriginalPrice = chosen.OriginalPrice,
-            Price = chosen.Price,
-            JdPrice = chosen.JdPrice
-        });
+        return Task.FromResult(new ProductSkuSnapshot(chosen.JdSkuId, chosen.JdPrice, chosen.OriginalPrice, chosen.Price));
     }
 }
+
+
+
+
+
+
+

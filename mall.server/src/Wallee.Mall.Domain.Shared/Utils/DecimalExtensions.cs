@@ -14,5 +14,18 @@ namespace Wallee.Mall.Utils
 
             return price;
         }
+
+        public static string ToDiscountText(this decimal price, decimal originalPrice)
+        {
+            if (price >= originalPrice || originalPrice == 0)
+            {
+                return "NONE";
+            }
+
+            var discountRate = price / originalPrice;
+
+            var discount = Math.Round(discountRate * 10m, 2, MidpointRounding.AwayFromZero);
+            return $"{discount:0.##}折";
+        }
     }
 }

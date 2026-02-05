@@ -13,6 +13,7 @@ import { parseVoloAbpError } from "@/lib/remote-error-parser";
 import { DataTableFilterMenu } from "@/components/data-table/data-table-filter-menu";
 import { DataTableAdvancedToolbar } from "@/components/data-table/data-table-advanced-toolbar";
 import CreateProduct from "@/components/products/create";
+import CreateProductByJdSku from "@/components/products/create-jd";
 
 type Props = {
   promise: Promise<{
@@ -87,6 +88,7 @@ const ProductTable: FC<Props> = ({ promise }) => {
             />
             <div className="flex-1"></div>
             <CreateProduct />
+            <CreateProductByJdSku />
           </DataTableAdvancedToolbar>
         </DataTable>
       </Card>

@@ -2,6 +2,11 @@ import { auth } from "@/lib/auth-server";
 import { NextRequest, NextResponse } from "next/server";
 const EXTERNAL_API_URL = process.env.NEXT_PUBLIC_API_URL;
 
+function logAuthState(method: string, path: string, token?: string) {
+  const tokenHint = token ? `${token.slice(0, 8)}...` : "<missing>";
+  console.log(`[api-proxy] ${method} ${path} token=${tokenHint}`);
+}
+
 /**
  * 标准错误消息映射
  */
@@ -75,6 +80,8 @@ export async function GET(request: NextRequest): Promise<Response> {
   const search = request.nextUrl.search;
   const url = `${EXTERNAL_API_URL}${path}${search}`;
 
+  logAuthState("GET", path, session?.accessToken);
+
   try {
     const response = await fetch(url, {
       method: "GET",
@@ -113,6 +120,8 @@ export async function POST(request: NextRequest): Promise<Response> {
   const path = request.nextUrl.pathname;
   const search = request.nextUrl.search;
   const url = `${EXTERNAL_API_URL}${path}${search}`;
+
+  logAuthState("POST", path, session?.accessToken);
 
   const contentType = request.headers.get("Content-Type") || "application/json";
   let body: FormData | string;
@@ -177,6 +186,8 @@ export async function PUT(request: NextRequest): Promise<Response> {
   const search = request.nextUrl.search;
   const url = `${EXTERNAL_API_URL}${path}${search}`;
 
+  logAuthState("PUT", path, session?.accessToken);
+
   try {
     const response = await fetch(url, {
       method: "PUT",
@@ -218,6 +229,8 @@ export async function DELETE(request: NextRequest): Promise<Response> {
   const path = request.nextUrl.pathname;
   const search = request.nextUrl.search;
   const url = `${EXTERNAL_API_URL}${path}${search}`;
+
+  logAuthState("DELETE", path, session?.accessToken);
 
   try {
     const response = await fetch(url, {

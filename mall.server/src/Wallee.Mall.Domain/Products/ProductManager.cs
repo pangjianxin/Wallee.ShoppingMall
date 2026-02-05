@@ -35,9 +35,9 @@ namespace Wallee.Mall.Products
 
             if (skuId != null)
             {
-                await backgroundJobManager.EnqueueAsync(new OneBoundProductFetchingJobArgs
+                await backgroundJobManager.EnqueueAsync(new CreateProductByJdSkuJobArgs
                 {
-                    NumIid = skuId
+                    JdSkuId = skuId
                 });
             }
             return entity;

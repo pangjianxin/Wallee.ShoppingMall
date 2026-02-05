@@ -1,76 +1,53 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.BackgroundJobs;
+using Volo.Abp.Content;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Guids;
 using Volo.Abp.Threading;
+using Volo.Abp.Uow;
 using Wallee.Mall.Medias;
-using Wallee.Mall.OneBound;
-using Wallee.Mall.OneBound.Dtos;
-using Microsoft.Extensions.DependencyInjection;
-using System.Net.Http;
-using System.IO;
-using Volo.Abp.Content;
 using Wallee.Mall.Medias.Dtos;
 
 namespace Wallee.Mall.Products.BackgroundJobs
 {
-    public class OneBoundProductFetchingJob(
-        OneboundClient oneBoundClient,
+    public class DownloadProductCoversJob(
         IGuidGenerator guidGenerator,
         IMallMediaAppService mallMediaAppService,
         ICancellationTokenProvider cancellationTokenProvider,
-        [FromKeyedServices("jd-image")] HttpClient imageDownloadClient) : AsyncBackgroundJob<OneBoundProductFetchingJobArgs>, ITransientDependency
+        IProductRepository productRepository,
+        [FromKeyedServices("jd-image")] HttpClient imageDownloadClient)
+        : AsyncBackgroundJob<DownloadProductCoversJobArgs>, ITransientDependency
     {
-        public override async Task ExecuteAsync(OneBoundProductFetchingJobArgs args)
+        [UnitOfWork]
+        public override async Task ExecuteAsync(DownloadProductCoversJobArgs args)
         {
-            JdItemGetProResponse response = await oneBoundClient.JdItemGetProTypedAsync(args.NumIid, cancellationTokenProvider.Token);
-
-            var item = response.Item;
-
-            if (item == null)
+            if (args.ImageUrls.Count == 0)
             {
                 return;
             }
 
-            var covers = await DownloadProductCoversAsync(item?.ItemImgs?.ItemImg?.Select(img => img.Url!).ToArray() ?? []);
-
-            var product = new Product(guidGenerator.Create(), item?.Title!, 0, item?.Brand!, item?.Desc!);
-
-            product.SetProductCovers([.. covers?.Select(it => it.Id) ?? []]);
-
-            var skus = item?.Skus?.Sku?.Select(it => new ProductSkuInput
+            var product = await productRepository.FindAsync(
+                p => p.Id == args.ProductId,
+                cancellationToken: cancellationTokenProvider.Token);
+            if (product == null)
             {
-                Id = guidGenerator.Create(),
-                JdSkuId = it.SkuId!,
-                OriginalPrice = decimal.Parse(it.OrginalPrice!),
-                JdPrice = decimal.Parse(it.Price!),
-                Price = decimal.Parse(it.Price!),
-                StockQuantity = 0,
-                Attributes = [.. ParseSkuAttributes(it.PropertiesName) ?? []]
-            });
+                return;
+            }
 
-            product.UpsertSkus(skus?.ToList() ?? []);
-
+            var covers = await DownloadProductCoversAsync(args.ImageUrls);
+            product.SetProductCovers([.. covers?.Select(it => it.Id) ?? []]);
+            await productRepository.UpdateAsync(product, true, cancellationTokenProvider.Token);
         }
 
-        private static IEnumerable<ProductSkuAttribute>? ParseSkuAttributes(string? propertiesName)
+        private async Task<List<MallMediaDto>?> DownloadProductCoversAsync(List<string> imageUrls)
         {
-            var attributes = propertiesName?.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-                .Select(part => part.Split(':', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
-                .Where(parts => parts.Length >= 4)
-                .ToDictionary(
-                    parts => $"{parts[0]}:{parts[1]}:{parts[2]}",
-                    parts => parts.Length == 4 ? parts[3] : string.Join(':', parts.Skip(3)));
-
-            return attributes?.Select(kv => new ProductSkuAttribute(kv.Key, kv.Value));
-        }
-
-        private async Task<List<MallMediaDto>?> DownloadProductCoversAsync(string[] imageUrls)
-        {
-            if (imageUrls.Length == 0)
+            if (imageUrls.Count == 0)
             {
                 return [];
             }
@@ -99,7 +76,6 @@ namespace Wallee.Mall.Products.BackgroundJobs
 
             var all = (await Task.WhenAll(tasks)).Where(media => media != null);
 
-            //过滤掉 null，避免将 null 添加到 List<MallMediaDto>
             return [.. all.Cast<MallMediaDto>()];
         }
 

@@ -90,7 +90,7 @@ export function CartItem({ item }: CartItemProps) {
         <div className="flex items-center justify-between mt-2">
           {/* 价格 */}
           <span className="text-base font-semibold text-destructive">
-            {formatPrice(item.price, item.currency)}
+            {formatPrice(item.price, "CNY")}
           </span>
 
           {/* 数量控制 */}

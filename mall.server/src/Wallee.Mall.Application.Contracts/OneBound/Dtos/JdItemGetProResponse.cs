@@ -50,8 +50,8 @@ public sealed class JdItemGetProResponse
     [JsonPropertyName("client_ip")]
     public string? ClientIp { get; set; }
 
-    [JsonPropertyName("call_args")]
-    public List<string>? CallArgs { get; set; }
+    //[JsonPropertyName("call_args")]
+    //public List<Dictionary<string, string>?>? CallArgs { get; set; }
 
     [JsonPropertyName("api_type")]
     public string? ApiType { get; set; }
@@ -135,7 +135,7 @@ public sealed class JdItemGetProItem
     public string? Desc { get; set; }
 
     [JsonPropertyName("desc_img")]
-    public string? DescImg { get; set; }
+    public List<string>? DescImg { get; set; }
 
     [JsonPropertyName("item_imgs")]
     public JdItemImagesContainer? ItemImgs { get; set; }
@@ -195,7 +195,7 @@ public sealed class JdItemGetProItem
     public JdSellerInfo? SellerInfo { get; set; }
 
     [JsonPropertyName("props_img")]
-    public JdPropImagesContainer? PropsImg { get; set; }
+    public List<Dictionary<string, string>>? PropsImg { get; set; }
 
     [JsonPropertyName("error")]
     public string? Error { get; set; }

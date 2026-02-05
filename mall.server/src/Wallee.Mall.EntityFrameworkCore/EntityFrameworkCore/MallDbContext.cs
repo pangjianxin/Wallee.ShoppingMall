@@ -103,27 +103,25 @@ public class MallDbContext(DbContextOptions<MallDbContext> options) :
             b.Property(p => p.SortOrder).HasDefaultValue(0);
             b.Property(p => p.SalesCount).HasDefaultValue(0);
 
-            b.HasMany(p => p.Skus).WithOne().HasForeignKey(s => s.ProductId);
             b.HasIndex(p => p.Name);
             b.HasIndex(p => p.Brand);
             b.HasIndex(p => p.IsActive);
             b.HasIndex(p => new { p.IsActive, p.SortOrder, p.SalesCount });
             b.HasIndex(p => p.CreationTime);
 
+            //SKU¿ìÕÕÐÅÏ¢
+            b.Property(p => p.DefaultOriginalPrice).HasColumnType("decimal(18,2)");
+            b.Property(p => p.DefaultJdPrice).HasColumnType("decimal(18,4)");
+            b.Property(p => p.DefaultJdPrice).HasColumnType("decimal(18,2)");
+
+            b.HasMany(p => p.Skus).WithOne().HasForeignKey(s => s.ProductId);
+
             b.OwnsMany(p => p.ProductCovers, pc =>
             {
                 pc.ToJson();
             });
 
-            b.OwnsOne(it => it.SkuSnapshot, config =>
-            {
-                config.ToJson();
-                config.Property(p => p.OriginalPrice).HasColumnType("decimal(18,2)");
-                config.Property(p => p.Price).HasColumnType("decimal(18,4)");
-                config.Property(p => p.JdPrice).HasColumnType("decimal(18,2)");
-            });
-
-
+            b.Ignore(it => it.DiscountText);
         });
 
         builder.Entity<ProductSku>(b =>

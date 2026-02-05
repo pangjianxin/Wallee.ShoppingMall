@@ -21,17 +21,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { executeOperation } from "@/lib/execute-operation";
-import {
-  FileUpload,
-  FileUploadDropzone,
-  FileUploadItem,
-  FileUploadItemDelete,
-  FileUploadItemMetadata,
-  FileUploadItemPreview,
-  FileUploadList,
-  FileUploadTrigger,
-} from "@/components/ui/file-upload";
-import { CloudUpload, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
@@ -41,7 +30,6 @@ import {
   InputGroupInput,
   InputGroupText,
 } from "@/components/ui/input-group";
-import { getDiscountText } from "@/lib/utils";
 
 const Create: FC = () => {
   const [open, setOpen] = useState(false);
@@ -135,93 +123,6 @@ const Create: FC = () => {
                   </FormItem>
                 )}
               />
-
-              <FormField
-                control={form.control}
-                name="originalPrice"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>商品原价</FormLabel>
-                    <FormControl>
-                      <InputGroup>
-                        <InputGroupAddon>
-                          <InputGroupText>¥</InputGroupText>
-                        </InputGroupAddon>
-                        <InputGroupInput
-                          type="number"
-                          value={field.value}
-                          onChange={(e) => {
-                            field.onChange(Number(e.target.value));
-                          }}
-                        />
-                        <InputGroupAddon align="inline-end">
-                          <InputGroupText>CNY</InputGroupText>
-                        </InputGroupAddon>
-                      </InputGroup>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="jdPrice"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>商品京东参考价</FormLabel>
-                    <FormControl>
-                      <InputGroup>
-                        <InputGroupAddon>
-                          <InputGroupText>¥</InputGroupText>
-                        </InputGroupAddon>
-                        <InputGroupInput
-                          type="number"
-                          value={field.value}
-                          onChange={(e) => {
-                            field.onChange(Number(e.target.value));
-                          }}
-                        />
-                        <InputGroupAddon align="inline-end">
-                          <InputGroupText>CNY</InputGroupText>
-                        </InputGroupAddon>
-                      </InputGroup>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="discountRate"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>商品折扣率</FormLabel>
-                    <FormControl>
-                      <InputGroup>
-                        <InputGroupInput
-                          type="number"
-                          value={field.value}
-                          onChange={(e) => {
-                            field.onChange(Number(e.target.value));
-                          }}
-                        />
-                        <InputGroupAddon align="inline-end">
-                          <InputGroupText>
-                            {getDiscountText(field.value)}
-                          </InputGroupText>
-                        </InputGroupAddon>
-                      </InputGroup>
-                    </FormControl>
-                    <FormDescription>
-                      1表示不打折，0.9表示九折，0.8表示八折，以此类推。
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
               <FormField
                 control={form.control}
                 name="sortOrder"
@@ -245,55 +146,6 @@ const Create: FC = () => {
                     <FormDescription>
                       数值越小,商品显示越靠前,默认值为1。
                     </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="productCovers"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>商品封面(最多十张)</FormLabel>
-                    <FormControl>
-                      <FileUpload
-                        value={field.value}
-                        onValueChange={field.onChange}
-                        multiple={true}
-                      >
-                        <FileUploadDropzone className="flex-col items-center border-dotted">
-                          <CloudUpload className="size-8" />
-                          <FileUploadTrigger asChild>
-                            <Button variant="link" size="sm" className="p-0">
-                              拖放文件或选择文件
-                            </Button>
-                          </FileUploadTrigger>
-                        </FileUploadDropzone>
-                        <FileUploadList className="max-h-[400px] overflow-y-auto">
-                          {field.value?.map((file, index) => (
-                            <FileUploadItem
-                              key={index}
-                              value={file}
-                              className="grid grid-cols-[1fr_auto] gap-2 items-center"
-                            >
-                              <FileUploadItemPreview />
-                              <FileUploadItemDelete asChild>
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  className="size-7"
-                                >
-                                  <X />
-                                  <span className="sr-only">删除</span>
-                                </Button>
-                              </FileUploadItemDelete>
-                              <FileUploadItemMetadata className="truncate min-w-0" />
-                            </FileUploadItem>
-                          ))}
-                        </FileUploadList>
-                      </FileUpload>
-                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}

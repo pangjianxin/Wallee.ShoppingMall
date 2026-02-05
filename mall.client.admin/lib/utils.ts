@@ -15,10 +15,14 @@ export function formatJSON(jsonString: string | undefined): string {
   }
 }
 
-export const getDiscountText = (value: number | undefined) => {
-  if (!value) return "未设置";
-  if (value === 1) return "不打折";
-  const discount = (value * 10).toFixed(2);
+export const getDiscountText = (
+  price: number | undefined,
+  originalPrice: number | undefined,
+) => {
+  if (!price || !originalPrice) return "未设置";
+  if (originalPrice === 0) return "未设置";
+  if (price >= originalPrice) return "不打折";
+  const discount = ((price / originalPrice) * 10).toFixed(2);
   return `${discount}折`;
 };
 

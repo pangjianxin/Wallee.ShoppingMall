@@ -31,7 +31,7 @@ const AuditLogs: FC<Props> = ({ promise }) => {
     (v: WalleeMallAuditLogsDtosAuditLogDto) => {
       router.push(`/audit-logs/${v.id}`);
     },
-    [router]
+    [router],
   );
 
   const columns = useMemo(() => {

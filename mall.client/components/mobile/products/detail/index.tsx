@@ -31,13 +31,12 @@ export default function ProductDetail({ product, posts, relatedTags }: Props) {
 
   const maxQuantity = selectedSku?.stockQuantity || 99;
 
-
   const handleBuyNow = () => {
     if (!selectedSku) {
       toast.error("请先选择商品规格");
       return;
     }
-    toast.success(`立即购买 ${quantity} 件 ${selectedSku.skuCode}`);
+    toast.success(`立即购买 ${quantity} 件 ${selectedSku.jdSkuId}`);
   };
 
   const handleToggleFavorite = () => {
@@ -68,7 +67,7 @@ export default function ProductDetail({ product, posts, relatedTags }: Props) {
       <SkuSelector
         skus={product?.skus || []}
         onSkuSelect={setSelectedSku}
-        currency={product?.currency || "¥"}
+        currency={"¥"}
       />
       {/* Quantity Selector */}
       <QuantitySelector

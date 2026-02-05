@@ -1,14 +1,11 @@
-import { productCreate } from "@/openapi";
+import { productCreateByJdSku } from "@/openapi";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
-export const useCreateProduct = () => {
+export const useCreateProductByJdSku = () => {
   const schema = z.object({
-    name: z.string().min(1, { message: "角色名称不能为空" }),
-    brand: z.string().min(1, { message: "品牌不能为空" }),
-    shortDescription: z.string().min(1, { message: "简短描述不能为空" }),
-    sortOrder: z.number().optional(),
+    jdSkuId: z.string().min(1, { message: "角色名称不能为空" }),
   });
 
   type FormValue = z.infer<typeof schema>;
@@ -16,15 +13,12 @@ export const useCreateProduct = () => {
   const form = useForm<FormValue>({
     resolver: zodResolver(schema),
     defaultValues: {
-      name: "",
-      brand: "",
-      shortDescription: "",
-      sortOrder: 0,
+      jdSkuId: "",
     },
   });
 
   const submit: SubmitHandler<FormValue> = async (data) => {
-    const { data: res } = await productCreate({
+    const { data: res } = await productCreateByJdSku({
       throwOnError: true,
       body: {
         ...data,

@@ -29,9 +29,6 @@ RUN dotnet build "./Wallee.Mall.HttpApi.Host.csproj" -c $BUILD_CONFIGURATION -o 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "./Wallee.Mall.HttpApi.Host.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
-# 在发布阶段生成开发证书到发布目录
-RUN dotnet dev-certs https -v -ep /app/publish/openiddict.pfx -p 66ef81ca-a7cc-41b5-b852-e29d42de81df
-RUN chmod 644 /app/publish/openiddict.pfx
 # 此阶段在生产中使用，或在常规模式下从 VS 运行时使用(在不使用调试配置时为默认值)
 FROM base AS final
 WORKDIR /app

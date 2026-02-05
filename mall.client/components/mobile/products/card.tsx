@@ -11,12 +11,8 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, className }: ProductCardProps) {
-  const discountRate = product.discountRate ?? 1;
-  const hasDiscount = discountRate < 1;
-  const discountPrice =
-    hasDiscount && product.originalPrice
-      ? product.originalPrice * discountRate
-      : null;
+  const hasDiscount = product.discountText !== "NONE";
+ 
 
   return (
     <div
@@ -38,16 +34,16 @@ export function ProductCard({ product, className }: ProductCardProps) {
       />
 
       <div className="space-y-2.5 p-2 sm:p-3">
-        {(product.brand || product.jdPrice) && (
+        {(product.brand || product.defaultJdPrice) && (
           <div className="flex items-center gap-2">
             {product.brand && (
               <span className="max-w-[60%] truncate rounded-full bg-muted px-2 py-0.5 text-[10px] text-muted-foreground">
                 {product.brand}
               </span>
             )}
-            {product.jdPrice && (
+            {product.defaultJdPrice && (
               <span className="ml-auto text-[10px] text-muted-foreground">
-                京东价 ¥{product.jdPrice.toFixed(2)}
+                京东价 ¥{product.defaultJdPrice.toFixed(2)}
               </span>
             )}
           </div>
@@ -63,13 +59,13 @@ export function ProductCard({ product, className }: ProductCardProps) {
         <div className="flex items-center gap-2">
           <span className="text-base font-bold text-destructive">
             ¥
-            {hasDiscount && discountPrice
-              ? discountPrice.toFixed(2)
-              : product.originalPrice?.toFixed(2) || "0.00"}
+            {hasDiscount && product.defaultPrice
+              ? product.defaultPrice.toFixed(2)
+              : product.defaultOriginalPrice?.toFixed(2) || "0.00"}
           </span>
-          {hasDiscount && product.originalPrice && (
+          {hasDiscount && product.defaultOriginalPrice && (
             <span className="text-[11px] text-muted-foreground line-through">
-              ¥{product.originalPrice.toFixed(2)}
+              ¥{product.defaultOriginalPrice.toFixed(2)}
             </span>
           )}
           {product.salesCount !== undefined && product.salesCount > 0 && (

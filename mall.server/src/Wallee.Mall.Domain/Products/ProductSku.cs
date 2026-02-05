@@ -26,7 +26,7 @@ namespace Wallee.Mall.Products
         /// <summary>
         /// 京东SKUID
         /// </summary>
-        public string JdSkuId { get; private set; } = string.Empty;
+        public string? JdSkuId { get; private set; }
         /// <summary>
         /// 京东参考价（仅用于展示/比价，不参与系统销售价计算）。
         /// </summary>
@@ -34,26 +34,10 @@ namespace Wallee.Mall.Products
         /// <summary>
         /// 获取折扣显示文本（如"8.5折"）
         /// </summary>
-        public string DiscountText
-        {
-            get
-            {
-                if (OriginalPrice <= 0)
-                {
-                    return "无折扣";
-                }
-
-                var discountRate = Price / OriginalPrice;
-
-                if (discountRate >= 1m)
-                {
-                    return "无折扣";
-                }
-
-                var discount = discountRate * 10;
-                return $"{discount:0.#}折";
-            }
-        }
+        /// <summary>
+        /// 折扣信息
+        /// </summary>
+        public string DiscountText => Price.ToDiscountText(OriginalPrice);
 
         private ProductSku()
         {
@@ -62,12 +46,12 @@ namespace Wallee.Mall.Products
         public ProductSku(
             Guid id,
             Guid productId,
-            string jdSkuId,
             decimal originalPrice,
             decimal price,
-            decimal? jdPrice,
             int stockQuantity,
-            IEnumerable<ProductSkuAttribute> attributes)
+            string? jdSkuId,
+            decimal? jdPrice,
+            IEnumerable<ProductSkuAttribute>? attributes)
         {
             Id = id;
             ProductId = productId;
@@ -76,17 +60,12 @@ namespace Wallee.Mall.Products
             SetPrice(price);
             SetJdPrice(jdPrice);
             SetStock(stockQuantity);
-            SetAttributes([.. attributes]);
+            SetAttributes([.. attributes ?? []]);
         }
 
-        public void SetJdSkuId(string jdSkuId)
+        public void SetJdSkuId(string? jdSkuId)
         {
-            if (string.IsNullOrWhiteSpace(jdSkuId))
-            {
-                throw new ArgumentException("Sku code cannot be empty", nameof(jdSkuId));
-            }
-
-            JdSkuId = jdSkuId.Trim();
+            JdSkuId = jdSkuId?.Trim();
         }
 
         public void SetPrice(decimal price)

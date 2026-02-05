@@ -51,11 +51,24 @@ namespace Wallee.Mall.Medias
 
         public virtual async Task DeleteAsync(Guid id)
         {
-            var mediaDescriptor = await repository.GetAsync(id);
+            var mediaDescriptor = await repository.FindAsync(id);
 
-            await mediaContainer.DeleteAsync(id.ToString());
-            await mediaThumbnailContainer.DeleteAsync(id.ToString());
-            await repository.DeleteAsync(id);
+            if (mediaDescriptor != default)
+            {
+                var deletingId = mediaDescriptor.Id.ToString();
+
+                if (await mediaContainer.ExistsAsync(deletingId) == true)
+                {
+                    await mediaContainer.DeleteAsync(deletingId);
+                }
+
+                if (await mediaThumbnailContainer.ExistsAsync(deletingId) == true)
+                {
+                    await mediaThumbnailContainer.DeleteAsync(deletingId);
+                }
+
+                await repository.DeleteAsync(id);
+            }
         }
 
         protected override async Task<IQueryable<MallMedia>> CreateFilteredQueryAsync(MallMediaGetListInput input)

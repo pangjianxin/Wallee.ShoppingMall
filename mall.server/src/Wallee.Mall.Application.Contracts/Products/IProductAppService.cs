@@ -8,9 +8,9 @@ namespace Wallee.Mall.Products
 {
     public interface IProductAppService : ICrudAppService<ProductDto, Guid, ProductGetListInput, CreateProductDto, UpdateProductDto>
     {
-        Task FetchSkusWithOneBoundAsync(Guid id, FetchSkuWithOneBoundDto input);
+        Task CreateByJdSkuAsync(CreateProductByJdSkuDto input);
         Task<List<ProductSkuDto>> GetSkusAsync(Guid productId);
-        Task<ProductDto> UpdateProductCovers(Guid id, UpdateProductCoversDto input);
-        Task<ProductDto> UpdateSkusAsync(Guid productId, UpsertProductSkusDto input);
+        Task<ProductDto> UpdateCoversAsync(Guid id, UpdateProductCoversDto input);
+        Task<ProductDto> UpdateSkusAsync(Guid productId, UpdateProductSkusDto input);
     }
 }
