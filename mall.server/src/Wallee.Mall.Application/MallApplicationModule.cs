@@ -4,6 +4,7 @@ using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Threading.Tasks;
 using Volo.Abp.Account;
 using Volo.Abp.FeatureManagement;
 using Volo.Abp.Identity;
@@ -73,7 +74,7 @@ public class MallApplicationModule : AbpModule
             int targetCount = config.GetValue<int?>("AI:Comprehensive:TargetCount") ?? 20;
             int threshold = config.GetValue<int?>("AI:Comprehensive:Threshold") ?? 8;
 
-            return chatClient!.CreateAIAgent(new ChatClientAgentOptions
+            return chatClient!.AsAIAgent(new ChatClientAgentOptions
             {
                 ChatOptions = new ChatOptions
                 {
@@ -132,14 +133,21 @@ public class MallApplicationModule : AbpModule
                     - 不输出任何实现代码，除非用户明确要求开发实现。
                     - 不做无依据的主观夸大；“最好/最值”必须有工具数据支撑（价格、参数、销量/评价若工具提供）。
                     ",
+
                 },
                 Name = key,
-                // 这里给工厂传入带 reducer 的 InMemoryChatMessageStore
-                ChatMessageStoreFactory = ctx => new InMemoryChatMessageStore(
-                    new SummarizingChatReducer(chatClient!, targetCount, threshold),
-                    ctx.SerializedState,
-                    ctx.JsonSerializerOptions),
+                //AIContextProviderFactory = (ctx, cancellationToken) =>
+                //{
 
+                //}
+
+                ChatHistoryProviderFactory = (ctx, ct) =>
+                new ValueTask<ChatHistoryProvider>(
+                    new InMemoryChatHistoryProvider(
+                        new SummarizingChatReducer(chatClient!, targetCount, threshold),
+                        ctx.SerializedState,
+                        ctx.JsonSerializerOptions,
+                        InMemoryChatHistoryProvider.ChatReducerTriggerEvent.AfterMessageAdded)),
             }, services: sp);
         });
     }

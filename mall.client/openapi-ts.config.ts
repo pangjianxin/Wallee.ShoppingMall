@@ -2,7 +2,9 @@ import { defaultPlugins, defineConfig } from "@hey-api/openapi-ts";
 
 //cre
 export default defineConfig({
-  input: "http://localhost:44301/swagger/v1/swagger.json",
+  input: {
+    path: "http://localhost:44301/swagger/v1/swagger.json",
+  },
   output: {
     format: "prettier",
     lint: "eslint",
